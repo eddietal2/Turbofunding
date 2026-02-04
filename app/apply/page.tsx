@@ -70,9 +70,46 @@ const US_STATES = [
   "Wyoming",
 ]
 
+// DEV MODE: Set to true to pre-fill all required fields for quick testing
+const DEV_MODE = true
+
+const devFormData = {
+  // Step 1: Funding Information
+  amountRequested: "50000",
+  useOfFunds: "expansion",
+  // Step 2: Business Information
+  businessName: "Test Business LLC",
+  dba: "Test DBA",
+  federalTaxId: "12-3456789",
+  entityType: "LLC",
+  businessStartDate: "2020-01-15",
+  yearsInBusiness: "5",
+  annualRevenue: "250001-500000",
+  industry: "Retail",
+  businessAddress: "123 Business St",
+  businessCity: "Los Angeles",
+  businessState: "California",
+  businessZip: "90001",
+  businessPhone: "(555) 123-4567",
+  businessEmail: "contact@testbusiness.com",
+  email: "john@testbusiness.com",
+  // Step 3: Owner Information
+  firstName: "John",
+  lastName: "Doe",
+  phone: "(555) 987-6543",
+  dateOfBirth: "1985-06-15",
+  ssn: "123-45-6789",
+  homeAddress: "456 Home Ave",
+  city: "Los Angeles",
+  state: "California",
+  zip: "90002",
+  creditScore: "good",
+  ownershipPercentage: "100",
+}
+
 export default function ApplyPage() {
   const router = useRouter()
-  const [step, setStep] = useState(4)
+  const [step, setStep] = useState(1)
   const [showSecondOwner, setShowSecondOwner] = useState(false)
   const [isDownloadingPDF, setIsDownloadingPDF] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -80,27 +117,27 @@ export default function ApplyPage() {
     // Business Information
     legalBusinessName: "",
     dbaName: "",
-    federalTaxId: "",
+    federalTaxId: DEV_MODE ? devFormData.federalTaxId : "",
     businessType: "",
-    yearsInBusiness: "", // This will now store business start date
-    annualRevenue: "",
+    yearsInBusiness: DEV_MODE ? devFormData.yearsInBusiness : "",
+    annualRevenue: DEV_MODE ? devFormData.annualRevenue : "",
     stateIncorporated: "",
-    industry: "",
-    businessAddress: "",
-    businessCity: "",
-    businessState: "",
+    industry: DEV_MODE ? devFormData.industry : "",
+    businessAddress: DEV_MODE ? devFormData.businessAddress : "",
+    businessCity: DEV_MODE ? devFormData.businessCity : "",
+    businessState: DEV_MODE ? devFormData.businessState : "",
     businessZipCode: "",
     // Personal Owner Information
-    firstName: "",
-    lastName: "",
-    phone: "",
-    dateOfBirth: "",
-    ssn: "",
-    homeAddress: "",
-    city: "",
-    state: "",
+    firstName: DEV_MODE ? devFormData.firstName : "",
+    lastName: DEV_MODE ? devFormData.lastName : "",
+    phone: DEV_MODE ? devFormData.phone : "",
+    dateOfBirth: DEV_MODE ? devFormData.dateOfBirth : "",
+    ssn: DEV_MODE ? devFormData.ssn : "",
+    homeAddress: DEV_MODE ? devFormData.homeAddress : "",
+    city: DEV_MODE ? devFormData.city : "",
+    state: DEV_MODE ? devFormData.state : "",
     zipCode: "",
-    creditScore: "",
+    creditScore: DEV_MODE ? devFormData.creditScore : "",
     percentageOwnership: "",
     secondOwnerFirstName: "",
     secondOwnerLastName: "",
@@ -118,25 +155,25 @@ export default function ApplyPage() {
     additionalInfo: "",
     signature: "",
     secondOwnerSignature: "",
-    signatureDate: "", // Changed from new Date().toISOString().split("T")[0] to allow manual date entry
+    signatureDate: "",
     agreeToTerms: false,
     secondOwnerAgreeToTerms: false,
     bankStatements: null as File | null,
     otherDocuments: null as File | null,
 
     // Updates from new code
-    amountRequested: "",
-    useOfFunds: "",
-    businessName: "",
-    dba: "",
-    businessPhone: "",
-    businessEmail: "",
-    businessStartDate: "",
-    entityType: "",
-    businessZip: "",
-    email: "", // Added from updates
-    zip: "", // Added from updates
-    ownershipPercentage: "", // Added from updates
+    amountRequested: DEV_MODE ? devFormData.amountRequested : "",
+    useOfFunds: DEV_MODE ? devFormData.useOfFunds : "",
+    businessName: DEV_MODE ? devFormData.businessName : "",
+    dba: DEV_MODE ? devFormData.dba : "",
+    businessPhone: DEV_MODE ? devFormData.businessPhone : "",
+    businessEmail: DEV_MODE ? devFormData.businessEmail : "",
+    businessStartDate: DEV_MODE ? devFormData.businessStartDate : "",
+    entityType: DEV_MODE ? devFormData.entityType : "",
+    businessZip: DEV_MODE ? devFormData.businessZip : "",
+    email: DEV_MODE ? devFormData.email : "",
+    zip: DEV_MODE ? devFormData.zip : "",
+    ownershipPercentage: DEV_MODE ? devFormData.ownershipPercentage : "",
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -738,7 +775,7 @@ export default function ApplyPage() {
                         <Button
                           type="button"
                           onClick={nextStep}
-                          disabled={!isStep1Valid}
+                          disabled={!DEV_MODE && !isStep1Valid}
                           className="bg-orange-500 hover:bg-orange-600 text-white disabled:bg-gray-300 disabled:cursor-not-allowed"
                         >
                           Next Step
@@ -1078,7 +1115,7 @@ export default function ApplyPage() {
                         <Button
                           type="button"
                           onClick={nextStep}
-                          disabled={!isStep2Valid}
+                          disabled={!DEV_MODE && !isStep2Valid}
                           className="bg-orange-500 hover:bg-orange-600 text-white disabled:bg-gray-300 disabled:cursor-not-allowed"
                         >
                           Next Step
@@ -1589,11 +1626,11 @@ export default function ApplyPage() {
                         <Button
                           type="button"
                           onClick={() => {
-                            if (validateStep3()) {
+                            if (DEV_MODE || validateStep3()) {
                               nextStep()
                             }
                           }}
-                          disabled={!isStep3Valid}
+                          disabled={!DEV_MODE && !isStep3Valid}
                           className="bg-orange-500 hover:bg-orange-600 text-white disabled:bg-gray-300 disabled:cursor-not-allowed"
                         >
                           Next Step
