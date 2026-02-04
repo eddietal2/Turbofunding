@@ -72,7 +72,7 @@ const US_STATES = [
 
 export default function ApplyPage() {
   const router = useRouter()
-  const [step, setStep] = useState(3)
+  const [step, setStep] = useState(4)
   const [showSecondOwner, setShowSecondOwner] = useState(false)
   const [isDownloadingPDF, setIsDownloadingPDF] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
@@ -316,12 +316,109 @@ export default function ApplyPage() {
     formData.email.trim() !== "" &&
     isValidEmail(formData.email)
 
+  // SSN validation helper (9 digits, with or without dashes)
+  const isValidSSN = (ssn: string) => {
+    const digits = ssn.replace(/\D/g, "")
+    return digits.length === 9
+  }
+
+  // Format SSN as XXX-XX-XXXX
+  const formatSSN = (value: string) => {
+    const digits = value.replace(/\D/g, "").slice(0, 9)
+    if (digits.length <= 3) return digits
+    if (digits.length <= 5) return `${digits.slice(0, 3)}-${digits.slice(3)}`
+    return `${digits.slice(0, 3)}-${digits.slice(3, 5)}-${digits.slice(5)}`
+  }
+
+  const validateStep3 = (): boolean => {
+    const newErrors: Record<string, string> = {}
+    
+    // Primary Owner validation
+    if (!formData.firstName.trim()) {
+      newErrors.firstName = "First name is required"
+    }
+    
+    if (!formData.lastName.trim()) {
+      newErrors.lastName = "Last name is required"
+    }
+    
+    if (!formData.phone.trim()) {
+      newErrors.phone = "Phone number is required"
+    } else if (!isValidPhone(formData.phone)) {
+      newErrors.phone = "Please enter a valid phone number"
+    }
+    
+    if (!formData.dateOfBirth) {
+      newErrors.dateOfBirth = "Date of birth is required"
+    }
+    
+    if (!formData.ssn.trim()) {
+      newErrors.ssn = "Social Security Number is required"
+    } else if (!isValidSSN(formData.ssn)) {
+      newErrors.ssn = "Please enter a valid 9-digit SSN"
+    }
+    
+    if (!formData.homeAddress.trim()) {
+      newErrors.homeAddress = "Home address is required"
+    }
+    
+    if (!formData.city.trim()) {
+      newErrors.city = "City is required"
+    }
+    
+    if (!formData.state) {
+      newErrors.state = "State is required"
+    }
+    
+    if (!formData.zip.trim()) {
+      newErrors.zip = "Zip code is required"
+    } else if (!isValidZip(formData.zip)) {
+      newErrors.zip = "Please enter a valid 5-digit zip code"
+    }
+    
+    if (!formData.creditScore) {
+      newErrors.creditScore = "Please select a credit score range"
+    }
+    
+    if (!formData.ownershipPercentage.trim()) {
+      newErrors.ownershipPercentage = "Ownership percentage is required"
+    } else if (isNaN(Number(formData.ownershipPercentage)) || Number(formData.ownershipPercentage) <= 0 || Number(formData.ownershipPercentage) > 100) {
+      newErrors.ownershipPercentage = "Please enter a valid percentage (1-100)"
+    }
+    
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  // Check if step 3 fields are valid (without setting errors)
+  const isStep3Valid = 
+    formData.firstName.trim() !== "" &&
+    formData.lastName.trim() !== "" &&
+    formData.phone.trim() !== "" &&
+    isValidPhone(formData.phone) &&
+    formData.dateOfBirth !== "" &&
+    formData.ssn.trim() !== "" &&
+    isValidSSN(formData.ssn) &&
+    formData.homeAddress.trim() !== "" &&
+    formData.city.trim() !== "" &&
+    formData.state !== "" &&
+    formData.zip.trim() !== "" &&
+    isValidZip(formData.zip) &&
+    formData.creditScore !== "" &&
+    formData.ownershipPercentage.trim() !== "" &&
+    !isNaN(Number(formData.ownershipPercentage)) &&
+    Number(formData.ownershipPercentage) > 0 &&
+    Number(formData.ownershipPercentage) <= 100
+
   const nextStep = () => {
     // Validate current step before proceeding
     if (step === 1 && !validateStep1()) {
       return
     }
     if (step === 2 && !validateStep2()) {
+      return
+    }
+    if (step === 3 && !validateStep3()) {
       return
     }
     
@@ -1007,107 +1104,142 @@ export default function ApplyPage() {
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                               <div className="space-y-2">
-                                <Label htmlFor="firstName">First Name</Label>
+                                <Label htmlFor="firstName">First Name <span className="text-red-500">*</span></Label>
                                 <Input
                                   id="firstName"
                                   name="firstName"
                                   value={formData.firstName}
-                                  onChange={handleChange}
+                                  onChange={(e) => {
+                                    handleChange(e)
+                                    if (errors.firstName) setErrors((prev) => ({ ...prev, firstName: "" }))
+                                  }}
                                   placeholder="Enter your first name"
-                                  className="bg-white border-gray-300 text-gray-900"
+                                  className={`bg-white border-gray-300 text-gray-900 ${errors.firstName ? "border-red-500" : ""}`}
                                   required
                                 />
+                                {errors.firstName && <p className="text-red-500 text-sm">{errors.firstName}</p>}
                               </div>
                               <div className="space-y-2">
-                                <Label htmlFor="lastName">Last Name</Label>
+                                <Label htmlFor="lastName">Last Name <span className="text-red-500">*</span></Label>
                                 <Input
                                   id="lastName"
                                   name="lastName"
                                   value={formData.lastName}
-                                  onChange={handleChange}
+                                  onChange={(e) => {
+                                    handleChange(e)
+                                    if (errors.lastName) setErrors((prev) => ({ ...prev, lastName: "" }))
+                                  }}
                                   placeholder="Enter your last name"
-                                  className="bg-white border-gray-300 text-gray-900"
+                                  className={`bg-white border-gray-300 text-gray-900 ${errors.lastName ? "border-red-500" : ""}`}
                                   required
                                 />
+                                {errors.lastName && <p className="text-red-500 text-sm">{errors.lastName}</p>}
                               </div>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                               <div className="space-y-2">
-                                <Label htmlFor="phone">Phone</Label>
+                                <Label htmlFor="phone">Phone <span className="text-red-500">*</span></Label>
                                 <Input
                                   id="phone"
                                   name="phone"
                                   type="tel"
                                   value={formData.phone}
-                                  onChange={handleChange}
-                                  placeholder="Enter your phone number"
-                                  className="bg-white border-gray-300 text-gray-900"
+                                  maxLength={14}
+                                  onChange={(e) => {
+                                    const formatted = formatPhone(e.target.value)
+                                    setFormData({ ...formData, phone: formatted })
+                                    if (errors.phone) setErrors((prev) => ({ ...prev, phone: "" }))
+                                  }}
+                                  placeholder="(XXX) XXX-XXXX"
+                                  className={`bg-white border-gray-300 text-gray-900 ${errors.phone ? "border-red-500" : ""}`}
                                   required
                                 />
+                                {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
                               </div>
                               <div className="space-y-2">
-                                <Label htmlFor="dateOfBirth">Date of Birth</Label>
+                                <Label htmlFor="dateOfBirth">Date of Birth <span className="text-red-500">*</span></Label>
                                 <Input
                                   id="dateOfBirth"
                                   name="dateOfBirth"
                                   type="date"
                                   value={formData.dateOfBirth}
-                                  onChange={handleChange}
-                                  className="bg-white border-gray-300 text-gray-900"
+                                  onChange={(e) => {
+                                    handleChange(e)
+                                    if (errors.dateOfBirth) setErrors((prev) => ({ ...prev, dateOfBirth: "" }))
+                                  }}
+                                  className={`bg-white border-gray-300 text-gray-900 ${errors.dateOfBirth ? "border-red-500" : ""}`}
                                   required
                                 />
+                                {errors.dateOfBirth && <p className="text-red-500 text-sm">{errors.dateOfBirth}</p>}
                               </div>
                             </div>
 
                             <div className="space-y-2">
-                              <Label htmlFor="ssn">Social Security Number</Label>
+                              <Label htmlFor="ssn">Social Security Number <span className="text-red-500">*</span></Label>
                               <Input
                                 id="ssn"
                                 name="ssn"
                                 type="password"
                                 value={formData.ssn}
-                                onChange={handleChange}
-                                placeholder="Enter your SSN"
-                                className="bg-white border-gray-300 text-gray-900"
+                                maxLength={11}
+                                onChange={(e) => {
+                                  const formatted = formatSSN(e.target.value)
+                                  setFormData({ ...formData, ssn: formatted })
+                                  if (errors.ssn) setErrors((prev) => ({ ...prev, ssn: "" }))
+                                }}
+                                placeholder="XXX-XX-XXXX"
+                                className={`bg-white border-gray-300 text-gray-900 ${errors.ssn ? "border-red-500" : ""}`}
                                 required
                               />
+                              {errors.ssn && <p className="text-red-500 text-sm">{errors.ssn}</p>}
                             </div>
 
                             <div className="space-y-2">
-                              <Label htmlFor="homeAddress">Home Street Address</Label>
+                              <Label htmlFor="homeAddress">Home Street Address <span className="text-red-500">*</span></Label>
                               <Input
                                 id="homeAddress"
                                 name="homeAddress"
                                 value={formData.homeAddress}
-                                onChange={handleChange}
+                                onChange={(e) => {
+                                  handleChange(e)
+                                  if (errors.homeAddress) setErrors((prev) => ({ ...prev, homeAddress: "" }))
+                                }}
                                 placeholder="Enter your home address"
-                                className="bg-white border-gray-300 text-gray-900"
+                                className={`bg-white border-gray-300 text-gray-900 ${errors.homeAddress ? "border-red-500" : ""}`}
                                 required
                               />
+                              {errors.homeAddress && <p className="text-red-500 text-sm">{errors.homeAddress}</p>}
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                               <div className="space-y-2">
-                                <Label htmlFor="city">City</Label>
+                                <Label htmlFor="city">City <span className="text-red-500">*</span></Label>
                                 <Input
                                   id="city"
                                   name="city"
                                   value={formData.city}
-                                  onChange={handleChange}
+                                  onChange={(e) => {
+                                    handleChange(e)
+                                    if (errors.city) setErrors((prev) => ({ ...prev, city: "" }))
+                                  }}
                                   placeholder="Enter city"
-                                  className="bg-white border-gray-300 text-gray-900"
+                                  className={`bg-white border-gray-300 text-gray-900 ${errors.city ? "border-red-500" : ""}`}
                                   required
                                 />
+                                {errors.city && <p className="text-red-500 text-sm">{errors.city}</p>}
                               </div>
                               <div className="space-y-2">
-                                <Label htmlFor="state">State</Label>
+                                <Label htmlFor="state">State <span className="text-red-500">*</span></Label>
                                 <Select
                                   value={formData.state}
-                                  onValueChange={(value) => setFormData({ ...formData, state: value })}
+                                  onValueChange={(value) => {
+                                    setFormData({ ...formData, state: value })
+                                    if (errors.state) setErrors((prev) => ({ ...prev, state: "" }))
+                                  }}
                                   required
                                 >
-                                  <SelectTrigger className="bg-white border-gray-300 text-gray-900">
+                                  <SelectTrigger className={`bg-white border-gray-300 text-gray-900 ${errors.state ? "border-red-500" : ""}`}>
                                     <SelectValue placeholder="Select state" />
                                   </SelectTrigger>
                                   <SelectContent className="bg-white border-gray-300 text-gray-900 max-h-[300px]">
@@ -1118,27 +1250,37 @@ export default function ApplyPage() {
                                     ))}
                                   </SelectContent>
                                 </Select>
+                                {errors.state && <p className="text-red-500 text-sm">{errors.state}</p>}
                               </div>
                               <div className="space-y-2">
-                                <Label htmlFor="zip">Zip Code</Label>
+                                <Label htmlFor="zip">Zip Code <span className="text-red-500">*</span></Label>
                                 <Input
                                   id="zip"
                                   name="zip"
                                   value={formData.zip}
-                                  onChange={handleChange}
-                                  placeholder="Enter zip code"
-                                  className="bg-white border-gray-300 text-gray-900"
+                                  maxLength={10}
+                                  onChange={(e) => {
+                                    const formatted = formatZipCode(e.target.value)
+                                    setFormData({ ...formData, zip: formatted })
+                                    if (errors.zip) setErrors((prev) => ({ ...prev, zip: "" }))
+                                  }}
+                                  placeholder="XXXXX"
+                                  className={`bg-white border-gray-300 text-gray-900 ${errors.zip ? "border-red-500" : ""}`}
                                   required
                                 />
+                                {errors.zip && <p className="text-red-500 text-sm">{errors.zip}</p>}
                               </div>
                             </div>
 
                             <div className="space-y-2">
-                              <Label>Credit Score Range</Label>
+                              <Label>Credit Score Range <span className="text-red-500">*</span></Label>
                               <RadioGroup
                                 value={formData.creditScore}
-                                onValueChange={(value) => handleSelectChange("creditScore", value)}
-                                className="grid grid-cols-1 md:grid-cols-3 gap-2"
+                                onValueChange={(value) => {
+                                  handleSelectChange("creditScore", value)
+                                  if (errors.creditScore) setErrors((prev) => ({ ...prev, creditScore: "" }))
+                                }}
+                                className={`grid grid-cols-1 md:grid-cols-3 gap-2 ${errors.creditScore ? "border border-red-500 rounded-md p-2" : ""}`}
                               >
                                 <div className="flex items-center space-x-2">
                                   <RadioGroupItem
@@ -1187,20 +1329,27 @@ export default function ApplyPage() {
                                   </Label>
                                 </div>
                               </RadioGroup>
+                              {errors.creditScore && <p className="text-red-500 text-sm">{errors.creditScore}</p>}
                             </div>
 
                             <div className="space-y-2">
-                              <Label htmlFor="ownershipPercentage">Ownership Percentage</Label>
+                              <Label htmlFor="ownershipPercentage">Ownership Percentage <span className="text-red-500">*</span></Label>
                               <Input
                                 id="ownershipPercentage"
                                 name="ownershipPercentage"
                                 type="number"
+                                min="1"
+                                max="100"
                                 value={formData.ownershipPercentage}
-                                onChange={handleChange}
-                                placeholder="Enter percentage"
-                                className="bg-white border-gray-300 text-gray-900"
+                                onChange={(e) => {
+                                  handleChange(e)
+                                  if (errors.ownershipPercentage) setErrors((prev) => ({ ...prev, ownershipPercentage: "" }))
+                                }}
+                                placeholder="Enter percentage (1-100)"
+                                className={`bg-white border-gray-300 text-gray-900 ${errors.ownershipPercentage ? "border-red-500" : ""}`}
                                 required
                               />
+                              {errors.ownershipPercentage && <p className="text-red-500 text-sm">{errors.ownershipPercentage}</p>}
                             </div>
                           </div>
                           {!showSecondOwner && (
@@ -1437,7 +1586,15 @@ export default function ApplyPage() {
                           <ArrowLeftIcon className="mr-2 h-4 w-4" />
                           Previous
                         </Button>
-                        <Button onClick={nextStep} className="bg-blue-600 hover:bg-blue-700">
+                        <Button
+                          onClick={() => {
+                            if (validateStep3()) {
+                              nextStep()
+                            }
+                          }}
+                          disabled={!isStep3Valid}
+                          className={`bg-orange-500 hover:bg-orange-500 ${!isStep3Valid ? "opacity-50 cursor-not-allowed" : ""}`}
+                        >
                           Next Step
                           <ArrowRightIcon className="ml-2 h-4 w-4" />
                         </Button>
@@ -1735,7 +1892,10 @@ export default function ApplyPage() {
                             Upload Documents
                           </Button>
                           <Button
-                            onClick={() => router.push("/")}
+                            onClick={() => {
+                              setStep(1)
+                              router.push("/")
+                            }}
                             variant="outline"
                             className="flex-1 border-blue-600 text-blue-400 hover:bg-blue-700 hover:text-gray-200 font-semibold"
                           >
