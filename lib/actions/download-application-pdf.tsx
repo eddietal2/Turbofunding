@@ -190,16 +190,16 @@ export async function downloadApplicationPDF(formData: any) {
     // Business Information Section
     drawSectionHeader("BUSINESS INFORMATION")
 
-    drawField("Legal Business Name", formData.legalBusinessName, true)
-    drawField("DBA Name", formData.dbaName, false)
+    drawField("Legal Business Name", formData.businessName || formData.legalBusinessName, true)
+    drawField("DBA Name", formData.dba || formData.dbaName, false)
 
     drawField("Federal Tax ID", formData.federalTaxId, true)
-    drawField("Business Type", formData.businessType, false)
+    drawField("Entity Type", formData.entityType || formData.businessType, false)
 
-    drawField("Business Start Date", formData.yearsInBusiness, true)
+    drawField("Business Start Date", formData.businessStartDate, true)
     drawField("Annual Revenue", formData.annualRevenue, false)
 
-    drawField("State Incorporated In", formData.stateIncorporated, true)
+    drawField("Years in Business", formData.yearsInBusiness, true)
     drawField("Industry", formData.industry, false)
 
     yPosition -= 18
@@ -212,7 +212,7 @@ export async function downloadApplicationPDF(formData: any) {
       color: darkGray,
     })
     yPosition -= 12
-    const businessAddress = `${formData.businessAddress}, ${formData.businessCity}, ${formData.businessState} ${formData.businessZipCode}`
+    const businessAddress = `${formData.businessAddress || ""}, ${formData.businessCity || ""}, ${formData.businessState || ""} ${formData.businessZip || formData.businessZipCode || ""}`
     page.drawText(businessAddress, {
       x: 50,
       y: yPosition,
@@ -221,7 +221,10 @@ export async function downloadApplicationPDF(formData: any) {
       color: rgb(0, 0, 0),
       maxWidth: 500,
     })
-    yPosition -= 30
+    yPosition -= 15
+
+    drawField("Business Phone", formData.businessPhone, true)
+    drawField("Business Email", formData.businessEmail || formData.email, false)
 
     // Owner Information Section
     drawSectionHeader("PRIMARY OWNER INFORMATION")
@@ -233,7 +236,7 @@ export async function downloadApplicationPDF(formData: any) {
     drawField("Social Security Number", "***-**-" + (formData.ssn?.slice(-4) || "****"), false)
 
     drawField("Credit Score", formData.creditScore, true)
-    drawField("Percentage Ownership", formData.percentageOwnership ? `${formData.percentageOwnership}%` : "N/A", false)
+    drawField("Percentage Ownership", formData.ownershipPercentage || formData.percentageOwnership ? `${formData.ownershipPercentage || formData.percentageOwnership}%` : "N/A", false)
 
     yPosition -= 18
     checkAndAddPage(25)
@@ -245,7 +248,7 @@ export async function downloadApplicationPDF(formData: any) {
       color: darkGray,
     })
     yPosition -= 12
-    const homeAddress = `${formData.homeAddress}, ${formData.city}, ${formData.state} ${formData.zipCode}`
+    const homeAddress = `${formData.homeAddress || ""}, ${formData.city || ""}, ${formData.state || ""} ${formData.zip || formData.zipCode || ""}`
     page.drawText(homeAddress, {
       x: 50,
       y: yPosition,
@@ -298,8 +301,8 @@ export async function downloadApplicationPDF(formData: any) {
     // Funding Information Section
     drawSectionHeader("FUNDING INFORMATION")
 
-    drawField("Funding Amount", formData.fundingAmount, true)
-    drawField("Purpose", formData.fundingPurpose, false)
+    drawField("Funding Amount", formData.amountRequested ? `$${Number(formData.amountRequested).toLocaleString()}` : formData.fundingAmount, true)
+    drawField("Purpose", formData.useOfFunds || formData.fundingPurpose, false)
 
     if (formData.additionalInfo) {
       yPosition -= 15

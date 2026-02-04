@@ -71,7 +71,7 @@ const US_STATES = [
 ]
 
 // DEV MODE: Set to true to pre-fill all required fields for quick testing
-const DEV_MODE = true
+const DEV_MODE = false
 
 const devFormData = {
   // Step 1: Funding Information
@@ -1771,7 +1771,7 @@ export default function ApplyPage() {
                               </div>
                               <div className="flex justify-between">
                                 <dt className="font-medium">Zip Code:</dt>
-                                <dd>{formData.zipCode}</dd>
+                                <dd>{formData.zip}</dd>
                               </div>
                               <div className="flex justify-between">
                                 <dt className="font-medium">Credit Score Range:</dt>
@@ -1779,7 +1779,7 @@ export default function ApplyPage() {
                               </div>
                               <div className="flex justify-between">
                                 <dt className="font-medium">Percentage Ownership:</dt>
-                                <dd>{formData.percentageOwnership}%</dd>
+                                <dd>{formData.ownershipPercentage}%</dd>
                               </div>
                             </dl>
                           </div>
