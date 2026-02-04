@@ -1579,24 +1579,24 @@ export default function ApplyPage() {
                       </CardContent>
                       <CardFooter className="flex justify-between pt-4">
                         <Button
+                          type="button"
                           variant="outline"
                           onClick={prevStep}
-                          className="border-blue-600 text-blue-400 hover:bg-blue-700 hover:text-gray-200 bg-transparent font-semibold"
+                          className="font-semibold bg-transparent"
                         >
-                          <ArrowLeftIcon className="mr-2 h-4 w-4" />
                           Previous
                         </Button>
                         <Button
+                          type="button"
                           onClick={() => {
                             if (validateStep3()) {
                               nextStep()
                             }
                           }}
                           disabled={!isStep3Valid}
-                          className={`bg-orange-500 hover:bg-orange-500 ${!isStep3Valid ? "opacity-50 cursor-not-allowed" : ""}`}
+                          className="bg-orange-500 hover:bg-orange-600 text-white disabled:bg-gray-300 disabled:cursor-not-allowed"
                         >
                           Next Step
-                          <ArrowRightIcon className="ml-2 h-4 w-4" />
                         </Button>
                       </CardFooter>
                     </Card>
@@ -1804,16 +1804,19 @@ export default function ApplyPage() {
                       </CardContent>
                       <CardFooter className="flex justify-between pt-4">
                         <Button
+                          type="button"
                           variant="outline"
                           onClick={prevStep}
-                          className="border-blue-600 text-blue-400 hover:bg-blue-700 hover:text-gray-200 bg-transparent font-semibold"
+                          className="font-semibold bg-transparent"
                         >
-                          <ArrowLeftIcon className="mr-2 h-4 w-4" />
                           Previous
                         </Button>
-                        <Button onClick={handleSubmit} className="bg-blue-600 hover:bg-blue-700">
+                        <Button
+                          type="button"
+                          onClick={handleSubmit}
+                          className="bg-orange-500 hover:bg-orange-600 text-white"
+                        >
                           Submit Application
-                          <ArrowRightIcon className="ml-2 h-4 w-4" />
                         </Button>
                       </CardFooter>
                     </Card>
