@@ -72,9 +72,10 @@ const US_STATES = [
 
 export default function ApplyPage() {
   const router = useRouter()
-  const [step, setStep] = useState(1)
+  const [step, setStep] = useState(3)
   const [showSecondOwner, setShowSecondOwner] = useState(false)
   const [isDownloadingPDF, setIsDownloadingPDF] = useState(false)
+  const [errors, setErrors] = useState<Record<string, string>>({})
   const [formData, setFormData] = useState({
     // Business Information
     legalBusinessName: "",
@@ -160,10 +161,174 @@ export default function ApplyPage() {
     setFormData((prev) => ({ ...prev, [name]: files?.[0] ?? null }))
   }
 
+  // Format EIN as XX-XXXXXXX
+  const formatEIN = (value: string) => {
+    const digits = value.replace(/\D/g, "").slice(0, 9)
+    if (digits.length <= 2) return digits
+    return `${digits.slice(0, 2)}-${digits.slice(2)}`
+  }
+
+  // Format phone as (XXX) XXX-XXXX
+  const formatPhone = (value: string) => {
+    const digits = value.replace(/\D/g, "").slice(0, 10)
+    if (digits.length === 0) return ""
+    if (digits.length <= 3) return `(${digits}`
+    if (digits.length <= 6) return `(${digits.slice(0, 3)}) ${digits.slice(3)}`
+    return `(${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`
+  }
+
+  // Format zip code as XXXXX or XXXXX-XXXX
+  const formatZipCode = (value: string) => {
+    const digits = value.replace(/\D/g, "").slice(0, 9)
+    if (digits.length <= 5) return digits
+    return `${digits.slice(0, 5)}-${digits.slice(5)}`
+  }
+
+  const validateStep1 = (): boolean => {
+    const newErrors: Record<string, string> = {}
+    
+    if (!formData.amountRequested || formData.amountRequested.trim() === "") {
+      newErrors.amountRequested = "Amount requested is required"
+    } else if (isNaN(Number(formData.amountRequested)) || Number(formData.amountRequested) <= 0) {
+      newErrors.amountRequested = "Please enter a valid amount greater than 0"
+    }
+    
+    if (!formData.useOfFunds || formData.useOfFunds.trim() === "") {
+      newErrors.useOfFunds = "Please describe how you plan to use the funds"
+    } else if (formData.useOfFunds.trim().length < 10) {
+      newErrors.useOfFunds = "Please provide more detail (at least 10 characters)"
+    }
+    
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  // Check if step 1 fields are valid (without setting errors)
+  const isStep1Valid = 
+    formData.amountRequested.trim() !== "" &&
+    !isNaN(Number(formData.amountRequested)) &&
+    Number(formData.amountRequested) > 0 &&
+    formData.useOfFunds.trim().length >= 10
+
+  // Email validation helper
+  const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  
+  // Phone validation helper (at least 10 digits)
+  const isValidPhone = (phone: string) => phone.replace(/\D/g, "").length >= 10
+
+  // Zip code validation helper (5 digits)
+  const isValidZip = (zip: string) => /^\d{5}(-\d{4})?$/.test(zip)
+
+  // EIN validation helper (XX-XXXXXXX format)
+  const isValidEIN = (ein: string) => /^\d{2}-?\d{7}$/.test(ein.replace(/\s/g, ""))
+
+  const validateStep2 = (): boolean => {
+    const newErrors: Record<string, string> = {}
+    
+    if (!formData.businessName.trim()) {
+      newErrors.businessName = "Legal business name is required"
+    }
+    
+    if (!formData.federalTaxId.trim()) {
+      newErrors.federalTaxId = "Federal Tax ID is required"
+    } else if (!isValidEIN(formData.federalTaxId)) {
+      newErrors.federalTaxId = "Please enter a valid EIN (XX-XXXXXXX)"
+    }
+    
+    if (!formData.businessAddress.trim()) {
+      newErrors.businessAddress = "Business address is required"
+    }
+    
+    if (!formData.businessCity.trim()) {
+      newErrors.businessCity = "City is required"
+    }
+    
+    if (!formData.businessState) {
+      newErrors.businessState = "State is required"
+    }
+    
+    if (!formData.businessZip.trim()) {
+      newErrors.businessZip = "Zip code is required"
+    } else if (!isValidZip(formData.businessZip)) {
+      newErrors.businessZip = "Please enter a valid 5-digit zip code"
+    }
+    
+    if (!formData.businessPhone.trim()) {
+      newErrors.businessPhone = "Business phone is required"
+    } else if (!isValidPhone(formData.businessPhone)) {
+      newErrors.businessPhone = "Please enter a valid phone number"
+    }
+    
+    if (!formData.businessEmail.trim()) {
+      newErrors.businessEmail = "Business email is required"
+    } else if (!isValidEmail(formData.businessEmail)) {
+      newErrors.businessEmail = "Please enter a valid email address"
+    }
+    
+    if (!formData.industry) {
+      newErrors.industry = "Industry is required"
+    }
+    
+    if (!formData.businessStartDate) {
+      newErrors.businessStartDate = "Business start date is required"
+    }
+    
+    if (!formData.yearsInBusiness.trim()) {
+      newErrors.yearsInBusiness = "Years in business is required"
+    } else if (isNaN(Number(formData.yearsInBusiness)) || Number(formData.yearsInBusiness) < 0) {
+      newErrors.yearsInBusiness = "Please enter a valid number"
+    }
+    
+    if (!formData.annualRevenue) {
+      newErrors.annualRevenue = "Annual revenue is required"
+    }
+    
+    if (!formData.email.trim()) {
+      newErrors.email = "Email address is required"
+    } else if (!isValidEmail(formData.email)) {
+      newErrors.email = "Please enter a valid email address"
+    }
+    
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  // Check if step 2 fields are valid (without setting errors)
+  const isStep2Valid = 
+    formData.businessName.trim() !== "" &&
+    formData.federalTaxId.trim() !== "" &&
+    isValidEIN(formData.federalTaxId) &&
+    formData.businessAddress.trim() !== "" &&
+    formData.businessCity.trim() !== "" &&
+    formData.businessState !== "" &&
+    formData.businessZip.trim() !== "" &&
+    isValidZip(formData.businessZip) &&
+    formData.businessPhone.trim() !== "" &&
+    isValidPhone(formData.businessPhone) &&
+    formData.businessEmail.trim() !== "" &&
+    isValidEmail(formData.businessEmail) &&
+    formData.industry !== "" &&
+    formData.businessStartDate !== "" &&
+    formData.yearsInBusiness.trim() !== "" &&
+    !isNaN(Number(formData.yearsInBusiness)) &&
+    Number(formData.yearsInBusiness) >= 0 &&
+    formData.annualRevenue !== "" &&
+    formData.email.trim() !== "" &&
+    isValidEmail(formData.email)
+
   const nextStep = () => {
+    // Validate current step before proceeding
+    if (step === 1 && !validateStep1()) {
+      return
+    }
+    if (step === 2 && !validateStep2()) {
+      return
+    }
+    
     if (typeof window !== "undefined") {
       window.scrollTo({ top: 0, behavior: "smooth" })
     }
+    setErrors({}) // Clear errors when moving to next step
     setStep((prev) => prev + 1)
   }
 
@@ -419,32 +584,48 @@ export default function ApplyPage() {
                         <form className="space-y-6">
                           <div className="space-y-3">
                             <Label htmlFor="amountRequested" className="text-gray-800">
-                              Amount Requested
+                              Amount Requested <span className="text-red-500">*</span>
                             </Label>
                             <Input
                               id="amountRequested"
                               name="amountRequested"
                               type="number"
                               value={formData.amountRequested}
-                              onChange={handleChange}
+                              onChange={(e) => {
+                                handleChange(e)
+                                if (errors.amountRequested) {
+                                  setErrors((prev) => ({ ...prev, amountRequested: "" }))
+                                }
+                              }}
                               placeholder="Enter amount"
-                              className="bg-white border-gray-300 text-gray-900"
+                              className={`bg-white border-gray-300 text-gray-900 ${errors.amountRequested ? "border-red-500 focus:ring-red-500" : ""}`}
                               required
                             />
+                            {errors.amountRequested && (
+                              <p className="text-red-500 text-sm">{errors.amountRequested}</p>
+                            )}
                           </div>
 
                           <div className="space-y-3">
                             <Label htmlFor="useOfFunds" className="text-gray-800">
-                              Use of Funds
+                              Use of Funds <span className="text-red-500">*</span>
                             </Label>
                             <Textarea
                               id="useOfFunds"
                               placeholder="Describe how you plan to use the funding..."
                               value={formData.useOfFunds}
-                              onChange={(e) => setFormData({ ...formData, useOfFunds: e.target.value })}
-                              className="bg-white border-gray-300 text-gray-900 min-h-[100px]"
+                              onChange={(e) => {
+                                setFormData({ ...formData, useOfFunds: e.target.value })
+                                if (errors.useOfFunds) {
+                                  setErrors((prev) => ({ ...prev, useOfFunds: "" }))
+                                }
+                              }}
+                              className={`bg-white border-gray-300 text-gray-900 min-h-[100px] ${errors.useOfFunds ? "border-red-500 focus:ring-red-500" : ""}`}
                               required
                             />
+                            {errors.useOfFunds && (
+                              <p className="text-red-500 text-sm">{errors.useOfFunds}</p>
+                            )}
                           </div>
                         </form>
                       </CardContent>
@@ -460,7 +641,8 @@ export default function ApplyPage() {
                         <Button
                           type="button"
                           onClick={nextStep}
-                          className="bg-orange-500 hover:bg-orange-600 text-white"
+                          disabled={!isStep1Valid}
+                          className="bg-orange-500 hover:bg-orange-600 text-white disabled:bg-gray-300 disabled:cursor-not-allowed"
                         >
                           Next Step
                         </Button>
@@ -484,16 +666,20 @@ export default function ApplyPage() {
                         <form className="space-y-6">
                           <div className="space-y-3">
                             <Label htmlFor="businessName" className="text-gray-800">
-                              Legal Business Name
+                              Legal Business Name <span className="text-red-500">*</span>
                             </Label>
                             <Input
                               id="businessName"
                               placeholder="ABC Company LLC"
                               value={formData.businessName}
-                              onChange={(e) => setFormData({ ...formData, businessName: e.target.value })}
-                              className="bg-white border-gray-300 text-gray-900"
+                              onChange={(e) => {
+                                setFormData({ ...formData, businessName: e.target.value })
+                                if (errors.businessName) setErrors((prev) => ({ ...prev, businessName: "" }))
+                              }}
+                              className={`bg-white border-gray-300 text-gray-900 ${errors.businessName ? "border-red-500" : ""}`}
                               required
                             />
+                            {errors.businessName && <p className="text-red-500 text-sm">{errors.businessName}</p>}
                           </div>
 
                           <div className="space-y-3">
@@ -511,56 +697,73 @@ export default function ApplyPage() {
 
                           <div className="space-y-3">
                             <Label htmlFor="federalTaxId" className="text-gray-800">
-                              Federal Tax ID (EIN)
+                              Federal Tax ID (EIN) <span className="text-red-500">*</span>
                             </Label>
                             <Input
                               id="federalTaxId"
                               placeholder="XX-XXXXXXX"
                               value={formData.federalTaxId}
-                              onChange={(e) => setFormData({ ...formData, federalTaxId: e.target.value })}
-                              className="bg-white border-gray-300 text-gray-900"
+                              maxLength={10}
+                              onChange={(e) => {
+                                const formatted = formatEIN(e.target.value)
+                                setFormData({ ...formData, federalTaxId: formatted })
+                                if (errors.federalTaxId) setErrors((prev) => ({ ...prev, federalTaxId: "" }))
+                              }}
+                              className={`bg-white border-gray-300 text-gray-900 ${errors.federalTaxId ? "border-red-500" : ""}`}
                               required
                             />
+                            {errors.federalTaxId && <p className="text-red-500 text-sm">{errors.federalTaxId}</p>}
                           </div>
 
                           <div className="space-y-3">
                             <Label htmlFor="businessAddress" className="text-gray-800">
-                              Business Address
+                              Business Address <span className="text-red-500">*</span>
                             </Label>
                             <Input
                               id="businessAddress"
                               placeholder="123 Main St"
                               value={formData.businessAddress}
-                              onChange={(e) => setFormData({ ...formData, businessAddress: e.target.value })}
-                              className="bg-white border-gray-300 text-gray-900"
+                              onChange={(e) => {
+                                setFormData({ ...formData, businessAddress: e.target.value })
+                                if (errors.businessAddress) setErrors((prev) => ({ ...prev, businessAddress: "" }))
+                              }}
+                              className={`bg-white border-gray-300 text-gray-900 ${errors.businessAddress ? "border-red-500" : ""}`}
                               required
                             />
+                            {errors.businessAddress && <p className="text-red-500 text-sm">{errors.businessAddress}</p>}
                           </div>
 
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                             <div className="space-y-3">
                               <Label htmlFor="city" className="text-gray-800">
-                                City
+                                City <span className="text-red-500">*</span>
                               </Label>
                               <Input
                                 id="businessCity"
                                 placeholder="Enter city"
                                 value={formData.businessCity}
-                                onChange={(e) => setFormData({ ...formData, businessCity: e.target.value })}
-                                className="bg-white border-gray-300 text-gray-900"
+                                onChange={(e) => {
+                                  setFormData({ ...formData, businessCity: e.target.value })
+                                  if (errors.businessCity) setErrors((prev) => ({ ...prev, businessCity: "" }))
+                                }}
+                                className={`bg-white border-gray-300 text-gray-900 ${errors.businessCity ? "border-red-500" : ""}`}
                                 required
                               />
+                              {errors.businessCity && <p className="text-red-500 text-sm">{errors.businessCity}</p>}
                             </div>
                             <div className="space-y-3">
                               <Label htmlFor="state" className="text-gray-800">
-                                State
+                                State <span className="text-red-500">*</span>
                               </Label>
                               <Select
                                 value={formData.businessState}
-                                onValueChange={(value) => setFormData({ ...formData, businessState: value })}
+                                onValueChange={(value) => {
+                                  setFormData({ ...formData, businessState: value })
+                                  if (errors.businessState) setErrors((prev) => ({ ...prev, businessState: "" }))
+                                }}
                                 required
                               >
-                                <SelectTrigger className="bg-white border-gray-300 text-gray-900">
+                                <SelectTrigger className={`bg-white border-gray-300 text-gray-900 ${errors.businessState ? "border-red-500" : ""}`}>
                                   <SelectValue placeholder="Select state" />
                                 </SelectTrigger>
                                 <SelectContent className="bg-white border-gray-300 text-gray-900 max-h-[300px]">
@@ -571,63 +774,82 @@ export default function ApplyPage() {
                                   ))}
                                 </SelectContent>
                               </Select>
+                              {errors.businessState && <p className="text-red-500 text-sm">{errors.businessState}</p>}
                             </div>
                             <div className="space-y-3">
                               <Label htmlFor="zipCode" className="text-gray-800">
-                                Zip Code
+                                Zip Code <span className="text-red-500">*</span>
                               </Label>
                               <Input
                                 id="businessZip"
-                                placeholder="Enter zip code"
+                                placeholder="XXXXX"
                                 value={formData.businessZip}
-                                onChange={(e) => setFormData({ ...formData, businessZip: e.target.value })}
-                                className="bg-white border-gray-300 text-gray-900"
+                                maxLength={10}
+                                onChange={(e) => {
+                                  const formatted = formatZipCode(e.target.value)
+                                  setFormData({ ...formData, businessZip: formatted })
+                                  if (errors.businessZip) setErrors((prev) => ({ ...prev, businessZip: "" }))
+                                }}
+                                className={`bg-white border-gray-300 text-gray-900 ${errors.businessZip ? "border-red-500" : ""}`}
                                 required
                               />
+                              {errors.businessZip && <p className="text-red-500 text-sm">{errors.businessZip}</p>}
                             </div>
                           </div>
 
                           <div className="space-y-3">
                             <Label htmlFor="businessPhone" className="text-gray-800">
-                              Business Phone
+                              Business Phone <span className="text-red-500">*</span>
                             </Label>
                             <Input
                               id="businessPhone"
                               type="tel"
-                              placeholder="Enter business phone"
+                              placeholder="(XXX) XXX-XXXX"
                               value={formData.businessPhone}
-                              onChange={(e) => setFormData({ ...formData, businessPhone: e.target.value })}
-                              className="bg-white border-gray-300 text-gray-900"
+                              maxLength={14}
+                              onChange={(e) => {
+                                const formatted = formatPhone(e.target.value)
+                                setFormData({ ...formData, businessPhone: formatted })
+                                if (errors.businessPhone) setErrors((prev) => ({ ...prev, businessPhone: "" }))
+                              }}
+                              className={`bg-white border-gray-300 text-gray-900 ${errors.businessPhone ? "border-red-500" : ""}`}
                               required
                             />
+                            {errors.businessPhone && <p className="text-red-500 text-sm">{errors.businessPhone}</p>}
                           </div>
 
                           <div className="space-y-3">
                             <Label htmlFor="businessEmail" className="text-gray-800">
-                              Business Email
+                              Business Email <span className="text-red-500">*</span>
                             </Label>
-                            {/* Changed input background from bg-white to bg-[#F5F7FA] */}
                             <Input
                               id="businessEmail"
                               type="email"
                               placeholder="contact@business.com"
                               value={formData.businessEmail}
-                              onChange={(e) => setFormData({ ...formData, businessEmail: e.target.value })}
-                              className="bg-[#F5F7FA] border-gray-300 text-gray-900"
+                              onChange={(e) => {
+                                setFormData({ ...formData, businessEmail: e.target.value })
+                                if (errors.businessEmail) setErrors((prev) => ({ ...prev, businessEmail: "" }))
+                              }}
+                              className={`bg-[#F5F7FA] border-gray-300 text-gray-900 ${errors.businessEmail ? "border-red-500" : ""}`}
                               required
                             />
+                            {errors.businessEmail && <p className="text-red-500 text-sm">{errors.businessEmail}</p>}
                           </div>
 
                           <div className="space-y-3">
                             <Label htmlFor="industry" className="text-gray-800">
-                              Industry
+                              Industry <span className="text-red-500">*</span>
                             </Label>
                             <Select
                               value={formData.industry}
-                              onValueChange={(value) => setFormData({ ...formData, industry: value })}
+                              onValueChange={(value) => {
+                                setFormData({ ...formData, industry: value })
+                                if (errors.industry) setErrors((prev) => ({ ...prev, industry: "" }))
+                              }}
                               required
                             >
-                              <SelectTrigger className="bg-white border-gray-300 text-gray-900">
+                              <SelectTrigger className={`bg-white border-gray-300 text-gray-900 ${errors.industry ? "border-red-500" : ""}`}>
                                 <SelectValue placeholder="Select industry" />
                               </SelectTrigger>
                               <SelectContent className="bg-white border-gray-300 text-gray-900 max-h-[300px]">
@@ -640,28 +862,31 @@ export default function ApplyPage() {
                                 <SelectItem value="Other">Other</SelectItem>
                               </SelectContent>
                             </Select>
+                            {errors.industry && <p className="text-red-500 text-sm">{errors.industry}</p>}
                           </div>
 
                           <div className="space-y-3">
                             <Label htmlFor="businessStartDate" className="text-gray-800">
-                              Business Start Date
+                              Business Start Date <span className="text-red-500">*</span>
                             </Label>
-                            {/* Changed input background from bg-white to bg-[#F5F7FA] */}
                             <Input
                               id="businessStartDate"
                               type="date"
                               value={formData.businessStartDate}
-                              onChange={(e) => setFormData({ ...formData, businessStartDate: e.target.value })}
-                              className="bg-[#F5F7FA] border-gray-300 text-gray-900"
+                              onChange={(e) => {
+                                setFormData({ ...formData, businessStartDate: e.target.value })
+                                if (errors.businessStartDate) setErrors((prev) => ({ ...prev, businessStartDate: "" }))
+                              }}
+                              className={`bg-[#F5F7FA] border-gray-300 text-gray-900 ${errors.businessStartDate ? "border-red-500" : ""}`}
                               required
                             />
+                            {errors.businessStartDate && <p className="text-red-500 text-sm">{errors.businessStartDate}</p>}
                           </div>
 
                           <div className="space-y-3">
                             <Label htmlFor="entityType" className="text-gray-800">
                               Entity Type
                             </Label>
-                            {/* Changed select backgrounds from bg-white to bg-[#F5F7FA] */}
                             <Select
                               value={formData.entityType}
                               onValueChange={(value) => setFormData({ ...formData, entityType: value })}
@@ -680,29 +905,36 @@ export default function ApplyPage() {
 
                           <div className="space-y-3">
                             <Label htmlFor="yearsInBusiness" className="text-gray-800">
-                              Years in Business
+                              Years in Business <span className="text-red-500">*</span>
                             </Label>
                             <Input
                               id="yearsInBusiness"
                               type="number"
                               placeholder="Enter years in business"
                               value={formData.yearsInBusiness}
-                              onChange={(e) => setFormData({ ...formData, yearsInBusiness: e.target.value })}
-                              className="bg-white border-gray-300 text-gray-900"
+                              onChange={(e) => {
+                                setFormData({ ...formData, yearsInBusiness: e.target.value })
+                                if (errors.yearsInBusiness) setErrors((prev) => ({ ...prev, yearsInBusiness: "" }))
+                              }}
+                              className={`bg-white border-gray-300 text-gray-900 ${errors.yearsInBusiness ? "border-red-500" : ""}`}
                               required
                             />
+                            {errors.yearsInBusiness && <p className="text-red-500 text-sm">{errors.yearsInBusiness}</p>}
                           </div>
 
                           <div className="space-y-3">
                             <Label htmlFor="annualRevenue" className="text-gray-800">
-                              Annual Revenue
+                              Annual Revenue <span className="text-red-500">*</span>
                             </Label>
                             <Select
                               value={formData.annualRevenue}
-                              onValueChange={(value) => setFormData({ ...formData, annualRevenue: value })}
+                              onValueChange={(value) => {
+                                setFormData({ ...formData, annualRevenue: value })
+                                if (errors.annualRevenue) setErrors((prev) => ({ ...prev, annualRevenue: "" }))
+                              }}
                               required
                             >
-                              <SelectTrigger className="bg-white border-gray-300 text-gray-900">
+                              <SelectTrigger className={`bg-white border-gray-300 text-gray-900 ${errors.annualRevenue ? "border-red-500" : ""}`}>
                                 <SelectValue placeholder="Select revenue range" />
                               </SelectTrigger>
                               <SelectContent className="bg-white border-gray-300 text-gray-900 max-h-[300px]">
@@ -714,21 +946,26 @@ export default function ApplyPage() {
                                 <SelectItem value="1000001+">Over $1,000,000</SelectItem>
                               </SelectContent>
                             </Select>
+                            {errors.annualRevenue && <p className="text-red-500 text-sm">{errors.annualRevenue}</p>}
                           </div>
 
                           <div className="space-y-3">
                             <Label htmlFor="email" className="text-gray-800">
-                              Email Address
+                              Email Address <span className="text-red-500">*</span>
                             </Label>
                             <Input
                               id="email"
                               type="email"
                               placeholder="Enter your email"
                               value={formData.email}
-                              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                              className="bg-white border-gray-300 text-gray-900"
+                              onChange={(e) => {
+                                setFormData({ ...formData, email: e.target.value })
+                                if (errors.email) setErrors((prev) => ({ ...prev, email: "" }))
+                              }}
+                              className={`bg-white border-gray-300 text-gray-900 ${errors.email ? "border-red-500" : ""}`}
                               required
                             />
+                            {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
                           </div>
                         </form>
                       </CardContent>
@@ -744,7 +981,8 @@ export default function ApplyPage() {
                         <Button
                           type="button"
                           onClick={nextStep}
-                          className="bg-orange-500 hover:bg-orange-600 text-white"
+                          disabled={!isStep2Valid}
+                          className="bg-orange-500 hover:bg-orange-600 text-white disabled:bg-gray-300 disabled:cursor-not-allowed"
                         >
                           Next Step
                         </Button>
