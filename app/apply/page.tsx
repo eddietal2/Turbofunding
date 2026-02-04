@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
@@ -11,11 +11,14 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { ArrowLeftIcon, ArrowRightIcon, CheckCircleIcon, UploadIcon } from "lucide-react"
+import { ArrowLeftIcon, ArrowRightIcon, CheckCircleIcon, UploadIcon, XIcon } from "lucide-react"
 import { MobileNav } from "@/components/mobile-nav"
 import { ConversionTracking } from "@/components/conversion-tracking"
 import { submitApplication } from "@/lib/actions/submit-application"
 import { downloadApplicationPDF } from "@/lib/actions/download-application-pdf"
+
+const DRAFT_STORAGE_KEY = "turbo_funding_application_draft"
+const DRAFT_STEP_KEY = "turbo_funding_application_step"
 
 const US_STATES = [
   "Alabama",
@@ -107,74 +110,177 @@ const devFormData = {
   ownershipPercentage: "100",
 }
 
+const getInitialFormData = () => ({
+  // Business Information
+  legalBusinessName: "",
+  dbaName: "",
+  federalTaxId: DEV_MODE ? devFormData.federalTaxId : "",
+  businessType: "",
+  yearsInBusiness: DEV_MODE ? devFormData.yearsInBusiness : "",
+  annualRevenue: DEV_MODE ? devFormData.annualRevenue : "",
+  stateIncorporated: "",
+  industry: DEV_MODE ? devFormData.industry : "",
+  businessAddress: DEV_MODE ? devFormData.businessAddress : "",
+  businessCity: DEV_MODE ? devFormData.businessCity : "",
+  businessState: DEV_MODE ? devFormData.businessState : "",
+  businessZipCode: "",
+  // Personal Owner Information
+  firstName: DEV_MODE ? devFormData.firstName : "",
+  lastName: DEV_MODE ? devFormData.lastName : "",
+  phone: DEV_MODE ? devFormData.phone : "",
+  dateOfBirth: DEV_MODE ? devFormData.dateOfBirth : "",
+  ssn: DEV_MODE ? devFormData.ssn : "",
+  homeAddress: DEV_MODE ? devFormData.homeAddress : "",
+  city: DEV_MODE ? devFormData.city : "",
+  state: DEV_MODE ? devFormData.state : "",
+  zipCode: "",
+  creditScore: DEV_MODE ? devFormData.creditScore : "",
+  percentageOwnership: "",
+  secondOwnerFirstName: "",
+  secondOwnerLastName: "",
+  secondOwnerPhone: "",
+  secondOwnerDateOfBirth: "",
+  secondOwnerSsn: "",
+  secondOwnerHomeAddress: "",
+  secondOwnerCity: "",
+  secondOwnerState: "",
+  secondOwnerZipCode: "",
+  secondOwnerCreditScore: "",
+  secondOwnerPercentageOwnership: "",
+  fundingAmount: "",
+  fundingPurpose: "",
+  additionalInfo: "",
+  signature: "",
+  secondOwnerSignature: "",
+  signatureDate: "",
+  agreeToTerms: false,
+  secondOwnerAgreeToTerms: false,
+  bankStatements: null as File | null,
+  otherDocuments: null as File | null,
+  // Updates from new code
+  amountRequested: DEV_MODE ? devFormData.amountRequested : "",
+  useOfFunds: DEV_MODE ? devFormData.useOfFunds : "",
+  businessName: DEV_MODE ? devFormData.businessName : "",
+  dba: DEV_MODE ? devFormData.dba : "",
+  businessPhone: DEV_MODE ? devFormData.businessPhone : "",
+  businessEmail: DEV_MODE ? devFormData.businessEmail : "",
+  businessStartDate: DEV_MODE ? devFormData.businessStartDate : "",
+  entityType: DEV_MODE ? devFormData.entityType : "",
+  businessZip: DEV_MODE ? devFormData.businessZip : "",
+  email: DEV_MODE ? devFormData.email : "",
+  zip: DEV_MODE ? devFormData.zip : "",
+  ownershipPercentage: DEV_MODE ? devFormData.ownershipPercentage : "",
+})
+
 export default function ApplyPage() {
   const router = useRouter()
   const [step, setStep] = useState(1)
   const [showSecondOwner, setShowSecondOwner] = useState(false)
   const [isDownloadingPDF, setIsDownloadingPDF] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
-  const [formData, setFormData] = useState({
-    // Business Information
-    legalBusinessName: "",
-    dbaName: "",
-    federalTaxId: DEV_MODE ? devFormData.federalTaxId : "",
-    businessType: "",
-    yearsInBusiness: DEV_MODE ? devFormData.yearsInBusiness : "",
-    annualRevenue: DEV_MODE ? devFormData.annualRevenue : "",
-    stateIncorporated: "",
-    industry: DEV_MODE ? devFormData.industry : "",
-    businessAddress: DEV_MODE ? devFormData.businessAddress : "",
-    businessCity: DEV_MODE ? devFormData.businessCity : "",
-    businessState: DEV_MODE ? devFormData.businessState : "",
-    businessZipCode: "",
-    // Personal Owner Information
-    firstName: DEV_MODE ? devFormData.firstName : "",
-    lastName: DEV_MODE ? devFormData.lastName : "",
-    phone: DEV_MODE ? devFormData.phone : "",
-    dateOfBirth: DEV_MODE ? devFormData.dateOfBirth : "",
-    ssn: DEV_MODE ? devFormData.ssn : "",
-    homeAddress: DEV_MODE ? devFormData.homeAddress : "",
-    city: DEV_MODE ? devFormData.city : "",
-    state: DEV_MODE ? devFormData.state : "",
-    zipCode: "",
-    creditScore: DEV_MODE ? devFormData.creditScore : "",
-    percentageOwnership: "",
-    secondOwnerFirstName: "",
-    secondOwnerLastName: "",
-    secondOwnerPhone: "",
-    secondOwnerDateOfBirth: "",
-    secondOwnerSsn: "",
-    secondOwnerHomeAddress: "",
-    secondOwnerCity: "",
-    secondOwnerState: "",
-    secondOwnerZipCode: "",
-    secondOwnerCreditScore: "",
-    secondOwnerPercentageOwnership: "",
-    fundingAmount: "",
-    fundingPurpose: "",
-    additionalInfo: "",
-    signature: "",
-    secondOwnerSignature: "",
-    signatureDate: "",
-    agreeToTerms: false,
-    secondOwnerAgreeToTerms: false,
-    bankStatements: null as File | null,
-    otherDocuments: null as File | null,
+  const [showDraftModal, setShowDraftModal] = useState(false)
+  const [draftLoaded, setDraftLoaded] = useState(false)
+  const [lastSaved, setLastSaved] = useState<Date | null>(null)
+  const [formData, setFormData] = useState(getInitialFormData())
 
-    // Updates from new code
-    amountRequested: DEV_MODE ? devFormData.amountRequested : "",
-    useOfFunds: DEV_MODE ? devFormData.useOfFunds : "",
-    businessName: DEV_MODE ? devFormData.businessName : "",
-    dba: DEV_MODE ? devFormData.dba : "",
-    businessPhone: DEV_MODE ? devFormData.businessPhone : "",
-    businessEmail: DEV_MODE ? devFormData.businessEmail : "",
-    businessStartDate: DEV_MODE ? devFormData.businessStartDate : "",
-    entityType: DEV_MODE ? devFormData.entityType : "",
-    businessZip: DEV_MODE ? devFormData.businessZip : "",
-    email: DEV_MODE ? devFormData.email : "",
-    zip: DEV_MODE ? devFormData.zip : "",
-    ownershipPercentage: DEV_MODE ? devFormData.ownershipPercentage : "",
-  })
+  // Clear draft from localStorage
+  const clearDraft = useCallback(() => {
+    try {
+      localStorage.removeItem(DRAFT_STORAGE_KEY)
+      localStorage.removeItem(DRAFT_STEP_KEY)
+    } catch (error) {
+      console.error("Error clearing draft:", error)
+    }
+  }, [])
+
+  // Load draft from localStorage on mount
+  useEffect(() => {
+    if (DEV_MODE) {
+      setDraftLoaded(true)
+      return
+    }
+
+    try {
+      const savedDraft = localStorage.getItem(DRAFT_STORAGE_KEY)
+      const savedStep = localStorage.getItem(DRAFT_STEP_KEY)
+
+      if (savedDraft) {
+        const parsedDraft = JSON.parse(savedDraft)
+        // Check if draft has any meaningful data
+        const hasData = Object.entries(parsedDraft).some(([key, value]) => {
+          if (key === "bankStatements" || key === "otherDocuments") return false
+          if (typeof value === "boolean") return value
+          if (typeof value === "string") return value.trim() !== ""
+          return false
+        })
+
+        if (hasData) {
+          // Store draft temporarily
+          sessionStorage.setItem("temp_draft", savedDraft)
+          sessionStorage.setItem("temp_step", savedStep || "1")
+          setShowDraftModal(true)
+        }
+      }
+    } catch (error) {
+      console.error("Error loading draft:", error)
+    }
+    setDraftLoaded(true)
+  }, [])
+
+  // Auto-save draft when form data changes (debounced)
+  useEffect(() => {
+    if (!draftLoaded || DEV_MODE || step >= 5) return
+
+    const timeoutId = setTimeout(() => {
+      try {
+        // Don't save file objects to localStorage
+        const dataToSave = { ...formData }
+        delete (dataToSave as any).bankStatements
+        delete (dataToSave as any).otherDocuments
+
+        localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(dataToSave))
+        localStorage.setItem(DRAFT_STEP_KEY, String(step))
+        setLastSaved(new Date())
+      } catch (error) {
+        console.error("Error saving draft:", error)
+      }
+    }, 1000)
+
+    return () => clearTimeout(timeoutId)
+  }, [formData, step, draftLoaded])
+
+  // Restore draft from session storage
+  const restoreDraft = useCallback(() => {
+    try {
+      const savedDraft = sessionStorage.getItem("temp_draft")
+      const savedStep = sessionStorage.getItem("temp_step")
+
+      if (savedDraft) {
+        const parsedDraft = JSON.parse(savedDraft)
+        setFormData((prev) => ({ ...prev, ...parsedDraft }))
+        if (savedStep) {
+          setStep(parseInt(savedStep, 10))
+        }
+        // Check if second owner has data
+        if (parsedDraft.secondOwnerFirstName || parsedDraft.secondOwnerLastName) {
+          setShowSecondOwner(true)
+        }
+      }
+    } catch (error) {
+      console.error("Error restoring draft:", error)
+    }
+    setShowDraftModal(false)
+  }, [])
+
+  // Start fresh - clear draft
+  const startFresh = useCallback(() => {
+    clearDraft()
+    sessionStorage.removeItem("temp_draft")
+    sessionStorage.removeItem("temp_step")
+    setFormData(getInitialFormData())
+    setStep(1)
+    setShowDraftModal(false)
+  }, [clearDraft])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
@@ -482,6 +588,7 @@ export default function ApplyPage() {
 
       if (result.success) {
         console.log("[v0] Application submitted successfully!")
+        clearDraft() // Clear draft after successful submission
         nextStep()
       } else {
         console.error("[v0] Application submission failed:", result.error)
@@ -554,6 +661,45 @@ export default function ApplyPage() {
   return (
     <>
       <ConversionTracking eventName="ViewContent" eventData={{ content_type: "application_page" }} />
+
+      {/* Draft Recovery Modal */}
+      {showDraftModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-md w-full p-6 relative animate-in fade-in zoom-in duration-200">
+            <button
+              onClick={startFresh}
+              className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
+              aria-label="Close"
+            >
+              <XIcon className="h-5 w-5" />
+            </button>
+            <div className="flex items-center gap-3 mb-4">
+              <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center">
+                <CheckCircleIcon className="h-6 w-6 text-orange-500" />
+              </div>
+              <h2 className="text-xl font-bold text-gray-900">Welcome Back!</h2>
+            </div>
+            <p className="text-gray-600 mb-6">
+              We found a saved draft of your funding application. Would you like to continue where you left off or start a new application?
+            </p>
+            <div className="flex flex-col sm:flex-row gap-3">
+              <Button
+                onClick={restoreDraft}
+                className="flex-1 bg-orange-500 hover:bg-orange-600 text-white"
+              >
+                Continue Application
+              </Button>
+              <Button
+                onClick={startFresh}
+                variant="outline"
+                className="flex-1 border-gray-300 text-gray-700 hover:bg-gray-100"
+              >
+                Start Fresh
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="flex min-h-screen flex-col bg-[#F5F7FA]">
         {/* Header */}
@@ -637,6 +783,16 @@ export default function ApplyPage() {
           <section className="w-full py-8 md:py-16 bg-[#F5F7FA]">
             <div className="container px-4 md:px-6">
               <div className="mx-auto max-w-3xl">
+                {/* Auto-save indicator */}
+                {lastSaved && step < 5 && (
+                  <div className="mb-4 flex items-center justify-end gap-2">
+                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
+                    <span className="text-xs text-gray-500">
+                      Draft auto-saved at {lastSaved.toLocaleTimeString()}
+                    </span>
+                  </div>
+                )}
+
                 <div className="mb-6">
                   <div className="flex justify-between">
                     <div className={`text-center ${step >= 1 ? "text-orange-500" : "text-gray-500"}`}>
