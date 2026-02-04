@@ -74,25 +74,32 @@ const US_STATES = [
 ]
 
 // DEV MODE: Set to true to pre-fill all required fields for quick testing
-const DEV_MODE = false
+const DEV_MODE = true
 
 const devFormData = {
   // Step 1: Funding Information
   amountRequested: "50000",
   useOfFunds: "expansion",
+  fundingAmount: "$50,000",
+  fundingPurpose: "Business Expansion",
   // Step 2: Business Information
   businessName: "Test Business LLC",
+  legalBusinessName: "Test Business LLC",
   dba: "Test DBA",
+  dbaName: "Test DBA",
   federalTaxId: "12-3456789",
   entityType: "LLC",
+  businessType: "LLC",
   businessStartDate: "2020-01-15",
   yearsInBusiness: "5",
   annualRevenue: "250001-500000",
+  stateIncorporated: "California",
   industry: "Retail",
   businessAddress: "123 Business St",
   businessCity: "Los Angeles",
   businessState: "California",
   businessZip: "90001",
+  businessZipCode: "90001",
   businessPhone: "(555) 123-4567",
   businessEmail: "contact@testbusiness.com",
   email: "john@testbusiness.com",
@@ -106,24 +113,30 @@ const devFormData = {
   city: "Los Angeles",
   state: "California",
   zip: "90002",
+  zipCode: "90002",
   creditScore: "good",
   ownershipPercentage: "100",
+  percentageOwnership: "100",
+  // Step 4: Signature
+  signature: "John Doe",
+  signatureDate: new Date().toISOString().split("T")[0],
+  additionalInfo: "",
 }
 
 const getInitialFormData = () => ({
   // Business Information
-  legalBusinessName: "",
-  dbaName: "",
+  legalBusinessName: DEV_MODE ? devFormData.legalBusinessName : "",
+  dbaName: DEV_MODE ? devFormData.dbaName : "",
   federalTaxId: DEV_MODE ? devFormData.federalTaxId : "",
-  businessType: "",
+  businessType: DEV_MODE ? devFormData.businessType : "",
   yearsInBusiness: DEV_MODE ? devFormData.yearsInBusiness : "",
   annualRevenue: DEV_MODE ? devFormData.annualRevenue : "",
-  stateIncorporated: "",
+  stateIncorporated: DEV_MODE ? devFormData.stateIncorporated : "",
   industry: DEV_MODE ? devFormData.industry : "",
   businessAddress: DEV_MODE ? devFormData.businessAddress : "",
   businessCity: DEV_MODE ? devFormData.businessCity : "",
   businessState: DEV_MODE ? devFormData.businessState : "",
-  businessZipCode: "",
+  businessZipCode: DEV_MODE ? devFormData.businessZipCode : "",
   // Personal Owner Information
   firstName: DEV_MODE ? devFormData.firstName : "",
   lastName: DEV_MODE ? devFormData.lastName : "",
@@ -133,9 +146,9 @@ const getInitialFormData = () => ({
   homeAddress: DEV_MODE ? devFormData.homeAddress : "",
   city: DEV_MODE ? devFormData.city : "",
   state: DEV_MODE ? devFormData.state : "",
-  zipCode: "",
+  zipCode: DEV_MODE ? devFormData.zipCode : "",
   creditScore: DEV_MODE ? devFormData.creditScore : "",
-  percentageOwnership: "",
+  percentageOwnership: DEV_MODE ? devFormData.percentageOwnership : "",
   secondOwnerFirstName: "",
   secondOwnerLastName: "",
   secondOwnerPhone: "",
@@ -147,12 +160,12 @@ const getInitialFormData = () => ({
   secondOwnerZipCode: "",
   secondOwnerCreditScore: "",
   secondOwnerPercentageOwnership: "",
-  fundingAmount: "",
-  fundingPurpose: "",
-  additionalInfo: "",
-  signature: "",
+  fundingAmount: DEV_MODE ? devFormData.fundingAmount : "",
+  fundingPurpose: DEV_MODE ? devFormData.fundingPurpose : "",
+  additionalInfo: DEV_MODE ? devFormData.additionalInfo : "",
+  signature: DEV_MODE ? devFormData.signature : "",
   secondOwnerSignature: "",
-  signatureDate: "",
+  signatureDate: DEV_MODE ? devFormData.signatureDate : "",
   agreeToTerms: false,
   secondOwnerAgreeToTerms: false,
   bankStatements: null as File | null,
@@ -639,13 +652,19 @@ export default function ApplyPage() {
         const url = window.URL.createObjectURL(blob)
         const link = document.createElement("a")
         link.href = url
-        link.download = `TurboFunding_Application_${formData.legalBusinessName.replace(/\s+/g, "_")}_${new Date().toISOString().split("T")[0]}.pdf`
+        const businessName = (formData.businessName || formData.legalBusinessName || "Application").replace(/\s+/g, "_")
+        link.download = `TurboFunding_Application_${businessName}_${new Date().toISOString().split("T")[0]}.pdf`
         document.body.appendChild(link)
         link.click()
         document.body.removeChild(link)
         window.URL.revokeObjectURL(url)
 
         console.log("[v0] PDF downloaded successfully")
+        
+        // Log blob URL if uploaded
+        if (result.blobUrl) {
+          console.log("[v0] PDF also saved to cloud storage:", result.blobUrl)
+        }
       } else {
         console.error("[v0] PDF download failed:", result.error)
         alert("Failed to download PDF. Please try again or contact support.")
