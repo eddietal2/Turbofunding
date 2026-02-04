@@ -1,0 +1,134 @@
+{
+  "imageSpecs": {
+    "facebook": {
+      "recommended": {
+        "width": 1200,
+        "height": 630,
+        "aspectRatio": "1.91:1"
+      },
+      "minimum": {
+        "width": 600,
+        "height": 315
+      }
+    },
+    "twitter": {
+      "summary_large_image": {
+        "width": 1200,
+        "height": 675,
+        "aspectRatio": "16:9"
+      },
+      "summary": {
+        "width": 280,
+        "height": 150
+      }
+    },
+    "linkedin": {
+      "recommended": {
+        "width": 1200,
+        "height": 627,
+        "aspectRatio": "1.91:1"
+      }
+    },
+    "instagram": {
+      "square": {
+        "width": 1080,
+        "height": 1080,
+        "aspectRatio": "1:1"
+      },
+      "story": {
+        "width": 1080,
+        "height": 1920,
+        "aspectRatio": "9:16"
+      }
+    },
+    "tiktok": {
+      "recommended": {
+        "width": 1080,
+        "height": 1920,
+        "aspectRatio": "9:16"
+      }
+    },
+    "pinterest": {
+      "recommended": {
+        "width": 1000,
+        "height": 1500,
+        "aspectRatio": "2:3"
+      }
+    },
+    "youtube": {
+      "thumbnail": {
+        "width": 1280,
+        "height": 720,
+        "aspectRatio": "16:9"
+      }
+    },
+    "whatsapp": {
+      "recommended": {
+        "width": 1200,
+        "height": 630,
+        "aspectRatio": "1.91:1"
+      }
+    },
+    "telegram": {
+      "recommended": {
+        "width": 1200,
+        "height": 630,
+        "aspectRatio": "1.91:1"
+      }
+    },
+    "snapchat": {
+      "recommended": {
+        "width": 1080,
+        "height": 1920,
+        "aspectRatio": "9:16"
+      }
+    },
+    "discord": {
+      "recommended": {
+        "width": 1200,
+        "height": 630,
+        "aspectRatio": "1.91:1"
+      }
+    },
+    "reddit": {
+      "recommended": {
+        "width": 1200,
+        "height": 630,
+        "aspectRatio": "1.91:1"
+      }
+    }
+  },
+  "requiredImages": [
+    "/images/turbofunding-og-image.jpg",
+    "/images/turbofunding-square.jpg",
+    "/images/turbofunding-twitter-card.jpg",
+    "/images/turbofunding-tiktok.jpg",
+    "/images/turbofunding-instagram.jpg",
+    "/images/turbofunding-linkedin.jpg",
+    "/images/turbofunding-pinterest.jpg",
+    "/images/turbofunding-whatsapp.jpg",
+    "/images/turbofunding-telegram.jpg",
+    "/images/turbofunding-youtube.jpg",
+    "/images/turbofunding-snapchat.jpg",
+    "/images/turbofunding-discord.jpg",
+    "/images/turbofunding-reddit.jpg",
+    "/images/turbofunding-home-og.jpg",
+    "/images/turbofunding-home-square.jpg",
+    "/images/turbofunding-home-twitter.jpg",
+    "/images/turbofunding-home-tiktok.jpg",
+    "/images/turbofunding-home-instagram.jpg",
+    "/images/turbofunding-home-linkedin.jpg",
+    "/images/turbofunding-home-pinterest.jpg",
+    "/images/turbofunding-home-whatsapp.jpg",
+    "/images/turbofunding-home-youtube.jpg",
+    "/images/turbofunding-home-snapchat.jpg",
+    "/images/turbofunding-products-og.jpg",
+    "/images/turbofunding-products-square.jpg",
+    "/images/turbofunding-products-twitter.jpg",
+    "/images/turbofunding-products-tiktok.jpg",
+    "/images/turbofunding-products-instagram.jpg",
+    "/images/turbofunding-products-linkedin.jpg",
+    "/images/turbofunding-products-pinterest.jpg",
+    "/images/turbofunding-products-whatsapp.jpg"
+  ]
+}
