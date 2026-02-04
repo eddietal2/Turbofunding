@@ -120,8 +120,8 @@ export default function ApplyPage() {
     signatureDate: "", // Changed from new Date().toISOString().split("T")[0] to allow manual date entry
     agreeToTerms: false,
     secondOwnerAgreeToTerms: false,
-    bankStatements: null,
-    otherDocuments: null,
+    bankStatements: null as File | null,
+    otherDocuments: null as File | null,
 
     // Updates from new code
     amountRequested: "",
@@ -138,26 +138,26 @@ export default function ApplyPage() {
     ownershipPercentage: "", // Added from updates
   })
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleSelectChange = (name, value) => {
+  const handleSelectChange = (name: string, value: string) => {
     setFormData((prev) => ({ ...prev, [name]: value }))
   }
 
-  const handleCheckboxChange = (checked) => {
+  const handleCheckboxChange = (checked: boolean) => {
     setFormData((prev) => ({ ...prev, agreeToTerms: checked }))
   }
 
-  const handleSecondOwnerCheckboxChange = (checked) => {
+  const handleSecondOwnerCheckboxChange = (checked: boolean) => {
     setFormData((prev) => ({ ...prev, secondOwnerAgreeToTerms: checked }))
   }
 
-  const handleFileChange = (e) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, files } = e.target
-    setFormData((prev) => ({ ...prev, [name]: files[0] }))
+    setFormData((prev) => ({ ...prev, [name]: files?.[0] ?? null }))
   }
 
   const nextStep = () => {
@@ -171,7 +171,7 @@ export default function ApplyPage() {
     setStep((prev) => prev - 1)
   }
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent | React.MouseEvent) => {
     e.preventDefault()
     console.log("[v0] Form submission started")
     console.log("[v0] Submitting application with data:", formData)
@@ -203,8 +203,8 @@ export default function ApplyPage() {
     router.push("/apply/success")
   }
 
-  const getFundingAmountValue = (range) => {
-    const values = {
+  const getFundingAmountValue = (range: string) => {
+    const values: Record<string, number> = {
       less_than_50k: 25000,
       "50k_to_100k": 75000,
       "100k_to_250k": 175000,
