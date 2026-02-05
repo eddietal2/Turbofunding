@@ -591,29 +591,50 @@ export default function ApplyPage() {
 
   const handleSubmit = async (e: React.FormEvent | React.MouseEvent) => {
     e.preventDefault()
-    console.log("[v0] Form submission started")
-    console.log("[v0] Submitting application with data:", formData)
+    console.log("[Submit] Form submission started")
+    console.log("[Submit] Submitting application with data:", formData)
 
     try {
-      console.log("[v0] Calling submitApplication...")
-      const result = await submitApplication(formData)
-      console.log("[v0] Submit result:", result)
+      // First, generate and upload the PDF to get the blob URL for the email
+      console.log("[Submit] Generating PDF for email attachment...")
+      let pdfBlobUrl: string | null = null
+      
+      try {
+        const pdfResult = await downloadApplicationPDF(formData)
+        if (pdfResult.success && pdfResult.blobUrl) {
+          pdfBlobUrl = pdfResult.blobUrl
+          console.log("[Submit] PDF uploaded to cloud storage:", pdfBlobUrl)
+        } else {
+          console.warn("[Submit] PDF generation/upload failed, continuing without PDF link")
+        }
+      } catch (pdfError) {
+        console.warn("[Submit] PDF generation error (non-critical):", pdfError)
+      }
+
+      console.log("[Submit] Calling submitApplication...")
+      const result = await submitApplication(formData, pdfBlobUrl)
+      console.log("[Submit] Submit result:", result)
 
       if (result.success) {
-        console.log("[v0] Application submitted successfully!")
+        console.log("[Submit] Application submitted successfully!")
+        if (result.emailSent) {
+          console.log("[Submit] Confirmation email sent to:", formData.email)
+        }
         clearDraft() // Clear draft after successful submission
         nextStep()
       } else {
-        console.error("[v0] Application submission failed:", result.error)
+        console.error("[Submit] Application submission failed:", result.error)
         alert(
           `Application submission failed:\n\n${result.error}\n\nPlease try again or contact support at vivsin1995@gmail.com`,
         )
       }
-    } catch (error: any) {
-      console.error("[v0] Error in handleSubmit:", error)
-      console.error("[v0] Error details:", error.message, error.stack)
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : "Unknown error"
+      const errorStack = error instanceof Error ? error.stack : ""
+      console.error("[Submit] Error in handleSubmit:", error)
+      console.error("[Submit] Error details:", errorMessage, errorStack)
       alert(
-        `An unexpected error occurred:\n\n${error.message}\n\nPlease contact support at vivsin1995@gmail.com with this error message.`,
+        `An unexpected error occurred:\n\n${errorMessage}\n\nPlease contact support at vivsin1995@gmail.com with this error message.`,
       )
     }
   }
