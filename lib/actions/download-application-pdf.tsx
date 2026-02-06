@@ -438,8 +438,11 @@ export async function downloadApplicationPDF(formData: any) {
       const blob = await put(filename, Buffer.from(pdfBytes), {
         access: "public",
         contentType: "application/pdf",
+        addRandomSuffix: true, // Adds random suffix for security (hard-to-guess URLs)
       })
-      blobUrl = blob.url
+      
+      // Use the built-in downloadUrl for direct download link
+      blobUrl = blob.downloadUrl
       console.log("[v0] PDF uploaded to Vercel Blob:", blobUrl)
     } catch (blobError: any) {
       console.error("[v0] Error uploading to Vercel Blob:", blobError.message)

@@ -2,8 +2,8 @@
 
 import nodemailer from "nodemailer"
 
-// Logo URL - update this to your production domain
-const LOGO_URL = "https://turbofunding.com/images/turbofunding-logo.png"
+// Logo hosted on Vercel Blob CDN
+const LOGO_URL = "https://yeixnyce3to9ontr.public.blob.vercel-storage.com/logos/turbofunding-logo.png"
 const WEBSITE_URL = "https://turbofunding.com"
 
 const transporter = nodemailer.createTransport({
@@ -16,7 +16,7 @@ const transporter = nodemailer.createTransport({
   },
 })
 
-// Shared email template wrapper
+// Shared email template wrapper - logo served from Vercel Blob CDN
 function getEmailTemplate(content: string, recipientEmail: string) {
   return `
     <!DOCTYPE html>
@@ -35,7 +35,7 @@ function getEmailTemplate(content: string, recipientEmail: string) {
               <!-- Header with Logo -->
               <tr>
                 <td style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); padding: 30px 40px; text-align: center;">
-                  <img src="${LOGO_URL}" alt="TurboFunding.com" width="220" style="max-width: 100%; height: auto;" />
+                  <img src="${LOGO_URL}" alt="TurboFunding.com" width="150" style="max-width: 100%; height: auto;" />
                   <p style="color: #f97316; font-weight: 700; font-size: 14px; margin: 10px 0 0 0; letter-spacing: 2px;">TURBOCHARGE YOUR BUSINESS</p>
                 </td>
               </tr>
@@ -205,10 +205,10 @@ export async function sendApplicationConfirmationEmail(data: ApplicationEmailDat
     </div>
 
     ${pdfUrl ? `
-    <!-- Download Button -->
+    <!-- View Application Button -->
     <div style="text-align: center; margin-bottom: 24px;">
-      <a href="${pdfUrl}" style="display: inline-block; background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 16px; box-shadow: 0 4px 14px rgba(249, 115, 22, 0.4);">
-        📄 Download Your Application PDF
+      <a href="${pdfUrl}" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 16px; box-shadow: 0 4px 14px rgba(249, 115, 22, 0.4);">
+        📄 View Application
       </a>
     </div>
     ` : ""}
@@ -666,7 +666,7 @@ export async function sendTestEmail(toEmail?: string) {
     recipientName: "Test User",
     businessName: "Acme Corporation",
     amountRequested: "150000",
-    pdfUrl: "https://example.com/test-application.pdf",
+    // pdfUrl is omitted - in real submissions, this comes from Vercel Blob upload
   })
 
   if (result.success) {

@@ -25,7 +25,8 @@ import nodemailer from "nodemailer"
 // Load environment variables
 dotenv.config()
 
-const LOGO_URL = "https://turbofunding.com/images/turbofunding-logo.png"
+// Logo hosted on Vercel Blob CDN
+const LOGO_URL = "https://yeixnyce3to9ontr.public.blob.vercel-storage.com/logos/turbofunding-logo.png"
 const WEBSITE_URL = "https://turbofunding.com"
 
 type EmailType = "application" | "signup" | "login"
@@ -49,7 +50,7 @@ function getEmailTemplate(content: string, recipientEmail: string) {
               <!-- Header with Logo -->
               <tr>
                 <td style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); padding: 30px 40px; text-align: center;">
-                  <img src="${LOGO_URL}" alt="TurboFunding.com" width="220" style="max-width: 100%; height: auto;" />
+                  <img src="${LOGO_URL}" alt="TurboFunding.com" width="150" style="max-width: 100%; height: auto;" />
                   <p style="color: #f97316; font-weight: 700; font-size: 14px; margin: 10px 0 0 0; letter-spacing: 2px;">TURBOCHARGE YOUR BUSINESS</p>
                 </td>
               </tr>
@@ -130,10 +131,10 @@ function getApplicationEmailContent() {
       </table>
     </div>
 
-    <!-- Download Button -->
+    <!-- View Application Button -->
     <div style="text-align: center; margin-bottom: 24px;">
-      <a href="https://turbofunding.com" style="display: inline-block; background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 16px; box-shadow: 0 4px 14px rgba(249, 115, 22, 0.4);">
-        📄 Download Your Application PDF
+      <a href="https://yeixnyce3to9ontr.public.blob.vercel-storage.com/applications/Test_Business_LLC_2026-02-04T21-33-23-709Z.pdf" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 16px; box-shadow: 0 4px 14px rgba(249, 115, 22, 0.4);">
+        📄 View Application
       </a>
     </div>
 
