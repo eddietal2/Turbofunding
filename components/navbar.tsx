@@ -31,7 +31,7 @@ export function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-800 bg-[#0D1B2A]">
+    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-[#0D1B2A]/80 backdrop-blur-xl supports-[backdrop-filter]:bg-[#0D1B2A]/70">
       <div className="container flex h-16 items-center justify-between">
         {/* Logo */}
         <Link
@@ -96,7 +96,7 @@ export function Navbar() {
       {/* Mobile Menu Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black md:hidden"
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
           onClick={closeMenu}
           aria-hidden="true"
         />
@@ -104,11 +104,11 @@ export function Navbar() {
 
       {/* Mobile Menu Sidebar */}
       <div
-        className={`fixed top-0 right-0 z-50 h-full w-64 bg-black transform transition-transform duration-300 ease-in-out md:hidden ${
+        className={`fixed top-0 right-0 z-50 h-full w-64 bg-[#0D1B2A]/90 backdrop-blur-xl border-l border-white/10 transform transition-transform duration-300 ease-in-out md:hidden ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="flex flex-col h-full bg-black">
+        <div className="flex flex-col h-full">
           {/* Close Button */}
           <div className="flex justify-end p-4">
             <Button
@@ -123,7 +123,7 @@ export function Navbar() {
           </div>
 
           {/* Navigation Links */}
-          <nav className="flex-1 px-4 py-2 bg-black">
+          <nav className="flex-1 px-4 py-2">
             <ul className="space-y-4">
               {navItems.map((item) => (
                 <li key={item.href}>
@@ -144,7 +144,7 @@ export function Navbar() {
           </nav>
 
           {/* CTA Button */}
-          <div className="p-4 bg-black">
+          <div className="p-4">
             <Button asChild className="w-full btn-gold-elite text-white font-semibold" onClick={closeMenu}>
               <Link href="/apply">Apply Now</Link>
             </Button>
