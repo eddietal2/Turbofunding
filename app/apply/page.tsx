@@ -191,6 +191,7 @@ export default function ApplyPage() {
   const [step, setStep] = useState(1)
   const [showSecondOwner, setShowSecondOwner] = useState(false)
   const [isDownloadingPDF, setIsDownloadingPDF] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [showDraftModal, setShowDraftModal] = useState(false)
   const [showSignatureModal, setShowSignatureModal] = useState(false)
@@ -618,6 +619,7 @@ export default function ApplyPage() {
     }
     setFormData(updatedFormData)
     setShowSignatureModal(false)
+    setIsSubmitting(true)
     
     console.log("[Submit] Form submission started with signature")
     console.log("[Submit] Submitting application with data:", updatedFormData)
@@ -649,9 +651,11 @@ export default function ApplyPage() {
           console.log("[Submit] Confirmation email sent to:", formData.email)
         }
         clearDraft() // Clear draft after successful submission
+        setIsSubmitting(false)
         nextStep()
       } else {
         console.error("[Submit] Application submission failed:", result.error)
+        setIsSubmitting(false)
         alert(
           `Application submission failed:\n\n${result.error}\n\nPlease try again or contact support at vivsin1995@gmail.com`,
         )
@@ -661,6 +665,7 @@ export default function ApplyPage() {
       const errorStack = error instanceof Error ? error.stack : ""
       console.error("[Submit] Error in handleSubmit:", error)
       console.error("[Submit] Error details:", errorMessage, errorStack)
+      setIsSubmitting(false)
       alert(
         `An unexpected error occurred:\n\n${errorMessage}\n\nPlease contact support at vivsin1995@gmail.com with this error message.`,
       )
@@ -2225,6 +2230,7 @@ export default function ApplyPage() {
                           type="button"
                           variant="outline"
                           onClick={prevStep}
+                          disabled={isSubmitting}
                           className="w-full sm:w-auto font-semibold bg-transparent order-2 sm:order-1"
                         >
                           ← Previous Step
@@ -2234,13 +2240,31 @@ export default function ApplyPage() {
                           <Button
                             type="button"
                             onClick={openSignatureModal}
-                            className="w-full sm:w-auto bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold px-8 py-3 shadow-lg shadow-orange-500/25"
+                            disabled={isSubmitting}
+                            className="w-full sm:w-auto bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold px-8 py-3 shadow-lg shadow-orange-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             Submit Application →
                           </Button>
                         </div>
                       </div>
                     </div>
+
+                    {/* Loading Overlay */}
+                    {isSubmitting && (
+                      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+                        <div className="bg-white rounded-2xl p-8 shadow-2xl flex flex-col items-center gap-4 max-w-sm mx-4">
+                          {/* Spinner */}
+                          <div className="relative">
+                            <div className="w-16 h-16 border-4 border-orange-200 rounded-full"></div>
+                            <div className="absolute top-0 left-0 w-16 h-16 border-4 border-orange-500 rounded-full border-t-transparent animate-spin"></div>
+                          </div>
+                          <div className="text-center">
+                            <h3 className="text-lg font-semibold text-gray-900 mb-1">Submitting Application</h3>
+                            <p className="text-sm text-gray-600">Please wait while we process your application...</p>
+                          </div>
+                        </div>
+                      </div>
+                    )}
                   </>
                 )}
 
