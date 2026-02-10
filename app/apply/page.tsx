@@ -865,7 +865,7 @@ export default function ApplyPage() {
                     <div className="relative mb-8">
                       <div className="absolute top-6 left-0 right-0 h-1.5 bg-gray-200 rounded-full" />
                       <div 
-                        className="absolute top-6 left-0 h-1.5 bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 rounded-full transition-all duration-500 ease-out"
+                        className="absolute top-6 left-0 h-1.5 bg-gradient-to-r from-green-400 via-green-500 to-green-600 rounded-full transition-all duration-500 ease-out"
                         style={{ width: `${((step - 1) / 5) * 100}%` }}
                       />
                       
@@ -883,7 +883,7 @@ export default function ApplyPage() {
                             <div
                               className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold transition-all duration-300 ${
                                 step > num
-                                  ? "bg-gradient-to-br from-orange-400 to-orange-600 text-white shadow-lg shadow-orange-500/30"
+                                  ? "bg-gradient-to-br from-green-400 to-green-600 text-white shadow-lg shadow-green-500/30"
                                   : step === num
                                     ? "bg-gradient-to-br from-orange-400 to-orange-600 text-white shadow-xl shadow-orange-500/40 scale-110 ring-4 ring-orange-100"
                                     : "bg-white border-2 border-gray-300 text-gray-400"
