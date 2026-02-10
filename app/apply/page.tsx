@@ -2282,76 +2282,115 @@ export default function ApplyPage() {
                       value={getFundingAmountValue(formData.fundingAmount)}
                       currency="USD"
                     />
-                    {/* Changed card background from bg-white to bg-[#F5F7FA] */}
-                    <Card className="bg-[#F5F7FA] border-gray-200">
-                      <CardHeader className="text-center pb-3">
-                        <div className="mx-auto w-14 h-14 rounded-full bg-green-900/20 flex items-center justify-center mb-3">
-                          <CheckCircleIcon className="h-8 w-8 text-green-500" />
+                    
+                    {/* Success Header Card */}
+                    <div className="bg-white rounded-xl p-6 md:p-8 mb-6 shadow-sm border border-gray-200 text-center">
+                      <div className="mx-auto w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mb-4">
+                        <CheckCircleIcon className="h-10 w-10 text-green-500" />
+                      </div>
+                      <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">Application Submitted!</h2>
+                      <p className="text-gray-600 text-lg">Thank you for choosing TurboFunding.com</p>
+                    </div>
+
+                    {/* Confirmation Details */}
+                    <div className="bg-white rounded-xl border border-gray-200 shadow-sm mb-4 p-6">
+                      <div className="text-center mb-6">
+                        <p className="text-gray-700 leading-relaxed">
+                          We've received your application and our team will review it promptly. 
+                          You can expect to hear from one of our funding specialists within <span className="font-semibold text-orange-500">1 business day</span>.
+                        </p>
+                      </div>
+                      
+                      <div className="bg-blue-50 rounded-xl p-4 border border-blue-100">
+                        <div className="flex items-center gap-3 mb-2">
+                          <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                          </svg>
+                          <span className="font-medium text-gray-900">Confirmation Sent</span>
                         </div>
-                        <CardTitle className="text-2xl text-orange-500">Application Submitted!</CardTitle>
-                        <CardDescription className="text-gray-600">
-                          Thank you for applying for funding with TurboFunding.com.
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent className="text-center pt-0">
-                        <div className="space-y-3">
-                          <p className="text-gray-700">
-                            We've received your application and our team will review it promptly. You can expect to hear
-                            from one of our funding specialists within 1 business day.
-                          </p>
-                          <p className="text-gray-700">
-                            A confirmation email has been sent to{" "}
-                            <span className="font-semibold text-gray-800">{formData.email}</span> with details about
-                            your application.
-                          </p>
-                          <div className="bg-gray-100 rounded-lg p-3 mt-4">
-                            <h3 className="text-lg font-medium text-orange-400 mb-2">What happens next?</h3>
-                            <ol className="text-left space-y-1 text-gray-700">
-                              <li className="flex items-start">
-                                <span className="mr-2">1.</span>
-                                <span>Our team will review your application</span>
-                              </li>
-                              <li className="flex items-start">
-                                <span className="mr-2">2.</span>
-                                <span>A funding specialist will contact you to discuss options</span>
-                              </li>
-                              <li className="flex items-start">
-                                <span className="mr-2">3.</span>
-                                <span>We'll present you with tailored funding solutions</span>
-                              </li>
-                              <li className="flex items-start">
-                                <span className="mr-2">4.</span>
-                                <span>Once approved, funding can be available in as little as 24-48 hours</span>
-                              </li>
-                            </ol>
-                          </div>
+                        <p className="text-sm text-gray-600">
+                          A confirmation email has been sent to <span className="font-semibold text-gray-800">{formData.email}</span> with your application details.
+                        </p>
+                      </div>
+                    </div>
+
+                    {/* What Happens Next */}
+                    <div className="bg-white rounded-xl border border-gray-200 shadow-sm mb-6 overflow-hidden">
+                      <div className="bg-gradient-to-r from-orange-500 to-orange-600 px-6 py-4">
+                        <h3 className="text-lg font-semibold text-white">What Happens Next?</h3>
+                      </div>
+                      <div className="p-6">
+                        <div className="space-y-4">
+                          {[
+                            { num: 1, title: "Application Review", desc: "Our team will carefully review your application and documents" },
+                            { num: 2, title: "Specialist Contact", desc: "A dedicated funding specialist will reach out to discuss your options" },
+                            { num: 3, title: "Tailored Solutions", desc: "We'll present you with customized funding solutions that fit your needs" },
+                            { num: 4, title: "Fast Funding", desc: "Once approved, funding can be available in as little as 24-48 hours" },
+                          ].map(({ num, title, desc }) => (
+                            <div key={num} className="flex items-start gap-4">
+                              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-orange-100 flex items-center justify-center">
+                                <span className="text-sm font-bold text-orange-600">{num}</span>
+                              </div>
+                              <div>
+                                <h4 className="font-medium text-gray-900">{title}</h4>
+                                <p className="text-sm text-gray-600">{desc}</p>
+                              </div>
+                            </div>
+                          ))}
                         </div>
-                      </CardContent>
-                      <CardFooter className="flex flex-col gap-3 pt-3">
-                        <Button
-                          onClick={handleDownloadPDF}
-                          disabled={isDownloadingPDF}
-                          className="w-full bg-orange-600 hover:bg-orange-700"
-                        >
-                          {isDownloadingPDF ? "Generating PDF..." : "Download Application PDF"}
-                        </Button>
-                        <div className="flex gap-3 w-full">
-                          <Button onClick={() => setStep(6)} className="flex-1 bg-blue-600 hover:bg-blue-700">
-                            Upload Documents
-                          </Button>
+                      </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 md:p-6">
+                      <div className="space-y-3">
+                        {/* Primary Actions */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           <Button
-                            onClick={() => {
-                              setStep(1)
-                              router.push("/")
-                            }}
-                            variant="outline"
-                            className="flex-1 border-blue-600 text-blue-400 hover:bg-blue-700 hover:text-gray-200 font-semibold"
+                            onClick={handleDownloadPDF}
+                            disabled={isDownloadingPDF}
+                            className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold py-3 shadow-lg shadow-orange-500/25"
                           >
-                            Return to Home
+                            {isDownloadingPDF ? (
+                              <span className="flex items-center justify-center gap-2">
+                                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                                Generating PDF...
+                              </span>
+                            ) : (
+                              <span className="flex items-center justify-center gap-2">
+                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                                </svg>
+                                Download Application PDF
+                              </span>
+                            )}
+                          </Button>
+                          <Button 
+                            onClick={() => setStep(6)} 
+                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3"
+                          >
+                            <span className="flex items-center justify-center gap-2">
+                              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                              </svg>
+                              Upload Documents
+                            </span>
                           </Button>
                         </div>
-                      </CardFooter>
-                    </Card>
+                        
+                        {/* Secondary Action */}
+                        <Button
+                          onClick={() => {
+                            setStep(1)
+                            router.push("/")
+                          }}
+                          variant="outline"
+                          className="w-full border-gray-300 text-gray-700 hover:bg-gray-50 font-medium py-3"
+                        >
+                          Return to Home
+                        </Button>
+                      </div>
+                    </div>
                   </>
                 )}
 
