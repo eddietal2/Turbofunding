@@ -74,7 +74,7 @@ const US_STATES = [
 ]
 
 // DEV MODE: Set to true to pre-fill all required fields for quick testing
-const DEV_MODE = true
+const DEV_MODE = false
 
 const devFormData = {
   // Step 1: Funding Information
@@ -714,13 +714,17 @@ export default function ApplyPage() {
               <XIcon className="h-5 w-5" />
             </button>
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-12 h-12 rounded-full bg-orange-100 flex items-center justify-center">
-                <CheckCircleIcon className="h-6 w-6 text-orange-500" />
-              </div>
+              <Image
+                src="/images/tf-logo.png"
+                alt="TurboFunding Logo"
+                width={62}
+                height={62}
+                className="w-18 h-18"
+              />
               <h2 className="text-xl font-bold text-gray-900">Welcome Back!</h2>
             </div>
             <p className="text-gray-600 mb-6">
-              We found a saved draft of your funding application. Would you like to continue where you left off or start a new application?
+              We found a <b>saved draft</b> of your funding application. Would you like to continue where you left off or start a new application?
             </p>
             <div className="flex flex-col sm:flex-row gap-3">
               <Button
