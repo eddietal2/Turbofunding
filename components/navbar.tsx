@@ -46,9 +46,6 @@ export function Navbar() {
             height={48}
             className="h-12 w-auto bg-transparent"
           />
-          <span className="text-orange-500">Turbo</span>
-          <span className="text-blue-600">Funding</span>
-          <span className="text-white">.com</span>
         </Link>
 
         {/* Desktop Navigation */}
