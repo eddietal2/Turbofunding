@@ -14,6 +14,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { ArrowLeftIcon, ArrowRightIcon, CheckCircleIcon, UploadIcon, XIcon } from "lucide-react"
 import { MobileNav } from "@/components/mobile-nav"
 import { ConversionTracking } from "@/components/conversion-tracking"
+import { SignatureModal } from "@/components/signature-modal"
 import { submitApplication } from "@/lib/actions/submit-application"
 import { downloadApplicationPDF } from "@/lib/actions/download-application-pdf"
 
@@ -74,7 +75,7 @@ const US_STATES = [
 ]
 
 // DEV MODE: Set to true to pre-fill all required fields for quick testing
-const DEV_MODE = false
+const DEV_MODE = true
 
 const devFormData = {
   // Step 1: Funding Information
@@ -164,6 +165,7 @@ const getInitialFormData = () => ({
   fundingPurpose: DEV_MODE ? devFormData.fundingPurpose : "",
   additionalInfo: DEV_MODE ? devFormData.additionalInfo : "",
   signature: DEV_MODE ? devFormData.signature : "",
+  signatureImage: "", // Canvas signature data URL
   secondOwnerSignature: "",
   signatureDate: DEV_MODE ? devFormData.signatureDate : "",
   agreeToTerms: false,
@@ -192,6 +194,7 @@ export default function ApplyPage() {
   const [isDownloadingPDF, setIsDownloadingPDF] = useState(false)
   const [errors, setErrors] = useState<Record<string, string>>({})
   const [showDraftModal, setShowDraftModal] = useState(false)
+  const [showSignatureModal, setShowSignatureModal] = useState(false)
   const [draftLoaded, setDraftLoaded] = useState(false)
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
   const [formData, setFormData] = useState(getInitialFormData())
@@ -589,10 +592,26 @@ export default function ApplyPage() {
     setStep((prev) => prev - 1)
   }
 
-  const handleSubmit = async (e: React.FormEvent | React.MouseEvent) => {
+  // Open signature modal when user clicks Submit
+  const openSignatureModal = (e: React.MouseEvent) => {
     e.preventDefault()
-    console.log("[Submit] Form submission started")
-    console.log("[Submit] Submitting application with data:", formData)
+    setShowSignatureModal(true)
+  }
+
+  // Handle signature and submit
+  const handleSignatureAndSubmit = async (signatureDataUrl: string) => {
+    // Update formData with signature
+    const updatedFormData = {
+      ...formData,
+      signatureImage: signatureDataUrl,
+      signature: formData.signature || `${formData.firstName} ${formData.lastName}`,
+      signatureDate: new Date().toISOString().split('T')[0],
+    }
+    setFormData(updatedFormData)
+    setShowSignatureModal(false)
+    
+    console.log("[Submit] Form submission started with signature")
+    console.log("[Submit] Submitting application with data:", updatedFormData)
 
     try {
       // First, generate and upload the PDF to get the blob URL for the email
@@ -600,7 +619,7 @@ export default function ApplyPage() {
       let pdfBlobUrl: string | null = null
       
       try {
-        const pdfResult = await downloadApplicationPDF(formData)
+        const pdfResult = await downloadApplicationPDF(updatedFormData)
         if (pdfResult.success && pdfResult.blobUrl) {
           pdfBlobUrl = pdfResult.blobUrl
           console.log("[Submit] PDF uploaded to cloud storage:", pdfBlobUrl)
@@ -612,7 +631,7 @@ export default function ApplyPage() {
       }
 
       console.log("[Submit] Calling submitApplication...")
-      const result = await submitApplication(formData, pdfBlobUrl)
+      const result = await submitApplication(updatedFormData, pdfBlobUrl)
       console.log("[Submit] Submit result:", result)
 
       if (result.success) {
@@ -744,6 +763,14 @@ export default function ApplyPage() {
           </div>
         </div>
       )}
+
+      {/* Signature Modal */}
+      <SignatureModal
+        isOpen={showSignatureModal}
+        onClose={() => setShowSignatureModal(false)}
+        onSign={handleSignatureAndSubmit}
+        signerName={`${formData.firstName} ${formData.lastName}`.trim() || "Applicant"}
+      />
 
       <div className="flex min-h-screen flex-col bg-[#F5F7FA]">
         {/* Header */}
@@ -2050,7 +2077,7 @@ export default function ApplyPage() {
                         </Button>
                         <Button
                           type="button"
-                          onClick={handleSubmit}
+                          onClick={openSignatureModal}
                           className="bg-orange-500 hover:bg-orange-600 text-white"
                         >
                           Submit Application

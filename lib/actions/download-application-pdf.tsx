@@ -338,10 +338,11 @@ export async function downloadApplicationPDF(formData: any) {
 
     checkAndAddPage(100)
 
-    // Check if signature is an image (data URL) or text
-    if (formData.signature && formData.signature.startsWith("data:image")) {
+    // Check if signatureImage (canvas) or signature is an image (data URL)
+    const signatureDataUrl = formData.signatureImage || formData.signature
+    if (signatureDataUrl && typeof signatureDataUrl === 'string' && signatureDataUrl.startsWith("data:image")) {
       try {
-        const base64Data = formData.signature.split(",")[1]
+        const base64Data = signatureDataUrl.split(",")[1]
         const imageBytes = Uint8Array.from(atob(base64Data), (c) => c.charCodeAt(0))
         const signatureImage = await pdfDoc.embedPng(imageBytes)
 
