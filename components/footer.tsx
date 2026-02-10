@@ -29,7 +29,7 @@ export function Footer() {
             <h3 className="text-sm font-semibold text-orange-500 uppercase tracking-wider mb-4">
               Quick Links
             </h3>
-            <ul className="space-y-3 text-sm">
+            <ul className="space-y-3 text-sm font-space-grotesk tracking-wide">
               <li>
                 <Link href="/products" className="hover:text-orange-400 transition-colors">
                   Products
@@ -58,7 +58,7 @@ export function Footer() {
             <h3 className="text-sm font-semibold text-orange-500 uppercase tracking-wider mb-4">
               Products
             </h3>
-            <ul className="space-y-3 text-sm">
+            <ul className="space-y-3 text-sm font-space-grotesk tracking-wide">
               <li>
                 <Link href="/products" className="hover:text-orange-400 transition-colors">
                   Working Capital
@@ -87,7 +87,7 @@ export function Footer() {
             <h3 className="text-sm font-semibold text-orange-500 uppercase tracking-wider mb-4">
               Contact Us
             </h3>
-            <ul className="space-y-3 text-sm">
+            <ul className="space-y-3 text-sm font-space-grotesk tracking-wide">
               <li>
                 <Link href="tel:8778383919" className="flex items-center gap-2 hover:text-orange-400 transition-colors">
                   <svg className="h-4 w-4 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -145,7 +145,7 @@ export function Footer() {
           <p className="text-xs text-gray-500">
             © {new Date().getFullYear()} TurboFunding.com. All rights reserved.
           </p>
-          <div className="flex gap-6 text-xs">
+          <div className="flex gap-6 text-xs font-space-grotesk tracking-wide">
             <Link href="/terms" className="text-gray-500 hover:text-orange-400 transition-colors">
               Terms of Service
             </Link>
