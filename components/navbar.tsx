@@ -73,7 +73,7 @@ export function Navbar() {
         {/* Desktop CTA - hidden on /apply pages */}
         {!pathname.startsWith("/apply") && (
           <div className="hidden md:flex items-center gap-4">
-            <Button asChild className="bg-orange-600 hover:bg-orange-700 text-white">
+            <Button asChild className="btn-gold-elite text-white font-semibold">
               <Link href="/apply">Apply Now</Link>
             </Button>
           </div>
@@ -145,7 +145,7 @@ export function Navbar() {
 
           {/* CTA Button */}
           <div className="p-4 bg-black">
-            <Button asChild className="w-full bg-orange-600 hover:bg-orange-700 text-white" onClick={closeMenu}>
+            <Button asChild className="w-full btn-gold-elite text-white font-semibold" onClick={closeMenu}>
               <Link href="/apply">Apply Now</Link>
             </Button>
           </div>
