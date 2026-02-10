@@ -3,7 +3,6 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { RotatingText } from "@/components/rotating-text"
-import { MobileNav } from "@/components/mobile-nav"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -176,62 +175,6 @@ export default function Home() {
 
       {/* Changed main background from bg-black to bg-[#F5F7FA] */}
       <div className="flex min-h-screen flex-col bg-[#F5F7FA]">
-        {/* Header */}
-        <header className="sticky top-0 z-50 w-full border-b border-gray-800 bg-[#0D1B2A]">
-          <div className="container flex h-16 items-center justify-between">
-            <Link
-              href="/"
-              className="flex items-center gap-1 text-xl font-bold tracking-tighter"
-              aria-label="TurboFunding.com Home"
-            >
-              <Image
-                src="/images/turbofunding-logo.png"
-                alt="TurboFunding Logo"
-                width={48}
-                height={48}
-                className="h-12 w-auto bg-transparent"
-              />
-              <span className="text-orange-500">Turbo</span>
-              <span className="text-blue-600">Funding</span>
-              <span className="text-white">.com</span>
-            </Link>
-
-            {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center gap-6 absolute left-1/2 transform -translate-x-1/2">
-              <Link href="/" className="text-sm font-medium text-white hover:text-orange-500 transition-colors">
-                Home
-              </Link>
-              <Link href="/products" className="text-sm font-medium text-white hover:text-orange-500 transition-colors">
-                Products
-              </Link>
-              <Link
-                href="/industries"
-                className="text-sm font-medium text-white hover:text-orange-500 transition-colors"
-              >
-                Industries
-              </Link>
-              <Link href="/team" className="text-sm font-medium text-white hover:text-orange-500 transition-colors">
-                About Us
-              </Link>
-              <Link href="/contact" className="text-sm font-medium text-white hover:text-orange-500 transition-colors">
-                Contact
-              </Link>
-              <Link href="/apply" className="text-sm font-medium text-white hover:text-orange-500 transition-colors">
-                Apply
-              </Link>
-            </nav>
-
-            {/* Desktop CTA */}
-            <div className="hidden md:flex items-center gap-4">
-              <Button asChild className="bg-blue-600 hover:bg-blue-700">
-                <Link href="/apply">Apply Now</Link>
-              </Button>
-            </div>
-
-            <MobileNav currentPage="/" />
-          </div>
-        </header>
-
         {/* Hero Section with Background Image */}
         <section className="relative w-full py-12 md:py-16 lg:py-24 xl:py-32 overflow-hidden">
           {/* Background Image */}

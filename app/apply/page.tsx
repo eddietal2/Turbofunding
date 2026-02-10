@@ -12,7 +12,6 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { ArrowLeftIcon, ArrowRightIcon, CheckCircleIcon, UploadIcon, XIcon } from "lucide-react"
-import { MobileNav } from "@/components/mobile-nav"
 import { ConversionTracking } from "@/components/conversion-tracking"
 import { SignatureModal } from "@/components/signature-modal"
 import { submitApplication } from "@/lib/actions/submit-application"
@@ -773,64 +772,6 @@ export default function ApplyPage() {
       />
 
       <div className="flex min-h-screen flex-col bg-[#F5F7FA]">
-        {/* Header */}
-        <header className="sticky top-0 z-50 w-full border-b border-gray-800 bg-[#0D1B2A]">
-          <div className="container flex h-16 items-center">
-            <div className="flex items-center">
-              <Link
-                href="/"
-                className="flex items-center gap-1 text-xl font-bold tracking-tighter"
-                aria-label="TurboFunding.com Home"
-              >
-                <Image
-                  src="/images/turbofunding-logo.png"
-                  alt="TurboFunding Logo"
-                  width={48}
-                  height={48}
-                  className="h-12 w-auto"
-                />
-                <span className="text-orange-500">Turbo</span>
-                <span className="text-blue-600">Funding</span>
-                <span className="text-white">.com</span>
-              </Link>
-            </div>
-            {/* Desktop Navigation - Centered */}
-            <nav
-              className="hidden md:flex gap-6 absolute left-1/2 transform -translate-x-1/2"
-              role="navigation"
-              aria-label="Main navigation"
-            >
-              <Link href="/" className="text-sm font-medium text-white hover:text-orange-500 transition-colors">
-                Home
-              </Link>
-              <Link href="/products" className="text-sm font-medium text-white hover:text-orange-500 transition-colors">
-                Products
-              </Link>
-              <Link
-                href="/industries"
-                className="text-sm font-medium text-white hover:text-orange-500 transition-colors"
-              >
-                Industries
-              </Link>
-              <Link href="/team" className="text-sm font-medium text-white hover:text-orange-500 transition-colors">
-                About Us
-              </Link>
-              <Link href="/contact" className="text-sm font-medium text-white hover:text-orange-500 transition-colors">
-                Contact
-              </Link>
-              <Link href="/apply" className="text-sm font-medium text-orange-500 transition-colors">
-                Apply
-              </Link>
-            </nav>
-            <div className="hidden md:flex items-center gap-4 ml-auto">
-              <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
-                <Link href="/apply">Apply Now</Link>
-              </Button>
-            </div>
-            <MobileNav currentPage="/apply" />
-          </div>
-        </header>
-
         <main className="flex-1">
           {/* Hero Section */}
           <section className="w-full py-4 md:py-8 bg-gray-900">

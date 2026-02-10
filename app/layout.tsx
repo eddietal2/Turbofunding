@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import { TrackingPixels } from "@/components/tracking-pixels"
 import { ScrollToTop } from "@/components/scroll-to-top"
+import { Navbar } from "@/components/navbar"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -268,6 +269,7 @@ export default function RootLayout({
       <body className={inter.className}>
         {/* ScrollToTop component to reset scroll position on navigation */}
         <ScrollToTop />
+        <Navbar />
         {children}
       </body>
     </html>
