@@ -70,12 +70,14 @@ export function Navbar() {
           ))}
         </nav>
 
-        {/* Desktop CTA */}
-        <div className="hidden md:flex items-center gap-4">
-          <Button asChild className="bg-orange-600 hover:bg-orange-700 text-white">
-            <Link href="/apply">Apply Now</Link>
-          </Button>
-        </div>
+        {/* Desktop CTA - hidden on /apply pages */}
+        {!pathname.startsWith("/apply") && (
+          <div className="hidden md:flex items-center gap-4">
+            <Button asChild className="bg-orange-600 hover:bg-orange-700 text-white">
+              <Link href="/apply">Apply Now</Link>
+            </Button>
+          </div>
+        )}
 
         {/* Mobile Menu Button */}
         <div className="md:hidden">
