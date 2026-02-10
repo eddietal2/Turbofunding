@@ -1626,8 +1626,12 @@ export default function ApplyPage() {
                                     name="secondOwnerPhone"
                                     type="tel"
                                     value={formData.secondOwnerPhone}
-                                    onChange={handleChange}
-                                    placeholder="Enter phone number"
+                                    maxLength={14}
+                                    onChange={(e) => {
+                                      const formatted = formatPhone(e.target.value)
+                                      setFormData({ ...formData, secondOwnerPhone: formatted })
+                                    }}
+                                    placeholder="(XXX) XXX-XXXX"
                                     className="bg-white border-gray-300 text-gray-900"
                                   />
                                 </div>
@@ -1651,8 +1655,12 @@ export default function ApplyPage() {
                                   name="secondOwnerSsn"
                                   type="password"
                                   value={formData.secondOwnerSsn}
-                                  onChange={handleChange}
-                                  placeholder="Enter SSN"
+                                  maxLength={11}
+                                  onChange={(e) => {
+                                    const formatted = formatSSN(e.target.value)
+                                    setFormData({ ...formData, secondOwnerSsn: formatted })
+                                  }}
+                                  placeholder="XXX-XX-XXXX"
                                   className="bg-white border-gray-300 text-gray-900"
                                 />
                               </div>
@@ -1705,8 +1713,12 @@ export default function ApplyPage() {
                                     id="secondOwnerZipCode"
                                     name="secondOwnerZipCode"
                                     value={formData.secondOwnerZipCode}
-                                    onChange={handleChange}
-                                    placeholder="Enter zip code"
+                                    maxLength={10}
+                                    onChange={(e) => {
+                                      const formatted = formatZipCode(e.target.value)
+                                      setFormData({ ...formData, secondOwnerZipCode: formatted })
+                                    }}
+                                    placeholder="XXXXX"
                                     className="bg-white border-gray-300 text-gray-900"
                                   />
                                 </div>
