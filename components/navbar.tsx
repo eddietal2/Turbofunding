@@ -153,10 +153,24 @@ export function Navbar() {
             </ul>
           </nav>
 
-          {/* CTA Button */}
-          <div className="p-4">
-            <Button asChild className="w-full btn-gold-elite text-white font-semibold" onClick={closeMenu}>
-              <Link href="/apply">Apply Now</Link>
+          {/* CTA Button - hidden on /apply pages */}
+          {!pathname.startsWith("/apply") && (
+            <div className="p-4">
+              <Button asChild className="w-full btn-gold-elite text-white font-semibold" onClick={closeMenu}>
+                <Link href="/apply">Apply Now</Link>
+              </Button>
+            </div>
+          )}
+
+          {/* Close Button */}
+          <div className="p-4 pt-0">
+            <Button
+              variant="outline"
+              onClick={closeMenu}
+              className="w-full border-gray-700 text-gray-400 hover:text-white hover:bg-gray-800"
+            >
+              <XIcon className="h-5 w-5 mr-2" />
+              Close Menu
             </Button>
           </div>
         </div>
