@@ -788,7 +788,69 @@ export default function ApplyPage() {
                 )}
 
                 <div className="mb-6">
-                  <div className="flex justify-between">
+                  {/* Mobile Step Indicator - Compact & Cool */}
+                  <div className="md:hidden">
+                    {/* Progress Bar */}
+                    <div className="relative mb-4">
+                      <div className="h-2 bg-gray-200 rounded-full overflow-hidden relative">
+                        {/* Step markers */}
+                        <div className="absolute inset-0 flex justify-between px-1 items-center">
+                          {[1, 2, 3, 4, 5, 6].map((s) => (
+                            <div
+                              key={s}
+                              className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                                s <= step ? "bg-white/80" : "bg-gray-400/50"
+                              }`}
+                            />
+                          ))}
+                        </div>
+                        {/* Progress fill - minimum 8% so step 1 shows some progress */}
+                        <div 
+                          className="h-full bg-gradient-to-r from-orange-400 to-orange-600 rounded-full transition-all duration-500 ease-out"
+                          style={{ width: `${Math.max(8, ((step) / 6) * 100)}%` }}
+                        />
+                      </div>
+                    </div>
+                    
+                    {/* Current Step Display */}
+                    <div className="flex items-center justify-between bg-white rounded-xl p-4 shadow-sm border border-gray-100">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center text-white font-bold shadow-lg">
+                          {step > 6 ? <CheckCircleIcon className="h-5 w-5" /> : step}
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-gray-900">
+                            {step === 1 && "Funding Info"}
+                            {step === 2 && "Business Info"}
+                            {step === 3 && "Owner Info"}
+                            {step === 4 && "Signature"}
+                            {step === 5 && "Confirmation"}
+                            {step === 6 && "Documents"}
+                          </p>
+                          <p className="text-xs text-gray-500">Step {step} of 6</p>
+                        </div>
+                      </div>
+                      
+                      {/* Step Pills */}
+                      <div className="flex gap-1.5">
+                        {[1, 2, 3, 4, 5, 6].map((s) => (
+                          <div
+                            key={s}
+                            className={`w-2 h-2 rounded-full transition-all duration-300 ${
+                              s < step 
+                                ? "bg-orange-500" 
+                                : s === step 
+                                  ? "bg-orange-500 scale-125" 
+                                  : "bg-gray-300"
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Desktop Step Indicator - Full Display */}
+                  <div className="hidden md:flex justify-between">
                     <div className={`text-center ${step >= 1 ? "text-orange-500" : "text-gray-500"}`}>
                       <div
                         className={`w-8 h-8 mx-auto rounded-full flex items-center justify-center border-2 ${step >= 1 ? "border-orange-500 bg-orange-500/20" : "border-gray-300"}`}
