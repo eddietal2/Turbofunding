@@ -85,10 +85,10 @@ export function Navbar() {
             variant="ghost"
             size="icon"
             onClick={toggleMenu}
-            className="text-white hover:bg-gray-800"
+            className="text-orange-500 hover:bg-gray-800 hover:text-orange-400 h-12 w-12"
             aria-label="Toggle mobile menu"
           >
-            {isOpen ? <XIcon className="h-6 w-6" /> : <MenuIcon className="h-6 w-6" />}
+            {isOpen ? <XIcon className="h-8 w-8" /> : <MenuIcon className="h-8 w-8" />}
           </Button>
         </div>
       </div>
@@ -109,13 +109,23 @@ export function Navbar() {
         }`}
       >
         <div className="flex flex-col h-full">
-          {/* Close Button */}
-          <div className="flex justify-end p-4">
+          {/* Sidebar Header with Logo */}
+          <div className="flex items-center justify-between p-4 border-b border-gray-800">
+            <Link href="/" onClick={closeMenu} className="flex items-center gap-2">
+              <Image
+                src="/images/turbofunding-logo.png"
+                alt="TurboFunding Logo"
+                width={36}
+                height={36}
+                className="h-9 w-auto"
+              />
+              <span className="text-white font-bold text-lg font-space-grotesk">TurboFunding</span>
+            </Link>
             <Button
               variant="ghost"
               size="icon"
               onClick={closeMenu}
-              className="text-white hover:bg-gray-800"
+              className="text-orange-500 hover:bg-gray-800 hover:text-orange-400"
               aria-label="Close mobile menu"
             >
               <XIcon className="h-6 w-6" />
