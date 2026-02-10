@@ -922,11 +922,8 @@ export default function ApplyPage() {
                   <>
                     <ConversionTracking eventName="AddPaymentInfo" eventData={{ content_type: "application_step_1" }} />
                     <Card className="bg-white border-gray-200">
-                      <CardHeader className="pb-4">
-                        <CardTitle className="text-2xl text-orange-500">Funding Information</CardTitle>
-                        <CardDescription className="text-gray-600">Tell us about your funding needs.</CardDescription>
-                      </CardHeader>
-                      <CardContent className="pt-0">
+                      <CardContent className="pt-6">
+                        <p className="text-gray-600 mb-6">Tell us about your funding needs.</p>
                         <form className="space-y-6">
                           <div className="space-y-3">
                             <Label htmlFor="amountRequested" className="text-gray-800">
@@ -1002,13 +999,8 @@ export default function ApplyPage() {
                   <>
                     <ConversionTracking eventName="AddPaymentInfo" eventData={{ content_type: "application_step_2" }} />
                     <Card className="bg-white border-gray-200">
-                      <CardHeader className="pb-4">
-                        <CardTitle className="text-2xl text-orange-500">Business Information</CardTitle>
-                        <CardDescription className="text-gray-600">
-                          Tell us about your business to help us find the right funding solution.
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent className="pt-0">
+                      <CardContent className="pt-6">
+                        <p className="text-gray-600 mb-6">Tell us about your business to help us find the right funding solution.</p>
                         <form className="space-y-6">
                           <div className="space-y-3">
                             <Label htmlFor="businessName" className="text-gray-800">
@@ -1342,11 +1334,8 @@ export default function ApplyPage() {
                   <>
                     <ConversionTracking eventName="AddPaymentInfo" eventData={{ content_type: "application_step_3" }} />
                     <Card className="bg-white border-gray-200">
-                      <CardHeader className="pb-4">
-                        <CardTitle className="text-2xl text-orange-500">Owner Information</CardTitle>
-                        <CardDescription className="text-gray-600">Please provide owner information.</CardDescription>
-                      </CardHeader>
-                      <CardContent className="pt-0">
+                      <CardContent className="pt-6">
+                        <p className="text-gray-600 mb-6">Please provide owner information.</p>
                         <form className="space-y-6">
                           <div className="space-y-3">
                             <h3 className="text-lg font-medium text-orange-400">Primary Owner Information</h3>
@@ -1860,13 +1849,8 @@ export default function ApplyPage() {
                       eventData={{ content_type: "application_step_4" }}
                     />
                     <Card className="bg-white border-gray-200">
-                      <CardHeader className="pb-4">
-                        <CardTitle className="text-2xl text-orange-500">Review & Submit</CardTitle>
-                        <CardDescription className="text-gray-600">
-                          Please review your information before submitting.
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent className="pt-0">
+                      <CardContent className="pt-6">
+                        <p className="text-gray-600 mb-6">Please review your information before submitting.</p>
                         <div className="space-y-6">
                           <div>
                             <h3 className="font-semibold mb-2 text-orange-400">Funding Information</h3>
@@ -2165,13 +2149,8 @@ export default function ApplyPage() {
                     <ConversionTracking eventName="AddPaymentInfo" eventData={{ content_type: "application_step_6" }} />
                     {/* Changed card background from bg-white to bg-[#F5F7FA] */}
                     <Card className="bg-[#F5F7FA] border-gray-200">
-                      <CardHeader className="pb-4">
-                        <CardTitle className="text-2xl text-orange-500">Document Upload</CardTitle>
-                        <CardDescription className="text-gray-600">
-                          Upload supporting documents to expedite your application review process.
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent className="pt-0">
+                      <CardContent className="pt-6">
+                        <p className="text-gray-600 mb-6">Upload supporting documents to expedite your application review process.</p>
                         <form className="space-y-4">
                           <div className="space-y-4">
                             <div className="space-y-2">
