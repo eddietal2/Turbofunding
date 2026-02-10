@@ -773,24 +773,6 @@ export default function ApplyPage() {
 
       <div className="flex min-h-screen flex-col bg-[#F5F7FA]">
         <main className="flex-1">
-          {/* Hero Section */}
-          <section className="w-full py-4 md:py-8 bg-gray-900">
-            <div className="container px-4 md:px-6">
-              <div className="flex flex-col items-center text-center mt-2">
-                <Link href="/" className="flex items-center text-orange-400 hover:text-orange-300 mb-2">
-                  <ArrowLeftIcon className="mr-2 h-4 w-4" />
-                  Back to Home
-                </Link>
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl text-orange-500 mt-2">
-                  Business Funding Application
-                </h1>
-                <p className="max-w-[700px] text-orange-400 md:text-xl mt-2">
-                  Complete the application below to get started with your business funding solution.
-                </p>
-              </div>
-            </div>
-          </section>
-
           {/* Application Form Section */}
           <section className="w-full py-8 md:py-16 bg-[#F5F7FA]">
             <div className="container px-4 md:px-6">

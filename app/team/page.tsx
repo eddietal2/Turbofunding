@@ -2,28 +2,11 @@ import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
-import { ArrowLeftIcon } from "lucide-react"
 
 export default function TeamPage() {
   return (
     <div className="flex min-h-screen flex-col bg-[#F5F7FA] text-[#0D1B2A]">
       <main className="flex-1">
-        {/* Hero Section */}
-        <section className="w-full py-4 md:py-8 bg-gray-900">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center text-center">
-              <Link href="/" className="flex items-center text-orange-400 hover:text-orange-300">
-                <ArrowLeftIcon className="mr-2 h-4 w-4" />
-                Back to Home
-              </Link>
-              <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl md:text-6xl text-orange-500">About Us</h1>
-              <p className="max-w-[700px] text-orange-400 md:text-xl mt-2">
-                From Main Street to Wall Street, we know capital — and we make it easier to get.
-              </p>
-            </div>
-          </div>
-        </section>
-
         {/* Our Story Section */}
         <section className="w-full py-8 md:py-16 bg-[#F5F7FA]">
           <div className="container px-4 md:px-6">

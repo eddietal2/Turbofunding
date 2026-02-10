@@ -4,7 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ArrowLeftIcon, CheckIcon, DollarSignIcon, ClockIcon, PercentIcon } from "lucide-react"
+import { CheckIcon, DollarSignIcon, ClockIcon, PercentIcon } from "lucide-react"
 import { useState } from "react"
 
 export default function ProductsClient() {
@@ -13,26 +13,6 @@ export default function ProductsClient() {
   return (
     <div className="flex min-h-screen flex-col bg-[#F5F7FA]">
       <main className="flex-1">
-        {/* Hero Section */}
-        <section className="w-full py-4 md:py-8 bg-gray-900">
-          <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center text-center">
-              <nav aria-label="Breadcrumb">
-                <Link href="/" className="flex items-center text-orange-400 hover:text-orange-300">
-                  <ArrowLeftIcon className="mr-2 h-4 w-4" aria-hidden="true" />
-                  Back to Home
-                </Link>
-              </nav>
-              <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl text-orange-500 mt-2">
-                Business Funding Products
-              </h1>
-              <p className="max-w-[700px] text-orange-400 md:text-xl mt-2">
-                Explore our range of flexible funding options designed to help your business grow and succeed.
-              </p>
-            </div>
-          </div>
-        </section>
-
         {/* Products Section */}
         <section className="w-full py-2 md:py-4 bg-[#F5F7FA]">
           <div className="container px-4 md:px-6">

@@ -4,7 +4,7 @@ import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { CheckCircleIcon, ArrowLeftIcon } from "lucide-react"
+import { CheckCircleIcon } from "lucide-react"
 import { ConversionTracking } from "@/components/conversion-tracking"
 
 export default function ApplicationSuccessPage() {
@@ -15,26 +15,6 @@ export default function ApplicationSuccessPage() {
 
       <div className="flex min-h-screen flex-col bg-[#F5F7FA] text-white">
         <main className="flex-1">
-          {/* Hero Section */}
-          <section className="w-full py-8 md:py-16 bg-gray-100 text-black">
-            <div className="container px-4 md:px-6">
-              <div className="flex flex-col items-center text-center space-y-3 mb-6">
-                <nav aria-label="Breadcrumb">
-                  <Link href="/apply" className="flex items-center text-orange-400 hover:text-orange-300 mb-2">
-                    <ArrowLeftIcon className="mr-2 h-4 w-4" aria-hidden="true" />
-                    Back to Application
-                  </Link>
-                </nav>
-                <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl text-orange-500">
-                  Documents Submitted!
-                </h1>
-                <p className="max-w-[700px] text-gray-700 md:text-xl">
-                  Your application is now complete with supporting documents.
-                </p>
-              </div>
-            </div>
-          </section>
-
           {/* Success Message Section */}
           <section className="w-full py-8 md:py-16 bg-[#F5F7FA]">
             <div className="container px-4 md:px-6">
