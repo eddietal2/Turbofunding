@@ -1,12 +1,16 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { Inter } from "next/font/google"
+import { Inter, Space_Grotesk } from "next/font/google"
 import { TrackingPixels } from "@/components/tracking-pixels"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { Navbar } from "@/components/navbar"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"] })
+const spaceGrotesk = Space_Grotesk({ 
+  subsets: ["latin"],
+  variable: "--font-space-grotesk",
+})
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://turbofunding.com"),
@@ -266,7 +270,7 @@ export default function RootLayout({
           redditPixelId={process.env.NEXT_PUBLIC_REDDIT_PIXEL_ID}
         />
       </head>
-      <body className={inter.className}>
+      <body className={`${inter.className} ${spaceGrotesk.variable}`}>
         {/* ScrollToTop component to reset scroll position on navigation */}
         <ScrollToTop />
         <Navbar />

@@ -50,7 +50,7 @@ export function Navbar() {
 
         {/* Desktop Navigation */}
         <nav
-          className="hidden md:flex items-center gap-6 absolute left-1/2 transform -translate-x-1/2"
+          className="hidden md:flex items-center gap-6 absolute left-1/2 transform -translate-x-1/2 font-space-grotesk"
           role="navigation"
           aria-label="Main navigation"
         >
@@ -58,10 +58,10 @@ export function Navbar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`text-sm font-medium transition-colors ${
+              className={`text-sm tracking-wide transition-colors ${
                 isActive(item.href)
-                  ? "text-orange-500"
-                  : "text-white hover:text-orange-500"
+                  ? "text-orange-500 font-bold"
+                  : "text-white font-normal hover:text-orange-500"
               }`}
               aria-current={isActive(item.href) ? "page" : undefined}
             >
@@ -123,17 +123,17 @@ export function Navbar() {
           </div>
 
           {/* Navigation Links */}
-          <nav className="flex-1 px-4 py-2">
+          <nav className="flex-1 px-4 py-2 font-space-grotesk">
             <ul className="space-y-4">
               {navItems.map((item) => (
                 <li key={item.href}>
                   <Link
                     href={item.href}
                     onClick={closeMenu}
-                    className={`block py-3 px-4 rounded-lg text-lg font-medium transition-colors ${
+                    className={`block py-3 px-4 rounded-lg text-lg tracking-wide transition-colors ${
                       isActive(item.href)
-                        ? "bg-blue-600 text-white"
-                        : "text-gray-300 hover:text-white hover:bg-gray-800"
+                        ? "bg-blue-600 text-white font-bold"
+                        : "text-gray-300 font-normal hover:text-white hover:bg-gray-800"
                     }`}
                   >
                     {item.label}

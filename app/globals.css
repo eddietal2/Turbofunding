@@ -6,6 +6,10 @@
   .text-balance {
     text-wrap: balance;
   }
+  
+  .font-space-grotesk {
+    font-family: var(--font-space-grotesk), system-ui, sans-serif;
+  }
 }
 
 @layer base {
