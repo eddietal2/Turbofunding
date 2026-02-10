@@ -4,6 +4,7 @@ import { Inter, Space_Grotesk } from "next/font/google"
 import { TrackingPixels } from "@/components/tracking-pixels"
 import { ScrollToTop } from "@/components/scroll-to-top"
 import { Navbar } from "@/components/navbar"
+import { Footer } from "@/components/footer"
 import "./globals.css"
 
 const inter = Inter({ subsets: ["latin"] })
@@ -275,6 +276,7 @@ export default function RootLayout({
         <ScrollToTop />
         <Navbar />
         {children}
+        <Footer />
       </body>
     </html>
   )
