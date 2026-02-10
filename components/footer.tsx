@@ -146,14 +146,11 @@ export function Footer() {
             © {new Date().getFullYear()} TurboFunding.com. All rights reserved.
           </p>
           <div className="flex gap-6 text-xs">
-            <Link href="#" className="text-gray-500 hover:text-orange-400 transition-colors">
+            <Link href="/terms" className="text-gray-500 hover:text-orange-400 transition-colors">
               Terms of Service
             </Link>
-            <Link href="#" className="text-gray-500 hover:text-orange-400 transition-colors">
+            <Link href="/privacy" className="text-gray-500 hover:text-orange-400 transition-colors">
               Privacy Policy
-            </Link>
-            <Link href="#" className="text-gray-500 hover:text-orange-400 transition-colors">
-              Cookie Policy
             </Link>
           </div>
         </div>
