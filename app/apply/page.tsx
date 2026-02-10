@@ -849,70 +849,46 @@ export default function ApplyPage() {
                     </div>
                   </div>
 
-                  {/* Desktop Step Indicator - Full Display */}
-                  <div className="hidden md:flex justify-between">
-                    <div className={`text-center ${step >= 1 ? "text-orange-500" : "text-gray-500"}`}>
-                      <div
-                        className={`w-8 h-8 mx-auto rounded-full flex items-center justify-center border-2 ${step >= 1 ? "border-orange-500 bg-orange-500/20" : "border-gray-300"}`}
-                      >
-                        {step > 1 ? <CheckCircleIcon className="h-5 w-5" /> : 1}
+                  {/* Desktop Step Indicator - Bold & Prominent */}
+                  <div className="hidden md:block">
+                    {/* Progress Bar Background */}
+                    <div className="relative mb-8">
+                      <div className="absolute top-6 left-0 right-0 h-1.5 bg-gray-200 rounded-full" />
+                      <div 
+                        className="absolute top-6 left-0 h-1.5 bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600 rounded-full transition-all duration-500 ease-out"
+                        style={{ width: `${((step - 1) / 5) * 100}%` }}
+                      />
+                      
+                      {/* Step Circles */}
+                      <div className="relative flex justify-between">
+                        {[
+                          { num: 1, label: "Funding Info" },
+                          { num: 2, label: "Business Info" },
+                          { num: 3, label: "Owner Info" },
+                          { num: 4, label: "Signature" },
+                          { num: 5, label: "Confirmation" },
+                          { num: 6, label: "Documents" },
+                        ].map(({ num, label }) => (
+                          <div key={num} className="flex flex-col items-center">
+                            <div
+                              className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold transition-all duration-300 ${
+                                step > num
+                                  ? "bg-gradient-to-br from-orange-400 to-orange-600 text-white shadow-lg shadow-orange-500/30"
+                                  : step === num
+                                    ? "bg-gradient-to-br from-orange-400 to-orange-600 text-white shadow-xl shadow-orange-500/40 scale-110 ring-4 ring-orange-100"
+                                    : "bg-white border-2 border-gray-300 text-gray-400"
+                              }`}
+                            >
+                              {step > num ? <CheckCircleIcon className="h-6 w-6" /> : num}
+                            </div>
+                            <p className={`mt-3 text-sm font-medium transition-colors duration-300 ${
+                              step >= num ? "text-gray-900" : "text-gray-400"
+                            }`}>
+                              {label}
+                            </p>
+                          </div>
+                        ))}
                       </div>
-                      <p className="mt-2 text-xs md:text-sm text-gray-700">Funding Info</p>
-                    </div>
-                    <div className="flex-1 flex items-center">
-                      <div className={`h-1 w-full ${step >= 2 ? "bg-orange-500" : "bg-gray-300"}`}></div>
-                    </div>
-                    <div className={`text-center ${step >= 2 ? "text-orange-500" : "text-gray-500"}`}>
-                      <div
-                        className={`w-8 h-8 mx-auto rounded-full flex items-center justify-center border-2 ${step >= 2 ? "border-orange-500 bg-orange-500/20" : "border-gray-300"}`}
-                      >
-                        {step > 2 ? <CheckCircleIcon className="h-5 w-5" /> : 2}
-                      </div>
-                      <p className="mt-2 text-xs md:text-sm text-gray-700">Business Info</p>
-                    </div>
-                    <div className="flex-1 flex items-center">
-                      <div className={`h-1 w-full ${step >= 3 ? "bg-orange-500" : "bg-gray-300"}`}></div>
-                    </div>
-                    <div className={`text-center ${step >= 3 ? "text-orange-500" : "text-gray-500"}`}>
-                      <div
-                        className={`w-8 h-8 mx-auto rounded-full flex items-center justify-center border-2 ${step >= 3 ? "border-orange-500 bg-orange-500/20" : "border-gray-300"}`}
-                      >
-                        {step > 3 ? <CheckCircleIcon className="h-5 w-5" /> : 3}
-                      </div>
-                      <p className="mt-2 text-xs md:text-sm text-gray-700">Owner Info</p>
-                    </div>
-                    <div className="flex-1 flex items-center">
-                      <div className={`h-1 w-full ${step >= 4 ? "bg-orange-500" : "bg-gray-300"}`}></div>
-                    </div>
-                    <div className={`text-center ${step >= 4 ? "text-orange-500" : "text-gray-500"}`}>
-                      <div
-                        className={`w-8 h-8 mx-auto rounded-full flex items-center justify-center border-2 ${step >= 4 ? "border-orange-500 bg-orange-500/20" : "border-gray-300"}`}
-                      >
-                        {step > 4 ? <CheckCircleIcon className="h-5 w-5" /> : 4}
-                      </div>
-                      <p className="mt-2 text-xs md:text-sm text-gray-700">Signature</p>
-                    </div>
-                    <div className="flex-1 flex items-center">
-                      <div className={`h-1 w-full ${step >= 5 ? "bg-orange-500" : "bg-gray-300"}`}></div>
-                    </div>
-                    <div className={`text-center ${step >= 5 ? "text-orange-500" : "text-gray-500"}`}>
-                      <div
-                        className={`w-8 h-8 mx-auto rounded-full flex items-center justify-center border-2 ${step >= 5 ? "border-orange-500 bg-orange-500/20" : "border-gray-300"}`}
-                      >
-                        {step > 5 ? <CheckCircleIcon className="h-5 w-5" /> : 5}
-                      </div>
-                      <p className="mt-2 text-xs md:text-sm text-gray-700">Confirmation</p>
-                    </div>
-                    <div className="flex-1 flex items-center">
-                      <div className={`h-1 w-full ${step >= 6 ? "bg-orange-500" : "bg-gray-300"}`}></div>
-                    </div>
-                    <div className={`text-center ${step >= 6 ? "text-orange-500" : "text-gray-500"}`}>
-                      <div
-                        className={`w-8 h-8 mx-auto rounded-full flex items-center justify-center border-2 ${step >= 6 ? "border-orange-500 bg-orange-500/20" : "border-gray-300"}`}
-                      >
-                        {step > 6 ? <CheckCircleIcon className="h-5 w-5" /> : 6}
-                      </div>
-                      <p className="mt-2 text-xs md:text-sm text-gray-700">Documents</p>
                     </div>
                   </div>
                 </div>
