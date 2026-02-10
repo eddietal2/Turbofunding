@@ -31,7 +31,7 @@ export function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-white/10 bg-[#0D1B2A]/80 backdrop-blur-xl supports-[backdrop-filter]:bg-[#0D1B2A]/70">
+    <header className="sticky top-0 z-50 w-full border-b border-gray-800 bg-[#0D1B2A]">
       <div className="container flex h-16 items-center justify-between">
         {/* Logo */}
         <Link
@@ -96,7 +96,7 @@ export function Navbar() {
       {/* Mobile Menu Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
+          className="fixed inset-0 z-40 bg-black/60 md:hidden"
           onClick={closeMenu}
           aria-hidden="true"
         />
@@ -104,7 +104,7 @@ export function Navbar() {
 
       {/* Mobile Menu Sidebar */}
       <div
-        className={`fixed top-0 right-0 z-50 h-full w-64 bg-[#0D1B2A]/90 backdrop-blur-xl border-l border-white/10 transform transition-transform duration-300 ease-in-out md:hidden ${
+        className={`fixed top-0 right-0 z-50 h-full w-64 bg-[#0D1B2A] border-l border-gray-800 transform transition-transform duration-300 ease-in-out md:hidden ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
