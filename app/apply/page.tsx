@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label"
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { ArrowLeftIcon, ArrowRightIcon, CheckCircleIcon, UploadIcon, XIcon } from "lucide-react"
+import { ArrowLeftIcon, ArrowRightIcon, CheckCircleIcon, UploadIcon, XIcon, ChevronDownIcon } from "lucide-react"
 import { ConversionTracking } from "@/components/conversion-tracking"
 import { SignatureModal } from "@/components/signature-modal"
 import { submitApplication } from "@/lib/actions/submit-application"
@@ -197,6 +197,16 @@ export default function ApplyPage() {
   const [draftLoaded, setDraftLoaded] = useState(false)
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
   const [formData, setFormData] = useState(getInitialFormData())
+  const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
+    funding: true,
+    business: true,
+    primaryOwner: true,
+    secondOwner: true,
+  })
+
+  const toggleSection = (section: string) => {
+    setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }))
+  }
 
   // Clear draft from localStorage
   const clearDraft = useCallback(() => {
@@ -1836,211 +1846,401 @@ export default function ApplyPage() {
                       eventName="InitiateCheckout"
                       eventData={{ content_type: "application_step_4" }}
                     />
-                    <Card className="bg-white border-gray-200">
-                      <CardContent className="pt-6">
-                        <p className="text-gray-600 mb-6">Please review your information before submitting.</p>
-                        <div className="space-y-6">
-                          <div>
-                            <h3 className="font-semibold mb-2 text-orange-400">Funding Information</h3>
-                            <dl className="space-y-1 text-sm text-gray-700">
-                              <div className="flex justify-between">
-                                <dt className="font-medium">Amount Requested:</dt>
-                                <dd>${Number(formData.amountRequested).toLocaleString()}</dd>
-                              </div>
-                              <div className="flex justify-between">
-                                <dt className="font-medium">Use of Funds:</dt>
-                                <dd className="text-right max-w-xs">{formData.useOfFunds}</dd>
-                              </div>
-                            </dl>
-                          </div>
-
-                          <div className="border-t pt-4">
-                            <h3 className="font-semibold mb-2 text-orange-400">Business Information</h3>
-                            <dl className="space-y-1 text-sm text-gray-700">
-                              <div className="flex justify-between">
-                                <dt className="font-medium">Legal Business Name:</dt>
-                                <dd>{formData.businessName}</dd>
-                              </div>
-                              {formData.dba && (
-                                <div className="flex justify-between">
-                                  <dt className="font-medium">DBA:</dt>
-                                  <dd>{formData.dba}</dd>
-                                </div>
-                              )}
-                              <div className="flex justify-between">
-                                <dt className="font-medium">Federal Tax ID (EIN):</dt>
-                                <dd>{formData.federalTaxId}</dd>
-                              </div>
-                              <div className="flex justify-between">
-                                <dt className="font-medium">Business Address:</dt>
-                                <dd>{formData.businessAddress}</dd>
-                              </div>
-                              <div className="flex justify-between">
-                                <dt className="font-medium">City:</dt>
-                                <dd>{formData.businessCity}</dd>
-                              </div>
-                              <div className="flex justify-between">
-                                <dt className="font-medium">State:</dt>
-                                <dd>{formData.businessState}</dd>
-                              </div>
-                              <div className="flex justify-between">
-                                <dt className="font-medium">Zip Code:</dt>
-                                <dd>{formData.businessZip}</dd>
-                              </div>
-                              <div className="flex justify-between">
-                                <dt className="font-medium">Business Phone:</dt>
-                                <dd>{formData.businessPhone}</dd>
-                              </div>
-                              <div className="flex justify-between">
-                                <dt className="font-medium">Business Email:</dt>
-                                <dd>{formData.businessEmail}</dd>
-                              </div>
-                              <div className="flex justify-between">
-                                <dt className="font-medium">Industry:</dt>
-                                <dd>{formData.industry}</dd>
-                              </div>
-                              <div className="flex justify-between">
-                                <dt className="font-medium">Business Start Date:</dt>
-                                <dd>{formData.businessStartDate}</dd>
-                              </div>
-                              <div className="flex justify-between">
-                                <dt className="font-medium">Entity Type:</dt>
-                                <dd>{formData.entityType}</dd>
-                              </div>
-                              <div className="flex justify-between">
-                                <dt className="font-medium">Years in Business:</dt>
-                                <dd>{formData.yearsInBusiness}</dd>
-                              </div>
-                              <div className="flex justify-between">
-                                <dt className="font-medium">Annual Revenue:</dt>
-                                <dd>{formData.annualRevenue}</dd>
-                              </div>
-                            </dl>
-                          </div>
-
-                          <div className="border-t pt-4">
-                            <h3 className="font-semibold mb-2 text-orange-400">Primary Owner Information</h3>
-                            <dl className="space-y-1 text-sm text-gray-700">
-                              <div className="flex justify-between">
-                                <dt className="font-medium">First Name:</dt>
-                                <dd>{formData.firstName}</dd>
-                              </div>
-                              <div className="flex justify-between">
-                                <dt className="font-medium">Last Name:</dt>
-                                <dd>{formData.lastName}</dd>
-                              </div>
-                              <div className="flex justify-between">
-                                <dt className="font-medium">Phone:</dt>
-                                <dd>{formData.phone}</dd>
-                              </div>
-                              <div className="flex justify-between">
-                                <dt className="font-medium">Date of Birth:</dt>
-                                <dd>{formData.dateOfBirth}</dd>
-                              </div>
-                              <div className="flex justify-between">
-                                <dt className="font-medium">Social Security Number:</dt>
-                                <dd>****-**-{formData.ssn.slice(-4)}</dd>
-                              </div>
-                              <div className="flex justify-between">
-                                <dt className="font-medium">Home Street Address:</dt>
-                                <dd>{formData.homeAddress}</dd>
-                              </div>
-                              <div className="flex justify-between">
-                                <dt className="font-medium">City:</dt>
-                                <dd>{formData.city}</dd>
-                              </div>
-                              <div className="flex justify-between">
-                                <dt className="font-medium">State:</dt>
-                                <dd>{formData.state}</dd>
-                              </div>
-                              <div className="flex justify-between">
-                                <dt className="font-medium">Zip Code:</dt>
-                                <dd>{formData.zip}</dd>
-                              </div>
-                              <div className="flex justify-between">
-                                <dt className="font-medium">Credit Score Range:</dt>
-                                <dd>{formData.creditScore}</dd>
-                              </div>
-                              <div className="flex justify-between">
-                                <dt className="font-medium">Percentage Ownership:</dt>
-                                <dd>{formData.ownershipPercentage}%</dd>
-                              </div>
-                            </dl>
-                          </div>
-
-                          {showSecondOwner && (
-                            <div className="border-t pt-4">
-                              <div className="flex items-center justify-between">
-                                <h3 className="font-semibold mb-2 text-orange-400">Second Owner Information</h3>
-                              </div>
-                              <dl className="space-y-1 text-sm text-gray-700">
-                                <div className="flex justify-between">
-                                  <dt className="font-medium">First Name:</dt>
-                                  <dd>{formData.secondOwnerFirstName}</dd>
-                                </div>
-                                <div className="flex justify-between">
-                                  <dt className="font-medium">Last Name:</dt>
-                                  <dd>{formData.secondOwnerLastName}</dd>
-                                </div>
-                                <div className="flex justify-between">
-                                  <dt className="font-medium">Phone:</dt>
-                                  <dd>{formData.secondOwnerPhone}</dd>
-                                </div>
-                                <div className="flex justify-between">
-                                  <dt className="font-medium">Date of Birth:</dt>
-                                  <dd>{formData.secondOwnerDateOfBirth}</dd>
-                                </div>
-                                <div className="flex justify-between">
-                                  <dt className="font-medium">Social Security Number:</dt>
-                                  <dd>****-**-{formData.secondOwnerSsn.slice(-4)}</dd>
-                                </div>
-                                <div className="flex justify-between">
-                                  <dt className="font-medium">Home Street Address:</dt>
-                                  <dd>{formData.secondOwnerHomeAddress}</dd>
-                                </div>
-                                <div className="flex justify-between">
-                                  <dt className="font-medium">City:</dt>
-                                  <dd>{formData.secondOwnerCity}</dd>
-                                </div>
-                                <div className="flex justify-between">
-                                  <dt className="font-medium">State:</dt>
-                                  <dd>{formData.secondOwnerState}</dd>
-                                </div>
-                                <div className="flex justify-between">
-                                  <dt className="font-medium">Zip Code:</dt>
-                                  <dd>{formData.secondOwnerZipCode}</dd>
-                                </div>
-                                <div className="flex justify-between">
-                                  <dt className="font-medium">Credit Score Range:</dt>
-                                  <dd>{formData.secondOwnerCreditScore}</dd>
-                                </div>
-                                <div className="flex justify-between">
-                                  <dt className="font-medium">Percentage Ownership:</dt>
-                                  <dd>{formData.secondOwnerPercentageOwnership}%</dd>
-                                </div>
-                              </dl>
-                            </div>
-                          )}
+                    
+                    {/* Header Card */}
+                    <div className="bg-white rounded-xl p-6 mb-6 shadow-sm border-2 border-orange-400">
+                      <div className="flex items-start gap-4">
+                        {/* Animated Application Icon */}
+                        <div className="flex-shrink-0">
+                          <svg 
+                            className="w-12 h-12 md:w-14 md:h-14" 
+                            viewBox="0 0 64 64" 
+                            fill="none" 
+                            xmlns="http://www.w3.org/2000/svg"
+                          >
+                            {/* Document background */}
+                            <rect 
+                              x="12" y="4" width="40" height="56" rx="4" 
+                              fill="#fed7aa"
+                              className="drop-shadow-lg"
+                            />
+                            {/* Folded corner */}
+                            <path 
+                              d="M42 4L52 14H46C43.7909 14 42 12.2091 42 10V4Z" 
+                              fill="#fdba74"
+                            />
+                            <path 
+                              d="M42 4V10C42 12.2091 43.7909 14 46 14H52" 
+                              stroke="#f97316" 
+                              strokeWidth="1.5"
+                            />
+                            {/* Document lines with staggered animation */}
+                            <rect x="20" y="22" width="24" height="3" rx="1.5" fill="#f97316">
+                              <animate 
+                                attributeName="opacity" 
+                                values="0.4;1;0.4" 
+                                dur="2s" 
+                                repeatCount="indefinite"
+                                begin="0s"
+                              />
+                            </rect>
+                            <rect x="20" y="30" width="20" height="3" rx="1.5" fill="#fb923c">
+                              <animate 
+                                attributeName="opacity" 
+                                values="0.4;1;0.4" 
+                                dur="2s" 
+                                repeatCount="indefinite"
+                                begin="0.2s"
+                              />
+                            </rect>
+                            <rect x="20" y="38" width="22" height="3" rx="1.5" fill="#f97316">
+                              <animate 
+                                attributeName="opacity" 
+                                values="0.4;1;0.4" 
+                                dur="2s" 
+                                repeatCount="indefinite"
+                                begin="0.4s"
+                              />
+                            </rect>
+                            <rect x="20" y="46" width="16" height="3" rx="1.5" fill="#fb923c">
+                              <animate 
+                                attributeName="opacity" 
+                                values="0.4;1;0.4" 
+                                dur="2s" 
+                                repeatCount="indefinite"
+                                begin="0.6s"
+                              />
+                            </rect>
+                            {/* Checkmark circle */}
+                            <circle cx="48" cy="48" r="12" fill="#22c55e">
+                              <animate 
+                                attributeName="r" 
+                                values="11;12;11" 
+                                dur="1.5s" 
+                                repeatCount="indefinite"
+                              />
+                            </circle>
+                            {/* Checkmark */}
+                            <path 
+                              d="M43 48L46 51L53 44" 
+                              stroke="white" 
+                              strokeWidth="2.5" 
+                              strokeLinecap="round" 
+                              strokeLinejoin="round"
+                              fill="none"
+                            />
+                          </svg>
                         </div>
-                      </CardContent>
-                      <CardFooter className="flex justify-between pt-4">
+                        <div>
+                          <h2 className="text-xl md:text-2xl font-bold mb-2 text-gray-900">Review Your Application</h2>
+                          <p className="text-gray-600 text-sm md:text-base">Please verify all information is correct before submitting. You can go back to edit any section.</p>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Funding Information Section */}
+                    <div className="bg-white rounded-xl border border-gray-200 shadow-sm mb-4 overflow-hidden">
+                      <div 
+                        className="bg-white px-4 md:px-6 py-4 border-b border-gray-200 cursor-pointer"
+                        onClick={() => toggleSection('funding')}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
+                              {expandedSections.funding ? '1' : <CheckCircleIcon className="h-5 w-5" />}
+                            </div>
+                            <div>
+                              <h3 className="font-semibold text-gray-900 text-lg">Funding Information</h3>
+                              {!expandedSections.funding && (
+                                <p className="text-sm text-gray-600">${Number(formData.amountRequested).toLocaleString()} requested</p>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={(e) => { e.stopPropagation(); setStep(1); }}
+                              className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                            >
+                              Edit
+                            </Button>
+                            <ChevronDownIcon className={`h-5 w-5 text-gray-500 transition-transform duration-200 ${expandedSections.funding ? 'rotate-180' : ''}`} />
+                          </div>
+                        </div>
+                      </div>
+                      <div className={`transition-all duration-300 ease-in-out ${expandedSections.funding ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+                        <div className="p-4 md:p-6">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div className="bg-gray-50 rounded-lg p-4">
+                              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Amount Requested</p>
+                              <p className="text-xl font-bold text-gray-900">${Number(formData.amountRequested).toLocaleString()}</p>
+                            </div>
+                            <div className="bg-gray-50 rounded-lg p-4">
+                              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Use of Funds</p>
+                              <p className="text-sm text-gray-700">{formData.useOfFunds}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Business Information Section */}
+                    <div className="bg-white rounded-xl border border-gray-200 shadow-sm mb-4 overflow-hidden">
+                      <div 
+                        className="bg-white px-4 md:px-6 py-4 border-b border-gray-200 cursor-pointer"
+                        onClick={() => toggleSection('business')}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
+                              {expandedSections.business ? '2' : <CheckCircleIcon className="h-5 w-5" />}
+                            </div>
+                            <div>
+                              <h3 className="font-semibold text-gray-900 text-lg">Business Information</h3>
+                              {!expandedSections.business && (
+                                <p className="text-sm text-gray-600">{formData.businessName}</p>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={(e) => { e.stopPropagation(); setStep(2); }}
+                              className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                            >
+                              Edit
+                            </Button>
+                            <ChevronDownIcon className={`h-5 w-5 text-gray-500 transition-transform duration-200 ${expandedSections.business ? 'rotate-180' : ''}`} />
+                          </div>
+                        </div>
+                      </div>
+                      <div className={`transition-all duration-300 ease-in-out ${expandedSections.business ? 'max-h-[800px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+                        <div className="p-4 md:p-6">
+                          {/* Business Name Highlight */}
+                          <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                            <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Legal Business Name</p>
+                            <p className="text-lg font-semibold text-gray-900">{formData.businessName}</p>
+                            {formData.dba && <p className="text-sm text-gray-600 mt-1">DBA: {formData.dba}</p>}
+                          </div>
+                          
+                          {/* Grid Layout for Details */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                          <div className="p-3 border border-gray-100 rounded-lg">
+                            <p className="text-xs text-gray-500 mb-1">Federal Tax ID (EIN)</p>
+                            <p className="text-sm font-medium text-gray-900">{formData.federalTaxId}</p>
+                          </div>
+                          <div className="p-3 border border-gray-100 rounded-lg">
+                            <p className="text-xs text-gray-500 mb-1">Industry</p>
+                            <p className="text-sm font-medium text-gray-900">{formData.industry}</p>
+                          </div>
+                          <div className="p-3 border border-gray-100 rounded-lg">
+                            <p className="text-xs text-gray-500 mb-1">Entity Type</p>
+                            <p className="text-sm font-medium text-gray-900">{formData.entityType || "N/A"}</p>
+                          </div>
+                          <div className="p-3 border border-gray-100 rounded-lg">
+                            <p className="text-xs text-gray-500 mb-1">Years in Business</p>
+                            <p className="text-sm font-medium text-gray-900">{formData.yearsInBusiness} years</p>
+                          </div>
+                          <div className="p-3 border border-gray-100 rounded-lg">
+                            <p className="text-xs text-gray-500 mb-1">Annual Revenue</p>
+                            <p className="text-sm font-medium text-gray-900">{formData.annualRevenue}</p>
+                          </div>
+                          <div className="p-3 border border-gray-100 rounded-lg">
+                            <p className="text-xs text-gray-500 mb-1">Start Date</p>
+                            <p className="text-sm font-medium text-gray-900">{formData.businessStartDate}</p>
+                          </div>
+                        </div>
+
+                        {/* Contact & Address */}
+                        <div className="mt-4 pt-4 border-t border-gray-100">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                              <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Business Address</p>
+                              <p className="text-sm text-gray-900">{formData.businessAddress}</p>
+                              <p className="text-sm text-gray-900">{formData.businessCity}, {formData.businessState} {formData.businessZip}</p>
+                            </div>
+                            <div>
+                              <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Contact</p>
+                              <p className="text-sm text-gray-900">{formData.businessPhone}</p>
+                              <p className="text-sm text-gray-900">{formData.businessEmail}</p>
+                            </div>
+                          </div>
+                        </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Primary Owner Section */}
+                    <div className="bg-white rounded-xl border border-gray-200 shadow-sm mb-4 overflow-hidden">
+                      <div 
+                        className="bg-white px-4 md:px-6 py-4 border-b border-gray-200 cursor-pointer"
+                        onClick={() => toggleSection('primaryOwner')}
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
+                              {expandedSections.primaryOwner ? '3' : <CheckCircleIcon className="h-5 w-5" />}
+                            </div>
+                            <div>
+                              <h3 className="font-semibold text-gray-900 text-lg">Primary Owner</h3>
+                              {!expandedSections.primaryOwner && (
+                                <p className="text-sm text-gray-600">{formData.firstName} {formData.lastName} ({formData.ownershipPercentage}%)</p>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              onClick={(e) => { e.stopPropagation(); setStep(3); }}
+                              className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                            >
+                              Edit
+                            </Button>
+                            <ChevronDownIcon className={`h-5 w-5 text-gray-500 transition-transform duration-200 ${expandedSections.primaryOwner ? 'rotate-180' : ''}`} />
+                          </div>
+                        </div>
+                      </div>
+                      <div className={`transition-all duration-300 ease-in-out ${expandedSections.primaryOwner ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+                        <div className="p-4 md:p-6">
+                          {/* Owner Name Highlight */}
+                          <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                            <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Full Name</p>
+                            <p className="text-lg font-semibold text-gray-900">{formData.firstName} {formData.lastName}</p>
+                            <p className="text-sm text-gray-600 mt-1">{formData.ownershipPercentage}% Ownership</p>
+                          </div>
+
+                          {/* Owner Details Grid */}
+                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                          <div className="p-3 border border-gray-100 rounded-lg">
+                            <p className="text-xs text-gray-500 mb-1">Phone</p>
+                            <p className="text-sm font-medium text-gray-900">{formData.phone}</p>
+                          </div>
+                          <div className="p-3 border border-gray-100 rounded-lg">
+                            <p className="text-xs text-gray-500 mb-1">Date of Birth</p>
+                            <p className="text-sm font-medium text-gray-900">{formData.dateOfBirth}</p>
+                          </div>
+                          <div className="p-3 border border-gray-100 rounded-lg">
+                            <p className="text-xs text-gray-500 mb-1">SSN</p>
+                            <p className="text-sm font-medium text-gray-900">***-**-{formData.ssn.slice(-4)}</p>
+                          </div>
+                          <div className="p-3 border border-gray-100 rounded-lg">
+                            <p className="text-xs text-gray-500 mb-1">Credit Score</p>
+                            <p className="text-sm font-medium text-gray-900 capitalize">{formData.creditScore}</p>
+                          </div>
+                        </div>
+
+                        {/* Owner Address */}
+                        <div className="mt-4 pt-4 border-t border-gray-100">
+                          <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Home Address</p>
+                          <p className="text-sm text-gray-900">{formData.homeAddress}</p>
+                          <p className="text-sm text-gray-900">{formData.city}, {formData.state} {formData.zip}</p>
+                        </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Second Owner Section (if applicable) */}
+                    {showSecondOwner && (
+                      <div className="bg-white rounded-xl border border-gray-200 shadow-sm mb-4 overflow-hidden">
+                        <div 
+                          className="bg-white px-4 md:px-6 py-4 border-b border-gray-200 cursor-pointer"
+                          onClick={() => toggleSection('secondOwner')}
+                        >
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
+                                {expandedSections.secondOwner ? '+' : <CheckCircleIcon className="h-5 w-5" />}
+                              </div>
+                              <div>
+                                <h3 className="font-semibold text-gray-900 text-lg">Second Owner</h3>
+                                {!expandedSections.secondOwner && (
+                                  <p className="text-sm text-gray-600">{formData.secondOwnerFirstName} {formData.secondOwnerLastName} ({formData.secondOwnerPercentageOwnership}%)</p>
+                                )}
+                              </div>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                onClick={(e) => { e.stopPropagation(); setStep(3); }}
+                                className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                              >
+                                Edit
+                              </Button>
+                              <ChevronDownIcon className={`h-5 w-5 text-gray-500 transition-transform duration-200 ${expandedSections.secondOwner ? 'rotate-180' : ''}`} />
+                            </div>
+                          </div>
+                        </div>
+                        <div className={`transition-all duration-300 ease-in-out ${expandedSections.secondOwner ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+                          <div className="p-4 md:p-6">
+                            {/* Second Owner Name Highlight */}
+                            <div className="bg-gray-50 rounded-lg p-4 mb-4">
+                              <p className="text-xs text-gray-500 uppercase tracking-wide mb-1">Full Name</p>
+                              <p className="text-lg font-semibold text-gray-900">{formData.secondOwnerFirstName} {formData.secondOwnerLastName}</p>
+                              <p className="text-sm text-gray-600 mt-1">{formData.secondOwnerPercentageOwnership}% Ownership</p>
+                            </div>
+
+                            {/* Second Owner Details Grid */}
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                              <div className="p-3 border border-gray-100 rounded-lg">
+                                <p className="text-xs text-gray-500 mb-1">Phone</p>
+                                <p className="text-sm font-medium text-gray-900">{formData.secondOwnerPhone}</p>
+                              </div>
+                              <div className="p-3 border border-gray-100 rounded-lg">
+                                <p className="text-xs text-gray-500 mb-1">Date of Birth</p>
+                                <p className="text-sm font-medium text-gray-900">{formData.secondOwnerDateOfBirth}</p>
+                              </div>
+                              <div className="p-3 border border-gray-100 rounded-lg">
+                                <p className="text-xs text-gray-500 mb-1">SSN</p>
+                                <p className="text-sm font-medium text-gray-900">***-**-{formData.secondOwnerSsn.slice(-4)}</p>
+                              </div>
+                              <div className="p-3 border border-gray-100 rounded-lg">
+                                <p className="text-xs text-gray-500 mb-1">Credit Score</p>
+                                <p className="text-sm font-medium text-gray-900 capitalize">{formData.secondOwnerCreditScore}</p>
+                              </div>
+                            </div>
+
+                            {/* Second Owner Address */}
+                            <div className="mt-4 pt-4 border-t border-gray-100">
+                              <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Home Address</p>
+                              <p className="text-sm text-gray-900">{formData.secondOwnerHomeAddress}</p>
+                              <p className="text-sm text-gray-900">{formData.secondOwnerCity}, {formData.secondOwnerState} {formData.secondOwnerZipCode}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Action Buttons */}
+                    <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 md:p-6">
+                      <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
                         <Button
                           type="button"
                           variant="outline"
                           onClick={prevStep}
-                          className="font-semibold bg-transparent"
+                          className="w-full sm:w-auto font-semibold bg-transparent order-2 sm:order-1"
                         >
-                          Previous
+                          ← Previous Step
                         </Button>
-                        <Button
-                          type="button"
-                          onClick={openSignatureModal}
-                          className="bg-orange-500 hover:bg-orange-600 text-white"
-                        >
-                          Submit Application
-                        </Button>
-                      </CardFooter>
-                    </Card>
+                        <div className="w-full sm:w-auto text-center order-1 sm:order-2">
+                          <p className="text-xs text-gray-500 mb-2 hidden sm:block">Ready to submit?</p>
+                          <Button
+                            type="button"
+                            onClick={openSignatureModal}
+                            className="w-full sm:w-auto bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold px-8 py-3 shadow-lg shadow-orange-500/25"
+                          >
+                            Submit Application →
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
                   </>
                 )}
 
