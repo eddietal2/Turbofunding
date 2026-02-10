@@ -306,6 +306,9 @@ export default function ApplyPage() {
     setFormData(getInitialFormData())
     setStep(1)
     setShowDraftModal(false)
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    }
   }, [clearDraft])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -599,6 +602,9 @@ export default function ApplyPage() {
   }
 
   const prevStep = () => {
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    }
     setStep((prev) => prev - 1)
   }
 
@@ -1966,7 +1972,7 @@ export default function ApplyPage() {
                               type="button"
                               variant="ghost"
                               size="sm"
-                              onClick={(e) => { e.stopPropagation(); setStep(1); }}
+                              onClick={(e) => { e.stopPropagation(); window.scrollTo({ top: 0, behavior: "smooth" }); setStep(1); }}
                               className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
                             >
                               Edit
@@ -2014,7 +2020,7 @@ export default function ApplyPage() {
                               type="button"
                               variant="ghost"
                               size="sm"
-                              onClick={(e) => { e.stopPropagation(); setStep(2); }}
+                              onClick={(e) => { e.stopPropagation(); window.scrollTo({ top: 0, behavior: "smooth" }); setStep(2); }}
                               className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
                             >
                               Edit
@@ -2102,7 +2108,7 @@ export default function ApplyPage() {
                               type="button"
                               variant="ghost"
                               size="sm"
-                              onClick={(e) => { e.stopPropagation(); setStep(3); }}
+                              onClick={(e) => { e.stopPropagation(); window.scrollTo({ top: 0, behavior: "smooth" }); setStep(3); }}
                               className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
                             >
                               Edit
@@ -2174,7 +2180,7 @@ export default function ApplyPage() {
                                 type="button"
                                 variant="ghost"
                                 size="sm"
-                                onClick={(e) => { e.stopPropagation(); setStep(3); }}
+                                onClick={(e) => { e.stopPropagation(); window.scrollTo({ top: 0, behavior: "smooth" }); setStep(3); }}
                                 className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
                               >
                                 Edit
@@ -2366,7 +2372,10 @@ export default function ApplyPage() {
                             )}
                           </Button>
                           <Button 
-                            onClick={() => setStep(6)} 
+                            onClick={() => {
+                              window.scrollTo({ top: 0, behavior: "smooth" })
+                              setStep(6)
+                            }} 
                             className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3"
                           >
                             <span className="flex items-center justify-center gap-2">
@@ -2482,7 +2491,7 @@ export default function ApplyPage() {
                       <CardFooter className="flex justify-between pt-4">
                         <Button
                           variant="outline"
-                          onClick={() => setStep(5)}
+                          onClick={() => { window.scrollTo({ top: 0, behavior: "smooth" }); setStep(5); }}
                           className="border-blue-600 text-blue-400 hover:bg-blue-700 hover:text-gray-200 bg-transparent font-semibold"
                         >
                           <ArrowLeftIcon className="mr-2 h-4 w-4" />
