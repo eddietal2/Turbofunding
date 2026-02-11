@@ -82,11 +82,22 @@ async function generateTestPDF() {
   const lightGray = rgb(107 / 255, 114 / 255, 128 / 255)
   const black = rgb(0, 0, 0)
   const lineGray = rgb(209 / 255, 213 / 255, 219 / 255)
+  const lightBlue = rgb(239 / 255, 246 / 255, 255 / 255) // Subtle blue tint
+  const accentOrange = rgb(251 / 255, 146 / 255, 60 / 255) // Lighter orange for accents
 
   const page = pdfDoc.addPage([612, 792]) // Letter size
   const pageWidth = 612
   const margin = 50
   let yPosition = 760
+
+  // ========== TOP ACCENT BAR ==========
+  page.drawRectangle({
+    x: 0,
+    y: 792 - 4,
+    width: pageWidth,
+    height: 4,
+    color: brandBlue,
+  })
 
   // ========== HEADER SECTION ==========
   // Logo only
@@ -122,16 +133,17 @@ async function generateTestPDF() {
   page.drawLine({
     start: { x: margin, y: yPosition },
     end: { x: pageWidth - margin, y: yPosition },
-    thickness: 1,
+    thickness: 0.75,
     color: lineGray,
   })
 
   // ========== LOAN APPLICATION TITLE ==========
   yPosition -= 30
+  // Title
   page.drawText("TurboFunding Loan Application", {
     x: margin,
     y: yPosition,
-    size: 14,
+    size: 16,
     font: headerFont,
     color: black,
   })
@@ -158,51 +170,75 @@ async function generateTestPDF() {
       start: { x: x, y: y },
       end: { x: x + width, y: y },
       thickness: 0.5,
-      color: black,
+      color: lineGray,
     })
     page.drawText(label.toUpperCase(), {
       x: x,
       y: y - 12,
-      size: 7,
+      size: 6,
       font: helveticaFont,
       color: lightGray,
     })
   }
 
-  // Helper function to draw section header (Space Grotesk style)
+  // Helper function to draw section header with accent
   const drawSectionHeader = (title: string, x: number, y: number) => {
     page.drawText(title, {
       x: x,
       y: y,
-      size: 14,
+      size: 12,
       font: headerFont,
       color: brandBlue,
     })
+    // Small accent line under header
+    page.drawLine({
+      start: { x: x, y: y - 4 },
+      end: { x: x + 60, y: y - 4 },
+      thickness: 1.5,
+      color: accentOrange,
+    })
   }
 
-  // Helper function to draw checkbox (Clarify Capital style)
+  // Helper function to draw modern checkbox
   const drawCheckbox = (label: string, checked: boolean, x: number, y: number) => {
-    page.drawRectangle({
-      x: x,
-      y: y - 2,
-      width: 12,
-      height: 12,
-      borderColor: darkGray,
-      borderWidth: 0.75,
-    })
     if (checked) {
-      page.drawText("X", {
-        x: x + 2.5,
-        y: y,
-        size: 9,
-        font: helveticaBold,
-        color: black,
+      // Filled checkbox for checked state
+      page.drawRectangle({
+        x: x,
+        y: y - 2,
+        width: 11,
+        height: 11,
+        color: brandBlue,
+      })
+      // Draw checkmark with lines
+      const white = rgb(1, 1, 1)
+      page.drawLine({
+        start: { x: x + 2, y: y + 3 },
+        end: { x: x + 4.5, y: y },
+        thickness: 1.5,
+        color: white,
+      })
+      page.drawLine({
+        start: { x: x + 4.5, y: y },
+        end: { x: x + 9, y: y + 7 },
+        thickness: 1.5,
+        color: white,
+      })
+    } else {
+      // Empty checkbox
+      page.drawRectangle({
+        x: x,
+        y: y - 2,
+        width: 11,
+        height: 11,
+        borderColor: lineGray,
+        borderWidth: 1,
       })
     }
     page.drawText(label, {
-      x: x + 16,
+      x: x + 15,
       y: y + 1,
-      size: 9,
+      size: 8,
       font: helveticaFont,
       color: darkGray,
     })
@@ -309,7 +345,7 @@ async function generateTestPDF() {
   page.drawText(sampleFormData.signature, {
     x: leftColX,
     y: yPosition - 20,
-    size: 20,
+    size: 22,
     font: cursiveFont,
     color: brandBlue,
   })
@@ -317,15 +353,15 @@ async function generateTestPDF() {
   page.drawLine({
     start: { x: leftColX, y: yPosition - 45 },
     end: { x: leftColX + 200, y: yPosition - 45 },
-    thickness: 0.5,
-    color: black,
+    thickness: 0.75,
+    color: lineGray,
   })
   page.drawText("SIGNATURE", {
     x: leftColX,
     y: yPosition - 57,
-    size: 7,
+    size: 6,
     font: helveticaFont,
-    color: darkGray,
+    color: lightGray,
   })
 
   page.drawText(sampleFormData.signatureDate, {
@@ -338,15 +374,15 @@ async function generateTestPDF() {
   page.drawLine({
     start: { x: leftColX + 250, y: yPosition - 45 },
     end: { x: leftColX + 400, y: yPosition - 45 },
-    thickness: 0.5,
-    color: black,
+    thickness: 0.75,
+    color: lineGray,
   })
   page.drawText("DATE", {
     x: leftColX + 250,
     y: yPosition - 57,
-    size: 7,
+    size: 6,
     font: helveticaFont,
-    color: darkGray,
+    color: lightGray,
   })
 
   yPosition -= 70
@@ -394,12 +430,35 @@ async function generateTestPDF() {
   yPosition -= 15
 
   // ========== ADVISOR FIELD ==========
+  page.drawLine({
+    start: { x: margin, y: yPosition + 8 },
+    end: { x: pageWidth - margin, y: yPosition + 8 },
+    thickness: 0.5,
+    color: lineGray,
+  })
+  
   page.drawText("TurboFunding Advisor:", {
     x: leftColX,
-    y: yPosition,
+    y: yPosition - 5,
     size: 9,
     font: helveticaBold,
-    color: black,
+    color: brandBlue,
+  })
+  
+  page.drawLine({
+    start: { x: leftColX + 110, y: yPosition - 8 },
+    end: { x: leftColX + 280, y: yPosition - 8 },
+    thickness: 0.5,
+    color: lineGray,
+  })
+
+  // ========== FOOTER ACCENT BAR ==========
+  page.drawRectangle({
+    x: 0,
+    y: 0,
+    width: pageWidth,
+    height: 4,
+    color: brandBlue,
   })
 
   // Save the PDF
