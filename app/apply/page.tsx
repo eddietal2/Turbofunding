@@ -2427,101 +2427,207 @@ export default function ApplyPage() {
                 {step === 6 && (
                   <>
                     <ConversionTracking eventName="AddPaymentInfo" eventData={{ content_type: "application_step_6" }} />
-                    {/* Changed card background from bg-white to bg-[#F5F7FA] */}
-                    <Card className="bg-[#F5F7FA] border-gray-200">
-                      <CardContent className="pt-6">
-                        <p className="text-gray-600 mb-6">Upload supporting documents to expedite your application review process.</p>
-                        <form className="space-y-4">
-                          <div className="space-y-4">
-                            <div className="space-y-2">
-                              <Label htmlFor="bankStatements">
-                                Bank Statements - 3 Months (Most Recent) (California: Last 4 months)
-                              </Label>
-                              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-gray-400 transition-colors">
-                                <Input
-                                  id="bankStatements"
-                                  name="bankStatements"
-                                  type="file"
-                                  accept=".pdf,.jpg,.jpeg,.png"
-                                  onChange={handleFileChange}
-                                  className="hidden"
-                                />
-                                <Label
-                                  htmlFor="bankStatements"
-                                  className="cursor-pointer flex flex-col items-center space-y-2"
-                                >
-                                  <UploadIcon className="h-8 w-8 text-gray-400" />
-                                  <span className="text-sm text-gray-500">
-                                    {formData.bankStatements
-                                      ? formData.bankStatements.name
-                                      : "Click to upload or drag and drop"}
-                                  </span>
-                                  <span className="text-xs text-gray-500">PDF, JPG, PNG up to 10MB</span>
-                                </Label>
-                              </div>
-                            </div>
+                    
+                    {/* Header Card */}
+                    <div className="bg-white rounded-xl p-6 md:p-8 mb-6 shadow-sm border border-gray-200">
+                      <div className="flex items-start gap-4">
+                        <div className="flex-shrink-0 w-14 h-14 md:w-16 md:h-16 rounded-full bg-blue-100 flex items-center justify-center">
+                          <svg className="w-7 h-7 md:w-8 md:h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                          </svg>
+                        </div>
+                        <div className="flex-1">
+                          <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">Upload Documents</h2>
+                          <p className="text-gray-600 text-sm md:text-base">
+                            Speed up your approval by uploading your business documents now. This helps us process your application faster.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
 
-                            <div className="space-y-2">
-                              <Label htmlFor="otherDocuments">Other Supporting Documents (Optional)</Label>
-                              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-gray-400 transition-colors">
-                                <Input
-                                  id="otherDocuments"
-                                  name="otherDocuments"
-                                  type="file"
-                                  accept=".pdf,.jpg,.jpeg,.png"
-                                  onChange={handleFileChange}
-                                  className="hidden"
-                                />
-                                <Label
-                                  htmlFor="otherDocuments"
-                                  className="cursor-pointer flex flex-col items-center space-y-2"
-                                >
-                                  <UploadIcon className="h-8 w-8 text-gray-400" />
-                                  <span className="text-sm text-gray-500">
-                                    {formData.otherDocuments
-                                      ? formData.otherDocuments.name
-                                      : "Click to upload or drag and drop"}
-                                  </span>
-                                  <span className="text-xs text-gray-500">PDF, JPG, PNG up to 10MB</span>
-                                </Label>
-                              </div>
-                            </div>
+                    {/* Bank Statements Upload */}
+                    <div className="bg-white rounded-xl border border-gray-200 shadow-sm mb-4 overflow-hidden">
+                      <div className="bg-gradient-to-r from-orange-500 to-orange-600 px-4 md:px-6 py-3">
+                        <div className="flex items-center gap-2">
+                          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                          <h3 className="font-semibold text-white">Bank Statements</h3>
+                          <span className="ml-auto text-xs bg-white/20 text-white px-2 py-0.5 rounded-full">Required</span>
+                        </div>
+                      </div>
+                      <div className="p-4 md:p-6">
+                        <p className="text-sm text-gray-600 mb-4">
+                          Please upload your <span className="font-semibold">last 3 months</span> of business bank statements.
+                          <span className="text-orange-600 font-medium"> California applicants: Last 4 months required.</span>
+                        </p>
+                        <div className={`border-2 border-dashed rounded-xl p-6 md:p-8 text-center transition-all duration-200 ${
+                          formData.bankStatements 
+                            ? 'border-green-400 bg-green-50' 
+                            : 'border-gray-300 hover:border-orange-400 hover:bg-orange-50/50'
+                        }`}>
+                          <Input
+                            id="bankStatements"
+                            name="bankStatements"
+                            type="file"
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            onChange={handleFileChange}
+                            className="hidden"
+                          />
+                          <Label
+                            htmlFor="bankStatements"
+                            className="cursor-pointer flex flex-col items-center space-y-3"
+                          >
+                            {formData.bankStatements ? (
+                              <>
+                                <div className="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center">
+                                  <CheckCircleIcon className="h-8 w-8 text-green-500" />
+                                </div>
+                                <div>
+                                  <p className="text-sm font-medium text-green-700">{formData.bankStatements.name}</p>
+                                  <p className="text-xs text-green-600 mt-1">File uploaded successfully • Click to replace</p>
+                                </div>
+                              </>
+                            ) : (
+                              <>
+                                <div className="w-14 h-14 rounded-full bg-orange-100 flex items-center justify-center">
+                                  <UploadIcon className="h-7 w-7 text-orange-500" />
+                                </div>
+                                <div>
+                                  <p className="text-sm font-medium text-gray-700">Click to upload or drag and drop</p>
+                                  <p className="text-xs text-gray-500 mt-1">PDF, JPG, PNG up to 10MB</p>
+                                </div>
+                              </>
+                            )}
+                          </Label>
+                        </div>
+                      </div>
+                    </div>
 
-                            <div className="bg-blue-100 border border-blue-300 rounded-lg p-4">
-                              <h4 className="text-sm font-medium text-blue-700 mb-2">Document Guidelines:</h4>
-                              <ul className="text-xs text-gray-700 space-y-1">
-                                <li>• All documents should be clear and legible</li>
-                                <li>• Bank statements must show business name and account activity</li>
-                                <li>• Documents can be uploaded later if not available now</li>
-                                <li>• Depending on the product, additional documentation may be required</li>
-                              </ul>
-                              <div className="mt-3 pt-3 border-t border-blue-300">
-                                <Button
-                                  size="sm"
-                                  className="bg-orange-600 hover:bg-orange-700 text-white text-xs"
-                                  onClick={() => window.open("/documents-needed", "_blank")}
-                                >
-                                  Documents Needed for Different Products
-                                </Button>
-                              </div>
+                    {/* Other Documents Upload */}
+                    <div className="bg-white rounded-xl border border-gray-200 shadow-sm mb-4 overflow-hidden">
+                      <div className="bg-gray-100 px-4 md:px-6 py-3 border-b border-gray-200">
+                        <div className="flex items-center gap-2">
+                          <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+                          </svg>
+                          <h3 className="font-semibold text-gray-700">Other Documents</h3>
+                          <span className="ml-auto text-xs bg-gray-200 text-gray-600 px-2 py-0.5 rounded-full">Optional</span>
+                        </div>
+                      </div>
+                      <div className="p-4 md:p-6">
+                        <p className="text-sm text-gray-600 mb-4">
+                          Additional documents that may help expedite your application (business licenses, tax returns, etc.)
+                        </p>
+                        <div className={`border-2 border-dashed rounded-xl p-6 md:p-8 text-center transition-all duration-200 ${
+                          formData.otherDocuments 
+                            ? 'border-green-400 bg-green-50' 
+                            : 'border-gray-300 hover:border-blue-400 hover:bg-blue-50/50'
+                        }`}>
+                          <Input
+                            id="otherDocuments"
+                            name="otherDocuments"
+                            type="file"
+                            accept=".pdf,.jpg,.jpeg,.png"
+                            onChange={handleFileChange}
+                            className="hidden"
+                          />
+                          <Label
+                            htmlFor="otherDocuments"
+                            className="cursor-pointer flex flex-col items-center space-y-3"
+                          >
+                            {formData.otherDocuments ? (
+                              <>
+                                <div className="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center">
+                                  <CheckCircleIcon className="h-8 w-8 text-green-500" />
+                                </div>
+                                <div>
+                                  <p className="text-sm font-medium text-green-700">{formData.otherDocuments.name}</p>
+                                  <p className="text-xs text-green-600 mt-1">File uploaded successfully • Click to replace</p>
+                                </div>
+                              </>
+                            ) : (
+                              <>
+                                <div className="w-14 h-14 rounded-full bg-gray-100 flex items-center justify-center">
+                                  <UploadIcon className="h-7 w-7 text-gray-400" />
+                                </div>
+                                <div>
+                                  <p className="text-sm font-medium text-gray-700">Click to upload or drag and drop</p>
+                                  <p className="text-xs text-gray-500 mt-1">PDF, JPG, PNG up to 10MB</p>
+                                </div>
+                              </>
+                            )}
+                          </Label>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Document Guidelines */}
+                    <div className="bg-white rounded-xl border border-gray-200 shadow-sm mb-6 overflow-hidden">
+                      <div className="bg-blue-50 px-4 md:px-6 py-3 border-b border-blue-100">
+                        <div className="flex items-center gap-2">
+                          <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <h3 className="font-semibold text-blue-700">Document Guidelines</h3>
+                        </div>
+                      </div>
+                      <div className="p-4 md:p-6">
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                          {[
+                            { icon: "M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z", text: "All documents should be clear and legible" },
+                            { icon: "M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4", text: "Bank statements must show business name" },
+                            { icon: "M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z", text: "Documents can be uploaded later if needed" },
+                            { icon: "M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2", text: "Additional docs may be required per product" },
+                          ].map(({ icon, text }, idx) => (
+                            <div key={idx} className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                              <svg className="w-5 h-5 text-blue-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d={icon} />
+                              </svg>
+                              <span className="text-sm text-gray-700">{text}</span>
                             </div>
-                          </div>
-                        </form>
-                      </CardContent>
-                      <CardFooter className="flex justify-between pt-4">
+                          ))}
+                        </div>
+                        <div className="mt-4 pt-4 border-t border-gray-200">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className="text-orange-600 border-orange-300 hover:bg-orange-50"
+                            onClick={() => window.open("/documents-needed", "_blank")}
+                          >
+                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                            View Documents Needed for Different Products
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Action Buttons */}
+                    <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 md:p-6">
+                      <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
                         <Button
+                          type="button"
                           variant="outline"
                           onClick={() => { window.scrollTo({ top: 0, behavior: "smooth" }); setStep(5); }}
-                          className="border-blue-600 text-blue-400 hover:bg-blue-700 hover:text-gray-200 bg-transparent font-semibold"
+                          className="w-full sm:w-auto font-semibold bg-transparent border-gray-300 text-gray-700 hover:bg-gray-50 order-2 sm:order-1"
                         >
                           <ArrowLeftIcon className="mr-2 h-4 w-4" />
                           Back to Confirmation
                         </Button>
-                        <Button onClick={handleDocumentUpload} className="bg-blue-600 hover:bg-blue-700">
-                          Complete Upload
-                        </Button>
-                      </CardFooter>
-                    </Card>
+                        <div className="w-full sm:w-auto text-center order-1 sm:order-2">
+                          <Button 
+                            onClick={handleDocumentUpload} 
+                            className="w-full sm:w-auto bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold px-8 py-3 shadow-lg shadow-green-500/25"
+                          >
+                            <CheckCircleIcon className="mr-2 h-5 w-5" />
+                            Complete Upload
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
                   </>
                 )}
               </div>
