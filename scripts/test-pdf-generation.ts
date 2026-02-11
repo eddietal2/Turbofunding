@@ -89,9 +89,9 @@ async function generateTestPDF() {
   let yPosition = 760
 
   // ========== HEADER SECTION ==========
-  // Logo only (larger, no text)
-  const logoHeight = 100
-  const logoWidth = 150
+  // Logo only
+  const logoHeight = 60
+  const logoWidth = 90
   try {
     const logoPath = path.join(__dirname, "..", "public", "images", "tf-logo.png")
     const logoBytes = fs.readFileSync(logoPath)
@@ -118,7 +118,7 @@ async function generateTestPDF() {
   })
 
   // Header line
-  yPosition -= 55
+  yPosition -= 35
   page.drawLine({
     start: { x: margin, y: yPosition },
     end: { x: pageWidth - margin, y: yPosition },
@@ -127,7 +127,7 @@ async function generateTestPDF() {
   })
 
   // ========== LOAN APPLICATION TITLE ==========
-  yPosition -= 40
+  yPosition -= 30
   page.drawText("TurboFunding Loan Application", {
     x: margin,
     y: yPosition,
@@ -238,16 +238,16 @@ async function generateTestPDF() {
   
   // Entity type checkboxes - right column, arranged in grid like Clarify Capital
   drawCheckbox("LLC", entityType.includes("llc"), rightColX, yPosition + 5)
-  drawCheckbox("CORPORATION", entityType.includes("corp"), rightColX + 80, yPosition + 5)
+  drawCheckbox("CORPORATION", entityType.includes("corp"), rightColX + 70, yPosition + 5)
   
-  yPosition -= 20
+  yPosition -= 22
   drawCheckbox("PARTNERSHIP", entityType.includes("partner"), rightColX, yPosition + 5)
-  drawCheckbox("SOLE PROP", entityType.includes("sole"), rightColX + 80, yPosition + 5)
+  drawCheckbox("SOLE PROP", entityType.includes("sole"), rightColX + 100, yPosition + 5)
   
-  yPosition -= 20
+  yPosition -= 22
   drawCheckbox("NON-PROFIT", entityType.includes("non"), rightColX, yPosition + 5)
 
-  yPosition -= 30
+  yPosition -= 28
 
   // Row 4: Business Start Date | Website
   drawUnderlinedField("Business Start Date", sampleFormData.businessStartDate, leftColX, yPosition, colWidth)
@@ -269,23 +269,23 @@ async function generateTestPDF() {
   drawUnderlinedField("State", sampleFormData.businessState, rightColX + thirdWidth + 40, yPosition, 50)
   drawUnderlinedField("ZIP", sampleFormData.businessZip, rightColX + thirdWidth + 100, yPosition, 50)
 
-  yPosition -= 50
+  yPosition -= 40
 
   // ========== PRIMARY OWNER SECTION ==========
   drawSectionHeader("Primary Owner", leftColX, yPosition)
 
-  yPosition -= 35
+  yPosition -= 30
 
   // Owner fields
   drawUnderlinedField("First Name", sampleFormData.firstName, leftColX, yPosition, halfWidth + 30)
   drawUnderlinedField("Last Name", sampleFormData.lastName, leftColX + halfWidth + 50, yPosition, halfWidth + 30)
 
-  yPosition -= 35
+  yPosition -= 30
 
   drawUnderlinedField("Phone", sampleFormData.phone, leftColX, yPosition, halfWidth + 30)
   drawUnderlinedField("Email", sampleFormData.email, leftColX + halfWidth + 50, yPosition, halfWidth + 30)
 
-  yPosition -= 35
+  yPosition -= 30
 
   const thirdWidthFull = (pageWidth - margin * 2 - 40) / 3
   drawUnderlinedField("Date of Birth", sampleFormData.dateOfBirth, leftColX, yPosition, thirdWidthFull)
@@ -293,17 +293,17 @@ async function generateTestPDF() {
   drawUnderlinedField("SSN", maskedSSN, leftColX + thirdWidthFull + 20, yPosition, thirdWidthFull)
   drawUnderlinedField("% Ownership", sampleFormData.ownershipPercentage + "%", leftColX + thirdWidthFull * 2 + 40, yPosition, thirdWidthFull - 40)
 
-  yPosition -= 35
+  yPosition -= 30
 
   drawUnderlinedField("Home Address", sampleFormData.homeAddress, leftColX, yPosition, pageWidth - margin * 2)
 
-  yPosition -= 35
+  yPosition -= 30
 
   drawUnderlinedField("City", sampleFormData.city, leftColX, yPosition, 200)
   drawUnderlinedField("State", sampleFormData.state, leftColX + 220, yPosition, 120)
   drawUnderlinedField("ZIP", sampleFormData.zip, leftColX + 360, yPosition, 100)
 
-  yPosition -= 40
+  yPosition -= 35
 
   // ========== SIGNATURE SECTION ==========
   page.drawText(sampleFormData.signature, {

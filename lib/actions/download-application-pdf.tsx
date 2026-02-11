@@ -90,7 +90,7 @@ export async function downloadApplicationPDF(formData: any) {
     })
 
     // Draw header line
-    yPosition -= 55
+    yPosition -= 35
     page.drawLine({
       start: { x: margin, y: yPosition },
       end: { x: pageWidth - margin, y: yPosition },
@@ -99,7 +99,7 @@ export async function downloadApplicationPDF(formData: any) {
     })
 
     // ========== LOAN APPLICATION TITLE ==========
-    yPosition -= 40
+    yPosition -= 30
     page.drawText("TurboFunding Loan Application", {
       x: margin,
       y: yPosition,
@@ -209,61 +209,62 @@ export async function downloadApplicationPDF(formData: any) {
 
     yPosition -= 35
 
-    // Row 3: Federal Tax ID with entity type checkboxes (full width)
+    // Row 3: Federal Tax ID (left) | Entity type checkboxes (right - 3 rows)
     const entityType = (formData.entityType || formData.businessType || "").toLowerCase()
     
-    // Federal Tax ID field
-    drawUnderlinedField("Federal Tax ID", formData.federalTaxId || "", leftColX, yPosition, 110)
+    drawUnderlinedField("Federal Tax ID", formData.federalTaxId || "", leftColX, yPosition, colWidth)
     
-    // Entity type checkboxes - same row as Tax ID
-    const checkboxStartX = leftColX + 130
-    drawCheckbox("LLC", entityType.includes("llc"), checkboxStartX, yPosition + 5)
-    drawCheckbox("CORP", entityType.includes("corp"), checkboxStartX + 50, yPosition + 5)
-    drawCheckbox("PARTNERSHIP", entityType.includes("partner"), checkboxStartX + 110, yPosition + 5)
-    drawCheckbox("SOLE PROP", entityType.includes("sole"), checkboxStartX + 195, yPosition + 5)
-    drawCheckbox("NON-PROFIT", entityType.includes("non") || entityType.includes("501"), checkboxStartX + 275, yPosition + 5)
+    // Entity type checkboxes - right column, arranged in grid like Clarify Capital
+    drawCheckbox("LLC", entityType.includes("llc"), rightColX, yPosition + 5)
+    drawCheckbox("CORPORATION", entityType.includes("corp"), rightColX + 70, yPosition + 5)
+    
+    yPosition -= 22
+    drawCheckbox("PARTNERSHIP", entityType.includes("partner"), rightColX, yPosition + 5)
+    drawCheckbox("SOLE PROP", entityType.includes("sole"), rightColX + 100, yPosition + 5)
+    
+    yPosition -= 22
+    drawCheckbox("NON-PROFIT", entityType.includes("non") || entityType.includes("501"), rightColX, yPosition + 5)
 
-    yPosition -= 35
+    yPosition -= 28
 
-    // Row 4: Website (new row to avoid overlap)
-    drawUnderlinedField("Website", formData.website || "", leftColX, yPosition, colWidth)
-
-    yPosition -= 35
-
-    // Row 5: Business Start Date | Business Address
+    // Row 4: Business Start Date | Website
     drawUnderlinedField("Business Start Date", formData.businessStartDate || "", leftColX, yPosition, colWidth)
+    drawUnderlinedField("Website", formData.website || "", rightColX, yPosition, colWidth)
+
+    yPosition -= 35
+
+    // Row 5: Industry & State Inc | Business Address
+    const halfWidth = (colWidth - 20) / 2
+    drawUnderlinedField("Industry", formData.industry || "", leftColX, yPosition, halfWidth)
+    drawUnderlinedField("State Incorporated", formData.stateIncorporated || formData.businessState || "", leftColX + halfWidth + 20, yPosition, halfWidth)
     drawUnderlinedField("Business Address", formData.businessAddress || "", rightColX, yPosition, colWidth)
 
     yPosition -= 35
 
-    // Row 6: Industry & State Incorporated | City, State, ZIP
-    const halfWidth = (colWidth - 20) / 2
-    drawUnderlinedField("Industry", formData.industry || "", leftColX, yPosition, halfWidth)
-    drawUnderlinedField("State Incorporated", formData.stateIncorporated || formData.businessState || "", leftColX + halfWidth + 20, yPosition, halfWidth)
-    
+    // Row 6: City, State, ZIP (right column only)
     const thirdWidth = (colWidth - 30) / 3
     drawUnderlinedField("City", formData.businessCity || "", rightColX, yPosition, thirdWidth + 30)
     drawUnderlinedField("State", formData.businessState || "", rightColX + thirdWidth + 40, yPosition, 50)
     drawUnderlinedField("ZIP", formData.businessZip || formData.businessZipCode || "", rightColX + thirdWidth + 100, yPosition, 50)
 
-    yPosition -= 50
+    yPosition -= 40
 
     // ========== PRIMARY OWNER SECTION ==========
     drawSectionHeader("Primary Owner", leftColX, yPosition)
 
-    yPosition -= 35
+    yPosition -= 30
 
     // Row 1: First Name | Last Name
     drawUnderlinedField("First Name", formData.firstName || "", leftColX, yPosition, halfWidth + 30)
     drawUnderlinedField("Last Name", formData.lastName || "", leftColX + halfWidth + 50, yPosition, halfWidth + 30)
 
-    yPosition -= 35
+    yPosition -= 30
 
     // Row 2: Phone | Email
     drawUnderlinedField("Phone", formData.phone || "", leftColX, yPosition, halfWidth + 30)
     drawUnderlinedField("Email", formData.email || "", leftColX + halfWidth + 50, yPosition, halfWidth + 30)
 
-    yPosition -= 35
+    yPosition -= 30
 
     // Row 3: DOB | SSN | % Ownership
     const thirdWidthFull = (pageWidth - margin * 2 - 40) / 3
@@ -273,19 +274,19 @@ export async function downloadApplicationPDF(formData: any) {
     drawUnderlinedField("SSN", maskedSSN, leftColX + thirdWidthFull + 20, yPosition, thirdWidthFull)
     drawUnderlinedField("% Ownership", (formData.ownershipPercentage || formData.percentageOwnership || "") + "%", leftColX + thirdWidthFull * 2 + 40, yPosition, thirdWidthFull - 40)
 
-    yPosition -= 35
+    yPosition -= 30
 
     // Row 4: Home Address
     drawUnderlinedField("Home Address", formData.homeAddress || "", leftColX, yPosition, pageWidth - margin * 2)
 
-    yPosition -= 35
+    yPosition -= 30
 
     // Row 5: City | State | ZIP
     drawUnderlinedField("City", formData.city || "", leftColX, yPosition, 200)
     drawUnderlinedField("State", formData.state || "", leftColX + 220, yPosition, 120)
     drawUnderlinedField("ZIP", formData.zip || formData.zipCode || "", leftColX + 360, yPosition, 100)
 
-    yPosition -= 40
+    yPosition -= 35
 
     // ========== SIGNATURE SECTION ==========
     // Draw signature image or text
