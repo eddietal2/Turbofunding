@@ -2347,45 +2347,65 @@ export default function ApplyPage() {
                       </div>
                     </div>
 
-                    {/* Action Buttons */}
+                    {/* Speed Up Your Approval - Prominent CTA */}
+                    <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-5 md:p-6 mb-6 shadow-lg shadow-blue-500/20">
+                      <div className="flex items-center gap-4">
+                        <div className="flex-shrink-0 w-14 h-14 rounded-full bg-white/20 backdrop-blur flex items-center justify-center">
+                          <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                          </svg>
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-bold text-white text-lg mb-1">Speed Up Your Approval!</h4>
+                          <p className="text-blue-100 text-sm">
+                            Upload your bank statements and business documents now to expedite your review and get funded faster.
+                          </p>
+                        </div>
+                        <Button 
+                          onClick={() => {
+                            window.scrollTo({ top: 0, behavior: "smooth" })
+                            setStep(6)
+                          }} 
+                          className="hidden sm:flex bg-white text-blue-600 hover:bg-blue-50 font-semibold px-6 py-2 shadow-md"
+                        >
+                          Upload Now →
+                        </Button>
+                      </div>
+                      {/* Mobile Upload Button */}
+                      <Button 
+                        onClick={() => {
+                          window.scrollTo({ top: 0, behavior: "smooth" })
+                          setStep(6)
+                        }} 
+                        className="sm:hidden w-full mt-4 bg-white text-blue-600 hover:bg-blue-50 font-semibold py-3"
+                      >
+                        Upload Documents Now →
+                      </Button>
+                    </div>
+
+                    {/* Other Actions */}
                     <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 md:p-6">
                       <div className="space-y-3">
-                        {/* Primary Actions */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                          <Button
-                            onClick={handleDownloadPDF}
-                            disabled={isDownloadingPDF}
-                            className="w-full bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold py-3 shadow-lg shadow-orange-500/25"
-                          >
-                            {isDownloadingPDF ? (
-                              <span className="flex items-center justify-center gap-2">
-                                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                                Generating PDF...
-                              </span>
-                            ) : (
-                              <span className="flex items-center justify-center gap-2">
-                                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                                </svg>
-                                Download Application PDF
-                              </span>
-                            )}
-                          </Button>
-                          <Button 
-                            onClick={() => {
-                              window.scrollTo({ top: 0, behavior: "smooth" })
-                              setStep(6)
-                            }} 
-                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3"
-                          >
+                        {/* Download PDF */}
+                        <Button
+                          onClick={handleDownloadPDF}
+                          disabled={isDownloadingPDF}
+                          className="w-full btn-gold-elite text-white font-semibold py-3 disabled:opacity-70"
+                        >
+                          {isDownloadingPDF ? (
+                            <span className="flex items-center justify-center gap-2">
+                              <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                              Generating PDF...
+                            </span>
+                          ) : (
                             <span className="flex items-center justify-center gap-2">
                               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                               </svg>
-                              Upload Documents
+                              Download Application PDF
                             </span>
-                          </Button>
-                        </div>
+                          )}
+                        </Button>
                         
                         {/* Secondary Action */}
                         <Button
