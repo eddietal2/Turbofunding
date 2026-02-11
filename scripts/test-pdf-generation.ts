@@ -223,13 +223,13 @@ async function generateTestPDF() {
   drawUnderlinedField("Phone", sampleFormData.businessPhone, rightColX, yPosition, phoneHalfWidth)
   drawUnderlinedField("Mobile", sampleFormData.phone, rightColX + phoneHalfWidth + 20, yPosition, phoneHalfWidth)
 
-  yPosition -= 40
+  yPosition -= 35
 
   // Row 2: DBA Name | Email
   drawUnderlinedField("DBA Name", sampleFormData.dba, leftColX, yPosition, colWidth)
   drawUnderlinedField("Email", sampleFormData.businessEmail, rightColX, yPosition, colWidth)
 
-  yPosition -= 40
+  yPosition -= 35
 
   // Row 3: Federal Tax ID with entity type checkboxes (full width)
   const entityType = sampleFormData.entityType.toLowerCase()
@@ -244,18 +244,18 @@ async function generateTestPDF() {
   drawCheckbox("SOLE PROP", entityType.includes("sole"), checkboxStartX + 195, yPosition + 5)
   drawCheckbox("NON-PROFIT", entityType.includes("non"), checkboxStartX + 275, yPosition + 5)
 
-  yPosition -= 40
+  yPosition -= 35
 
   // Row 4: Website (new row to avoid overlap)
   drawUnderlinedField("Website", "www.acmeindustries.com", leftColX, yPosition, colWidth)
 
-  yPosition -= 40
+  yPosition -= 35
 
   // Row 5: Business Start Date | Business Address
   drawUnderlinedField("Business Start Date", sampleFormData.businessStartDate, leftColX, yPosition, colWidth)
   drawUnderlinedField("Business Address", sampleFormData.businessAddress, rightColX, yPosition, colWidth)
 
-  yPosition -= 40
+  yPosition -= 35
 
   // Row 6: Industry & State Inc | City, State, ZIP
   const halfWidth = (colWidth - 20) / 2
@@ -267,7 +267,7 @@ async function generateTestPDF() {
   drawUnderlinedField("State", sampleFormData.businessState, rightColX + thirdWidth + 40, yPosition, 50)
   drawUnderlinedField("ZIP", sampleFormData.businessZip, rightColX + thirdWidth + 100, yPosition, 50)
 
-  yPosition -= 60
+  yPosition -= 50
 
   // ========== PRIMARY OWNER SECTION ==========
   drawSectionHeader("Primary Owner", leftColX, yPosition)
@@ -278,12 +278,12 @@ async function generateTestPDF() {
   drawUnderlinedField("First Name", sampleFormData.firstName, leftColX, yPosition, halfWidth + 30)
   drawUnderlinedField("Last Name", sampleFormData.lastName, leftColX + halfWidth + 50, yPosition, halfWidth + 30)
 
-  yPosition -= 40
+  yPosition -= 35
 
   drawUnderlinedField("Phone", sampleFormData.phone, leftColX, yPosition, halfWidth + 30)
   drawUnderlinedField("Email", sampleFormData.email, leftColX + halfWidth + 50, yPosition, halfWidth + 30)
 
-  yPosition -= 40
+  yPosition -= 35
 
   const thirdWidthFull = (pageWidth - margin * 2 - 40) / 3
   drawUnderlinedField("Date of Birth", sampleFormData.dateOfBirth, leftColX, yPosition, thirdWidthFull)
@@ -291,17 +291,17 @@ async function generateTestPDF() {
   drawUnderlinedField("SSN", maskedSSN, leftColX + thirdWidthFull + 20, yPosition, thirdWidthFull)
   drawUnderlinedField("% Ownership", sampleFormData.ownershipPercentage + "%", leftColX + thirdWidthFull * 2 + 40, yPosition, thirdWidthFull - 40)
 
-  yPosition -= 40
+  yPosition -= 35
 
   drawUnderlinedField("Home Address", sampleFormData.homeAddress, leftColX, yPosition, pageWidth - margin * 2)
 
-  yPosition -= 40
+  yPosition -= 35
 
   drawUnderlinedField("City", sampleFormData.city, leftColX, yPosition, 200)
   drawUnderlinedField("State", sampleFormData.state, leftColX + 220, yPosition, 120)
   drawUnderlinedField("ZIP", sampleFormData.zip, leftColX + 360, yPosition, 100)
 
-  yPosition -= 50
+  yPosition -= 40
 
   // ========== SIGNATURE SECTION ==========
   page.drawText(sampleFormData.signature, {
@@ -347,7 +347,7 @@ async function generateTestPDF() {
     color: darkGray,
   })
 
-  yPosition -= 80
+  yPosition -= 70
 
   // ========== LEGAL DISCLAIMER ==========
   const disclaimer = `By signing above, each of the above listed business and business owners/officers/members (individually and collectively, "you") authorize TurboFunding LLC ("TF") and each of its representatives, successors, assignees, affiliates and designees (collectively "Recipients") that may be involved with the acquiring of commercial loans and/or other products that have daily repayment features for the purchase of future receivables, including Merchant Cash Advance transactions, including without limitation the application therefore (collectively, "Transactions") to obtain consumer or personal business and investigative reports and other information about you.`
