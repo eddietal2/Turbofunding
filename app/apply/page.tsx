@@ -840,7 +840,7 @@ export default function ApplyPage() {
                           {step > 6 ? <CheckCircleIcon className="h-5 w-5" /> : step}
                         </div>
                         <div>
-                          <p className="text-sm font-semibold text-gray-900">
+                          <p className="text-sm font-semibold text-gray-900 font-space-grotesk">
                             {step === 1 && "Funding Info"}
                             {step === 2 && "Business Info"}
                             {step === 3 && "Owner Info"}
@@ -848,7 +848,7 @@ export default function ApplyPage() {
                             {step === 5 && "Confirmation"}
                             {step === 6 && "Documents"}
                           </p>
-                          <p className="text-xs text-gray-500">Step {step} of 6</p>
+                          <p className="text-xs text-gray-500 font-space-grotesk">Step {step} of 6</p>
                         </div>
                       </div>
                       
@@ -902,7 +902,7 @@ export default function ApplyPage() {
                             >
                               {step > num ? <CheckCircleIcon className="h-6 w-6" /> : num}
                             </div>
-                            <p className={`mt-3 text-sm font-medium transition-colors duration-300 ${
+                            <p className={`mt-3 text-sm font-medium transition-colors duration-300 font-space-grotesk ${
                               step >= num ? "text-gray-900" : "text-gray-400"
                             }`}>
                               {label}

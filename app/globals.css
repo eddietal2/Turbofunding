@@ -147,3 +147,13 @@
   );
   animation: gold-shimmer 2s ease-in-out infinite, subtle-glow 1.5s ease-in-out infinite;
 }
+
+/* Orange Focus Styling for Form Inputs */
+input:focus,
+textarea:focus,
+select:focus,
+[role="combobox"]:focus {
+  border-color: #f97316 !important;
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15) !important;
+}
