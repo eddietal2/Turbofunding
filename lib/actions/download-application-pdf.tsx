@@ -1,6 +1,7 @@
 "use server"
 
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib"
+import fontkit from "@pdf-lib/fontkit"
 import * as fs from "fs/promises"
 import * as path from "path"
 
@@ -9,13 +10,15 @@ export async function downloadApplicationPDF(formData: any) {
     console.log("[v0] Generating PDF for download...")
 
     const pdfDoc = await PDFDocument.create()
+    pdfDoc.registerFontkit(fontkit)
+    
     const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
     const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
 
     // Load Space Grotesk for headers from local file
     let headerFont = helveticaBold
     try {
-      const fontPath = path.join(process.cwd(), "public", "fonts", "SpaceGrotesk-Bold.woff")
+      const fontPath = path.join(process.cwd(), "public", "fonts", "SpaceGrotesk-Bold.ttf")
       const fontBytes = await fs.readFile(fontPath)
       headerFont = await pdfDoc.embedFont(new Uint8Array(fontBytes))
       console.log("[v0] Space Grotesk font loaded successfully from local file")

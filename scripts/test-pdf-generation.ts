@@ -7,6 +7,7 @@
  */
 
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib"
+import fontkit from "@pdf-lib/fontkit"
 import * as fs from "fs"
 import * as path from "path"
 
@@ -57,6 +58,8 @@ async function generateTestPDF() {
   console.log("🚀 Starting PDF generation test...")
   
   const pdfDoc = await PDFDocument.create()
+  pdfDoc.registerFontkit(fontkit)
+  
   const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
   const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
   const cursiveFont = await pdfDoc.embedFont(StandardFonts.HelveticaOblique) // Fallback for signature
@@ -64,7 +67,7 @@ async function generateTestPDF() {
   // Load Space Grotesk for headers from local file
   let headerFont = helveticaBold
   try {
-    const fontPath = path.join(__dirname, "..", "public", "fonts", "SpaceGrotesk-Bold.woff")
+    const fontPath = path.join(__dirname, "..", "public", "fonts", "SpaceGrotesk-Bold.ttf")
     const fontBytes = fs.readFileSync(fontPath)
     headerFont = await pdfDoc.embedFont(new Uint8Array(fontBytes))
     console.log("✓ Space Grotesk font loaded from local file")
@@ -87,15 +90,15 @@ async function generateTestPDF() {
 
   // ========== HEADER SECTION ==========
   // Logo only (larger, no text)
-  const logoHeight = 50
-  const logoWidth = 75
+  const logoHeight = 100
+  const logoWidth = 150
   try {
     const logoPath = path.join(__dirname, "..", "public", "images", "tf-logo.png")
     const logoBytes = fs.readFileSync(logoPath)
     const logoImage = await pdfDoc.embedPng(new Uint8Array(logoBytes))
     page.drawImage(logoImage, {
-      x: margin,
-      y: yPosition - logoHeight + 10,
+      x: margin - 20,
+      y: yPosition - logoHeight + 30,
       width: logoWidth,
       height: logoHeight,
     })
@@ -128,7 +131,7 @@ async function generateTestPDF() {
   page.drawText("TurboFunding Loan Application", {
     x: margin,
     y: yPosition,
-    size: 24,
+    size: 14,
     font: headerFont,
     color: black,
   })
