@@ -855,11 +855,6 @@ export default function ApplyPage() {
         window.URL.revokeObjectURL(url)
 
         console.log("[v0] PDF downloaded successfully")
-        
-        // Log blob URL if uploaded
-        if (result.blobUrl) {
-          console.log("[v0] PDF also saved to cloud storage:", result.blobUrl)
-        }
       } else {
         console.error("[v0] PDF download failed:", result.error)
         alert("Failed to download PDF. Please try again or contact support.")
