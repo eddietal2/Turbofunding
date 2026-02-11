@@ -231,37 +231,39 @@ async function generateTestPDF() {
 
   yPosition -= 35
 
-  // Row 3: Federal Tax ID with entity type checkboxes (full width)
+  // Row 3: Federal Tax ID (left) | Entity type checkboxes (right - 3 rows)
   const entityType = sampleFormData.entityType.toLowerCase()
   
-  drawUnderlinedField("Federal Tax ID", sampleFormData.federalTaxId, leftColX, yPosition, 110)
+  drawUnderlinedField("Federal Tax ID", sampleFormData.federalTaxId, leftColX, yPosition, colWidth)
   
-  // Entity type checkboxes - same row as Tax ID
-  const checkboxStartX = leftColX + 130
-  drawCheckbox("LLC", entityType.includes("llc"), checkboxStartX, yPosition + 5)
-  drawCheckbox("CORP", entityType.includes("corp"), checkboxStartX + 50, yPosition + 5)
-  drawCheckbox("PARTNERSHIP", entityType.includes("partner"), checkboxStartX + 110, yPosition + 5)
-  drawCheckbox("SOLE PROP", entityType.includes("sole"), checkboxStartX + 195, yPosition + 5)
-  drawCheckbox("NON-PROFIT", entityType.includes("non"), checkboxStartX + 275, yPosition + 5)
+  // Entity type checkboxes - right column, arranged in grid like Clarify Capital
+  drawCheckbox("LLC", entityType.includes("llc"), rightColX, yPosition + 5)
+  drawCheckbox("CORPORATION", entityType.includes("corp"), rightColX + 80, yPosition + 5)
+  
+  yPosition -= 20
+  drawCheckbox("PARTNERSHIP", entityType.includes("partner"), rightColX, yPosition + 5)
+  drawCheckbox("SOLE PROP", entityType.includes("sole"), rightColX + 80, yPosition + 5)
+  
+  yPosition -= 20
+  drawCheckbox("NON-PROFIT", entityType.includes("non"), rightColX, yPosition + 5)
 
-  yPosition -= 35
+  yPosition -= 30
 
-  // Row 4: Website (new row to avoid overlap)
-  drawUnderlinedField("Website", "www.acmeindustries.com", leftColX, yPosition, colWidth)
-
-  yPosition -= 35
-
-  // Row 5: Business Start Date | Business Address
+  // Row 4: Business Start Date | Website
   drawUnderlinedField("Business Start Date", sampleFormData.businessStartDate, leftColX, yPosition, colWidth)
+  drawUnderlinedField("Website", "www.acmeindustries.com", rightColX, yPosition, colWidth)
+
+  yPosition -= 35
+
+  // Row 5: Industry & State Inc | Business Address
+  const halfWidth = (colWidth - 20) / 2
+  drawUnderlinedField("Industry", sampleFormData.industry, leftColX, yPosition, halfWidth)
+  drawUnderlinedField("State Incorporated", sampleFormData.stateIncorporated, leftColX + halfWidth + 20, yPosition, halfWidth)
   drawUnderlinedField("Business Address", sampleFormData.businessAddress, rightColX, yPosition, colWidth)
 
   yPosition -= 35
 
-  // Row 6: Industry & State Inc | City, State, ZIP
-  const halfWidth = (colWidth - 20) / 2
-  drawUnderlinedField("Industry", sampleFormData.industry, leftColX, yPosition, halfWidth)
-  drawUnderlinedField("State Incorporated", sampleFormData.stateIncorporated, leftColX + halfWidth + 20, yPosition, halfWidth)
-  
+  // Row 6: City, State, ZIP (right column only)
   const thirdWidth = (colWidth - 30) / 3
   drawUnderlinedField("City", sampleFormData.businessCity, rightColX, yPosition, thirdWidth + 30)
   drawUnderlinedField("State", sampleFormData.businessState, rightColX + thirdWidth + 40, yPosition, 50)

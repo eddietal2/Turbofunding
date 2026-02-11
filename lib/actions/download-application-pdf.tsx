@@ -201,13 +201,13 @@ export async function downloadApplicationPDF(formData: any) {
     drawUnderlinedField("Phone", formData.businessPhone || "", rightColX, yPosition, phoneHalfWidth)
     drawUnderlinedField("Mobile", formData.phone || "", rightColX + phoneHalfWidth + 20, yPosition, phoneHalfWidth)
 
-    yPosition -= 40
+    yPosition -= 35
 
     // Row 2: DBA Name | Email
     drawUnderlinedField("DBA Name", formData.dba || formData.dbaName || "", leftColX, yPosition, colWidth)
     drawUnderlinedField("Email", formData.businessEmail || formData.email || "", rightColX, yPosition, colWidth)
 
-    yPosition -= 40
+    yPosition -= 35
 
     // Row 3: Federal Tax ID with entity type checkboxes (full width)
     const entityType = (formData.entityType || formData.businessType || "").toLowerCase()
@@ -223,18 +223,18 @@ export async function downloadApplicationPDF(formData: any) {
     drawCheckbox("SOLE PROP", entityType.includes("sole"), checkboxStartX + 195, yPosition + 5)
     drawCheckbox("NON-PROFIT", entityType.includes("non") || entityType.includes("501"), checkboxStartX + 275, yPosition + 5)
 
-    yPosition -= 40
+    yPosition -= 35
 
     // Row 4: Website (new row to avoid overlap)
     drawUnderlinedField("Website", formData.website || "", leftColX, yPosition, colWidth)
 
-    yPosition -= 40
+    yPosition -= 35
 
     // Row 5: Business Start Date | Business Address
     drawUnderlinedField("Business Start Date", formData.businessStartDate || "", leftColX, yPosition, colWidth)
     drawUnderlinedField("Business Address", formData.businessAddress || "", rightColX, yPosition, colWidth)
 
-    yPosition -= 40
+    yPosition -= 35
 
     // Row 6: Industry & State Incorporated | City, State, ZIP
     const halfWidth = (colWidth - 20) / 2
@@ -246,7 +246,7 @@ export async function downloadApplicationPDF(formData: any) {
     drawUnderlinedField("State", formData.businessState || "", rightColX + thirdWidth + 40, yPosition, 50)
     drawUnderlinedField("ZIP", formData.businessZip || formData.businessZipCode || "", rightColX + thirdWidth + 100, yPosition, 50)
 
-    yPosition -= 60
+    yPosition -= 50
 
     // ========== PRIMARY OWNER SECTION ==========
     drawSectionHeader("Primary Owner", leftColX, yPosition)
@@ -257,13 +257,13 @@ export async function downloadApplicationPDF(formData: any) {
     drawUnderlinedField("First Name", formData.firstName || "", leftColX, yPosition, halfWidth + 30)
     drawUnderlinedField("Last Name", formData.lastName || "", leftColX + halfWidth + 50, yPosition, halfWidth + 30)
 
-    yPosition -= 40
+    yPosition -= 35
 
     // Row 2: Phone | Email
     drawUnderlinedField("Phone", formData.phone || "", leftColX, yPosition, halfWidth + 30)
     drawUnderlinedField("Email", formData.email || "", leftColX + halfWidth + 50, yPosition, halfWidth + 30)
 
-    yPosition -= 40
+    yPosition -= 35
 
     // Row 3: DOB | SSN | % Ownership
     const thirdWidthFull = (pageWidth - margin * 2 - 40) / 3
@@ -273,19 +273,19 @@ export async function downloadApplicationPDF(formData: any) {
     drawUnderlinedField("SSN", maskedSSN, leftColX + thirdWidthFull + 20, yPosition, thirdWidthFull)
     drawUnderlinedField("% Ownership", (formData.ownershipPercentage || formData.percentageOwnership || "") + "%", leftColX + thirdWidthFull * 2 + 40, yPosition, thirdWidthFull - 40)
 
-    yPosition -= 40
+    yPosition -= 35
 
     // Row 4: Home Address
     drawUnderlinedField("Home Address", formData.homeAddress || "", leftColX, yPosition, pageWidth - margin * 2)
 
-    yPosition -= 40
+    yPosition -= 35
 
     // Row 5: City | State | ZIP
     drawUnderlinedField("City", formData.city || "", leftColX, yPosition, 200)
     drawUnderlinedField("State", formData.state || "", leftColX + 220, yPosition, 120)
     drawUnderlinedField("ZIP", formData.zip || formData.zipCode || "", leftColX + 360, yPosition, 100)
 
-    yPosition -= 50
+    yPosition -= 40
 
     // ========== SIGNATURE SECTION ==========
     // Draw signature image or text
@@ -359,7 +359,7 @@ export async function downloadApplicationPDF(formData: any) {
       color: darkGray,
     })
 
-    yPosition -= 80
+    yPosition -= 70
 
     // ========== LEGAL DISCLAIMER ==========
     const disclaimer = `By signing above, each of the above listed business and business owners/officers/members (individually and collectively, "you") authorize TurboFunding LLC ("TF") and each of its representatives, successors, assignees, affiliates and designees (collectively "Recipients") that may be involved with the acquiring of commercial loans and/or other products that have daily repayment features for the purchase of future receivables, including Merchant Cash Advance transactions, including without limitation the application therefore (collectively, "Transactions") to obtain consumer or personal business and investigative reports and other information about you, including without limitation credit card processor statements and bank statements, from one or more consumer reporting agencies, such as TransUnion, Experian and Equifax, and from other credit bureaus, banks, creditors and other third parties. You also authorize TF to transmit this application form, along with any of the foregoing information obtained in connection with this application, to any or all of the Recipients for the foregoing purposes; however TF shall not disclose information in your credit report to third parties. You also consent to the release, by any credit or financial institution, of any information relating to you, to TF and to each of the Recipients, on its own behalf.`
