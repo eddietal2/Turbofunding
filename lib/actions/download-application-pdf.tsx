@@ -112,8 +112,9 @@ export async function downloadApplicationPDF(formData: any) {
 
     // ========== TWO COLUMN LAYOUT ==========
     const leftColX = margin
-    const rightColX = pageWidth / 2 + 10
-    const colWidth = (pageWidth - margin * 2 - 20) / 2
+    const columnGap = 40 // Gap between left and right columns
+    const rightColX = pageWidth / 2 + columnGap / 2
+    const colWidth = (pageWidth - margin * 2 - columnGap) / 2
 
     // Helper function to draw underlined field
     const drawUnderlinedField = (label: string, value: string, x: number, y: number, width: number) => {
@@ -245,7 +246,7 @@ export async function downloadApplicationPDF(formData: any) {
     drawUnderlinedField("State", formData.businessState || "", rightColX + thirdWidth + 40, yPosition, 50)
     drawUnderlinedField("ZIP", formData.businessZip || formData.businessZipCode || "", rightColX + thirdWidth + 100, yPosition, 50)
 
-    yPosition -= 50
+    yPosition -= 60
 
     // ========== PRIMARY OWNER SECTION ==========
     drawSectionHeader("Primary Owner", leftColX, yPosition)
