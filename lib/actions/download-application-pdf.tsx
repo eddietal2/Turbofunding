@@ -1,7 +1,6 @@
 "use server"
 
 import { PDFDocument, rgb, StandardFonts } from "pdf-lib"
-import { put } from "@vercel/blob"
 
 export async function downloadApplicationPDF(formData: any) {
   try {
@@ -426,34 +425,13 @@ export async function downloadApplicationPDF(formData: any) {
 
     console.log("[v0] PDF generated successfully for download")
 
-    // Upload to Vercel Blob
-    let blobUrl: string | null = null
-    try {
-      const businessName = (formData.businessName || formData.legalBusinessName || "application")
-        .replace(/[^a-zA-Z0-9]/g, "_")
-        .substring(0, 30)
-      const timestamp = new Date().toISOString().replace(/[:.]/g, "-")
-      const filename = `applications/${businessName}_${timestamp}.pdf`
-
-      console.log("[v0] Uploading PDF to Vercel Blob...")
-      const blob = await put(filename, Buffer.from(pdfBytes), {
-        access: "public",
-        contentType: "application/pdf",
-        addRandomSuffix: true, // Adds random suffix for security (hard-to-guess URLs)
-      })
-      
-      // Use the built-in downloadUrl for direct download link
-      blobUrl = blob.downloadUrl
-      console.log("[v0] PDF uploaded to Vercel Blob:", blobUrl)
-    } catch (blobError: any) {
-      console.error("[v0] Error uploading to Vercel Blob:", blobError.message)
-      // Continue without blob upload - still return PDF for download
-    }
+    // Note: Blob upload is now handled by upload-application-documents.ts
+    // This function only generates the PDF bytes for client-side download
 
     return {
       success: true,
       pdfBytes: Array.from(pdfBytes),
-      blobUrl,
+      blobUrl: null, // Blob URL is set by upload-application-documents.ts
     }
   } catch (error: any) {
     console.error("[v0] Error generating PDF for download:", error)

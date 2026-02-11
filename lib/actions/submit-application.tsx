@@ -1,6 +1,7 @@
 "use server"
 
 import { sendApplicationConfirmationEmail, sendAdminNotificationEmail } from "@/lib/email"
+import { ApplicationFolder } from "./upload-application-documents"
 
 interface SubmitApplicationResult {
   success: boolean
@@ -9,10 +10,13 @@ interface SubmitApplicationResult {
   emailSent?: boolean
 }
 
-export async function submitApplication(formData: Record<string, unknown>, pdfUrl?: string | null): Promise<SubmitApplicationResult> {
+export async function submitApplication(formData: Record<string, unknown>, applicationFolder?: ApplicationFolder | null): Promise<SubmitApplicationResult> {
   try {
     console.log("[Submit] Starting application submission...")
     console.log("[Submit] Form data received:", JSON.stringify(formData, null, 2))
+    if (applicationFolder) {
+      console.log("[Submit] Application folder:", JSON.stringify(applicationFolder, null, 2))
+    }
 
     // TODO: Implement your preferred backend submission method here
     // For now, just log the data
@@ -24,6 +28,9 @@ export async function submitApplication(formData: Record<string, unknown>, pdfUr
     const recipientName = `${formData.firstName || ""} ${formData.lastName || ""}`.trim() || "Valued Customer"
     const businessName = (formData.businessName || formData.legalBusinessName || "Your Business") as string
     const amountRequested = (formData.amountRequested || "0") as string
+
+    // Extract PDF URL from application folder
+    const pdfUrl = applicationFolder?.applicationPdfUrl || null
 
     if (recipientEmail) {
       console.log("[Submit] Sending confirmation email to owner:", recipientEmail)
@@ -42,8 +49,8 @@ export async function submitApplication(formData: Record<string, unknown>, pdfUr
         console.error("[Submit] Failed to send confirmation email:", emailResult.error)
       }
 
-      // Also send admin notification
-      const adminResult = await sendAdminNotificationEmail(formData, pdfUrl)
+      // Also send admin notification with all document links
+      const adminResult = await sendAdminNotificationEmail(formData, applicationFolder)
       if (adminResult.success) {
         console.log("[Submit] Admin notification sent successfully")
       } else {

@@ -1,6 +1,7 @@
 "use server"
 
 import nodemailer from "nodemailer"
+import { ApplicationFolder } from "./actions/upload-application-documents"
 
 // Logo hosted on Vercel Blob CDN
 const LOGO_URL = "https://yeixnyce3to9ontr.public.blob.vercel-storage.com/logos/turbofunding-logo.png"
@@ -273,7 +274,13 @@ Funding Solutions for Growing Businesses
 }
 
 // Send notification to admin about new application
-export async function sendAdminNotificationEmail(formData: Record<string, unknown>, pdfUrl?: string | null) {
+export async function sendAdminNotificationEmail(formData: Record<string, unknown>, applicationFolder?: ApplicationFolder | null) {
+  // Extract document URLs from folder
+  const pdfUrl = applicationFolder?.applicationPdfUrl || null
+  const bankStatementsUrl = applicationFolder?.bankStatementsUrl || null
+  const otherDocumentsUrl = applicationFolder?.otherDocumentsUrl || null
+  const folderPath = applicationFolder?.folderPath || null
+
   const content = `
     <h2 style="color: #1e3a8a; margin: 0 0 20px 0; font-size: 22px;">🆕 New Application Received</h2>
     
@@ -300,11 +307,27 @@ export async function sendAdminNotificationEmail(formData: Record<string, unknow
       <p style="margin: 8px 0; color: #334155;"><strong>Phone:</strong> ${formData.phone || formData.businessPhone}</p>
     </div>
 
-    ${pdfUrl ? `
-    <div style="text-align: center; margin-bottom: 20px;">
-      <a href="${pdfUrl}" style="display: inline-block; background-color: #3b82f6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: 600;">
-        📄 View Application PDF
-      </a>
+    ${(pdfUrl || bankStatementsUrl || otherDocumentsUrl) ? `
+    <div style="background-color: #fef3c7; border: 1px solid #f59e0b; border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+      <h3 style="color: #b45309; margin: 0 0 12px 0; font-size: 16px; border-bottom: 2px solid #f59e0b; padding-bottom: 8px;">📁 Application Documents</h3>
+      ${folderPath ? `<p style="margin: 8px 0; color: #92400e; font-size: 13px;"><strong>Folder:</strong> ${folderPath}</p>` : ""}
+      <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px;">
+        ${pdfUrl ? `
+        <a href="${pdfUrl}" style="display: inline-block; background-color: #3b82f6; color: white; padding: 10px 18px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px;">
+          📄 Application PDF
+        </a>
+        ` : ""}
+        ${bankStatementsUrl ? `
+        <a href="${bankStatementsUrl}" style="display: inline-block; background-color: #22c55e; color: white; padding: 10px 18px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px;">
+          🏦 Bank Statements
+        </a>
+        ` : ""}
+        ${otherDocumentsUrl ? `
+        <a href="${otherDocumentsUrl}" style="display: inline-block; background-color: #8b5cf6; color: white; padding: 10px 18px; text-decoration: none; border-radius: 6px; font-weight: 600; font-size: 14px;">
+          📎 Other Documents
+        </a>
+        ` : ""}
+      </div>
     </div>
     ` : ""}
 

@@ -16,6 +16,7 @@ import { ConversionTracking } from "@/components/conversion-tracking"
 import { SignatureModal } from "@/components/signature-modal"
 import { submitApplication } from "@/lib/actions/submit-application"
 import { downloadApplicationPDF } from "@/lib/actions/download-application-pdf"
+import { uploadApplicationDocuments, ApplicationFolder } from "@/lib/actions/upload-application-documents"
 
 const DRAFT_STORAGE_KEY = "turbo_funding_application_draft"
 const DRAFT_STEP_KEY = "turbo_funding_application_step"
@@ -198,6 +199,8 @@ export default function ApplyPage() {
   const [draftLoaded, setDraftLoaded] = useState(false)
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
   const [formData, setFormData] = useState(getInitialFormData())
+  const [applicationFolderPath, setApplicationFolderPath] = useState<string | null>(null)
+  const [isUploadingDocs, setIsUploadingDocs] = useState(false)
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     funding: true,
     business: true,
@@ -330,7 +333,13 @@ export default function ApplyPage() {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, files } = e.target
-    setFormData((prev) => ({ ...prev, [name]: files?.[0] ?? null }))
+    const file = files?.[0] ?? null
+    console.log("[FileChange] File selected:", name, file?.name, file?.size, "bytes")
+    setFormData((prev) => {
+      const newFormData = { ...prev, [name]: file }
+      console.log("[FileChange] Updated formData:", name, "=", newFormData[name as keyof typeof newFormData])
+      return newFormData
+    })
   }
 
   // Format EIN as XX-XXXXXXX
@@ -631,24 +640,49 @@ export default function ApplyPage() {
     console.log("[Submit] Submitting application with data:", updatedFormData)
 
     try {
-      // First, generate and upload the PDF to get the blob URL for the email
+      // First, generate the PDF (still uploads to legacy location)
       console.log("[Submit] Generating PDF for email attachment...")
-      let pdfBlobUrl: string | null = null
+      let pdfBytes: number[] | null = null
       
       try {
         const pdfResult = await downloadApplicationPDF(updatedFormData)
-        if (pdfResult.success && pdfResult.blobUrl) {
-          pdfBlobUrl = pdfResult.blobUrl
-          console.log("[Submit] PDF uploaded to cloud storage:", pdfBlobUrl)
+        if (pdfResult.success && pdfResult.pdfBytes) {
+          pdfBytes = pdfResult.pdfBytes
+          console.log("[Submit] PDF generated successfully")
         } else {
-          console.warn("[Submit] PDF generation/upload failed, continuing without PDF link")
+          console.warn("[Submit] PDF generation failed, continuing without PDF")
         }
       } catch (pdfError) {
         console.warn("[Submit] PDF generation error (non-critical):", pdfError)
       }
 
+      // Upload PDF to organized folder (documents will be uploaded later in Step 6)
+      console.log("[Submit] Uploading application PDF to organized folder...")
+      let applicationFolder: ApplicationFolder | null = null
+      
+      try {
+        const uploadResult = await uploadApplicationDocuments(
+          (formData.businessName || formData.legalBusinessName || "Unknown Business") as string,
+          pdfBytes || undefined,
+          undefined, // No bank statements yet - uploaded in Step 6
+          undefined,
+          undefined, // No other documents yet - uploaded in Step 6
+          undefined
+        )
+        
+        if (uploadResult.success && uploadResult.folder) {
+          applicationFolder = uploadResult.folder
+          setApplicationFolderPath(uploadResult.folder.folderPath)
+          console.log("[Submit] PDF uploaded to folder:", applicationFolder.folderPath)
+        } else {
+          console.warn("[Submit] PDF upload failed:", uploadResult.error)
+        }
+      } catch (uploadError) {
+        console.warn("[Submit] PDF upload error (non-critical):", uploadError)
+      }
+
       console.log("[Submit] Calling submitApplication...")
-      const result = await submitApplication(updatedFormData, pdfBlobUrl)
+      const result = await submitApplication(updatedFormData, applicationFolder)
       console.log("[Submit] Submit result:", result)
 
       if (result.success) {
@@ -678,8 +712,109 @@ export default function ApplyPage() {
     }
   }
 
-  const handleDocumentUpload = () => {
-    router.push("/apply/success")
+  const handleDocumentUpload = async () => {
+    console.log("[Docs] handleDocumentUpload called")
+    console.log("[Docs] formData.bankStatements:", formData.bankStatements)
+    console.log("[Docs] formData.otherDocuments:", formData.otherDocuments)
+    console.log("[Docs] formData.bankStatements type:", typeof formData.bankStatements)
+    console.log("[Docs] formData.bankStatements instanceof File:", formData.bankStatements instanceof File)
+    
+    // Check if we have documents to upload
+    if (!formData.bankStatements && !formData.otherDocuments) {
+      console.log("[Docs] No documents to upload, redirecting...")
+      router.push("/apply/success")
+      return
+    }
+
+    setIsUploadingDocs(true)
+    console.log("[Docs] Starting document upload...")
+
+    try {
+      // Helper function to convert File to base64
+      const fileToBase64 = async (file: File): Promise<string> => {
+        console.log("[Docs] fileToBase64 called for:", file.name, "size:", file.size)
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader()
+          reader.readAsDataURL(file)
+          reader.onload = () => {
+            const result = reader.result as string
+            console.log("[Docs] FileReader result length:", result.length)
+            const base64 = result.split(',')[1]
+            console.log("[Docs] Base64 length after split:", base64?.length || 0)
+            if (!base64) {
+              reject(new Error("Failed to extract base64 from file"))
+              return
+            }
+            resolve(base64)
+          }
+          reader.onerror = (error) => {
+            console.error("[Docs] FileReader error:", error)
+            reject(error)
+          }
+        })
+      }
+
+      // Convert document files to base64
+      let bankStatementsBase64: string | undefined
+      let bankStatementsFilename: string | undefined
+      let otherDocumentsBase64: string | undefined
+      let otherDocumentsFilename: string | undefined
+
+      if (formData.bankStatements) {
+        console.log("[Docs] Converting bank statements to base64...")
+        console.log("[Docs] Bank statements file:", formData.bankStatements.name, formData.bankStatements.size, "bytes")
+        bankStatementsBase64 = await fileToBase64(formData.bankStatements)
+        bankStatementsFilename = formData.bankStatements.name
+        console.log("[Docs] Bank statements converted! Base64 length:", bankStatementsBase64.length)
+      }
+
+      if (formData.otherDocuments) {
+        console.log("[Docs] Converting other documents to base64...")
+        console.log("[Docs] Other documents file:", formData.otherDocuments.name, formData.otherDocuments.size, "bytes")
+        otherDocumentsBase64 = await fileToBase64(formData.otherDocuments)
+        otherDocumentsFilename = formData.otherDocuments.name
+        console.log("[Docs] Other documents converted! Base64 length:", otherDocumentsBase64.length)
+      }
+
+      // Upload documents to folder (use same folder as the PDF from Step 4)
+      console.log("[Docs] Calling uploadApplicationDocuments...")
+      console.log("[Docs] businessName:", formData.businessName || formData.legalBusinessName)
+      console.log("[Docs] applicationFolderPath:", applicationFolderPath)
+      console.log("[Docs] bankStatementsBase64 length:", bankStatementsBase64?.length || 0)
+      console.log("[Docs] bankStatementsFilename:", bankStatementsFilename)
+      console.log("[Docs] otherDocumentsBase64 length:", otherDocumentsBase64?.length || 0)
+      console.log("[Docs] otherDocumentsFilename:", otherDocumentsFilename)
+      
+      const uploadResult = await uploadApplicationDocuments(
+        (formData.businessName || formData.legalBusinessName || "Unknown Business") as string,
+        undefined, // No PDF bytes - just uploading documents
+        bankStatementsBase64,
+        bankStatementsFilename,
+        otherDocumentsBase64,
+        otherDocumentsFilename,
+        applicationFolderPath || undefined // Pass existing folder path from Step 4
+      )
+
+      console.log("[Docs] uploadApplicationDocuments returned:", JSON.stringify(uploadResult, null, 2))
+
+      if (uploadResult.success && uploadResult.folder) {
+        console.log("[Docs] Documents uploaded successfully!")
+        console.log("[Docs] Bank statements URL:", uploadResult.folder.bankStatementsUrl)
+        console.log("[Docs] Other documents URL:", uploadResult.folder.otherDocumentsUrl)
+        alert(`Upload successful!\n\nBank Statements: ${uploadResult.folder.bankStatementsUrl || 'Not uploaded'}\n\nOther Documents: ${uploadResult.folder.otherDocumentsUrl || 'Not uploaded'}`)
+      } else {
+        console.error("[Docs] Document upload failed:", uploadResult.error)
+        alert(`Upload failed: ${uploadResult.error}`)
+      }
+
+      setIsUploadingDocs(false)
+      router.push("/apply/success")
+    } catch (error) {
+      console.error("[Docs] Error uploading documents:", error)
+      alert(`Upload error: ${error instanceof Error ? error.message : String(error)}`)
+      setIsUploadingDocs(false)
+      // Don't redirect on error so user can try again
+    }
   }
 
   const getFundingAmountValue = (range: string) => {
@@ -2445,6 +2580,14 @@ export default function ApplyPage() {
                       </div>
                     </div>
 
+                    {/* Debug Info - TODO: Remove in production */}
+                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4 text-xs font-mono">
+                      <p><strong>Debug (remove later):</strong></p>
+                      <p>Folder: {applicationFolderPath || "Not set"}</p>
+                      <p>Bank Statements: {formData.bankStatements ? `${formData.bankStatements.name} (${formData.bankStatements.size} bytes)` : "null"}</p>
+                      <p>Other Docs: {formData.otherDocuments ? `${formData.otherDocuments.name} (${formData.otherDocuments.size} bytes)` : "null"}</p>
+                    </div>
+
                     {/* Bank Statements Upload */}
                     <div className="bg-white rounded-xl border border-gray-200 shadow-sm mb-4 overflow-hidden">
                       <div className="bg-gradient-to-r from-orange-500 to-orange-600 px-4 md:px-6 py-3">
@@ -2619,11 +2762,25 @@ export default function ApplyPage() {
                         </Button>
                         <div className="w-full sm:w-auto text-center order-1 sm:order-2">
                           <Button 
+                            type="button"
                             onClick={handleDocumentUpload} 
-                            className="w-full sm:w-auto bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold px-8 py-3 shadow-lg shadow-green-500/25"
+                            disabled={isUploadingDocs}
+                            className="w-full sm:w-auto bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 text-white font-semibold px-8 py-3 shadow-lg shadow-green-500/25 disabled:opacity-50"
                           >
-                            <CheckCircleIcon className="mr-2 h-5 w-5" />
-                            Complete Upload
+                            {isUploadingDocs ? (
+                              <>
+                                <svg className="animate-spin mr-2 h-5 w-5" fill="none" viewBox="0 0 24 24">
+                                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                </svg>
+                                Uploading...
+                              </>
+                            ) : (
+                              <>
+                                <CheckCircleIcon className="mr-2 h-5 w-5" />
+                                Complete Upload
+                              </>
+                            )}
                           </Button>
                         </div>
                       </div>
