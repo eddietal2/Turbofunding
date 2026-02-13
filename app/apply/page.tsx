@@ -1,4 +1,6 @@
 "use client"
+// DEV MODE: Set to true to pre-fill all required fields for quick testing
+const DEV_MODE = true
 
 import { useState, useEffect, useCallback } from "react"
 import Link from "next/link"
@@ -74,8 +76,8 @@ const US_STATES = [
   "Wyoming",
 ]
 
-// DEV MODE: Set to true to pre-fill all required fields for quick testing
-const DEV_MODE = true
+// Funding range limits (in dollars)
+const MIN_FUNDING_AMOUNT = 1000
 
 const devFormData = {
   // Step 1: Funding Information
@@ -372,6 +374,8 @@ export default function ApplyPage() {
       newErrors.amountRequested = "Amount requested is required"
     } else if (isNaN(Number(formData.amountRequested)) || Number(formData.amountRequested) <= 0) {
       newErrors.amountRequested = "Please enter a valid amount greater than 0"
+    } else if (Number(formData.amountRequested) < MIN_FUNDING_AMOUNT) {
+      newErrors.amountRequested = `Minimum funding amount is $${MIN_FUNDING_AMOUNT.toLocaleString()}`
     }
     
     if (!formData.useOfFunds || formData.useOfFunds.trim() === "") {
@@ -389,6 +393,7 @@ export default function ApplyPage() {
     formData.amountRequested.trim() !== "" &&
     !isNaN(Number(formData.amountRequested)) &&
     Number(formData.amountRequested) > 0 &&
+    Number(formData.amountRequested) >= MIN_FUNDING_AMOUNT &&
     formData.useOfFunds.trim().length >= 10
 
   // Email validation helper
@@ -1056,6 +1061,7 @@ export default function ApplyPage() {
                             <Label htmlFor="amountRequested" className="text-gray-800">
                               Amount Requested <span className="text-red-500">*</span>
                             </Label>
+                            <p className="text-sm text-gray-500">Minimum: ${MIN_FUNDING_AMOUNT.toLocaleString()}</p>
                             <Input
                               id="amountRequested"
                               name="amountRequested"
