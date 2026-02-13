@@ -2,7 +2,7 @@
 // DEV MODE: Set to true to pre-fill all required fields for quick testing
 const DEV_MODE = true
 
-import { useState, useEffect, useCallback } from "react"
+import { useState, useEffect, useCallback, useRef } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
@@ -189,13 +189,25 @@ const getInitialFormData = () => ({
   ownershipPercentage: DEV_MODE ? devFormData.ownershipPercentage : "",
 })
 
+// File validation constants
+const MAX_FILE_SIZE = 10 * 1024 * 1024 // 10MB
+const ALLOWED_EXTENSIONS = ['.pdf', '.jpg', '.jpeg', '.png']
+const SESSION_TIMEOUT = 30 * 60 * 1000 // 30 minutes
+
 export default function ApplyPage() {
   const router = useRouter()
   const [step, setStep] = useState(1)
   const [showSecondOwner, setShowSecondOwner] = useState(false)
   const [isDownloadingPDF, setIsDownloadingPDF] = useState(false)
+  const [pdfDownloadError, setPdfDownloadError] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [uploadError, setUploadError] = useState<string | null>(null)
+  const [fileValidationErrors, setFileValidationErrors] = useState<Record<string, string>>({})
   const [errors, setErrors] = useState<Record<string, string>>({})
+  const [globalError, setGlobalError] = useState<string | null>(null)
+  const [lastSubmitTime, setLastSubmitTime] = useState<number>(0)
+  const [sessionTimeoutWarning, setSessionTimeoutWarning] = useState(false)
+  const sessionTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const [showDraftModal, setShowDraftModal] = useState(false)
   const [showSignatureModal, setShowSignatureModal] = useState(false)
   const [draftLoaded, setDraftLoaded] = useState(false)
@@ -258,7 +270,71 @@ export default function ApplyPage() {
     setDraftLoaded(true)
   }, [])
 
-  // Auto-save draft when form data changes (debounced)
+  // Browser back button and session timeout handling
+  useEffect(() => {
+    if (!draftLoaded) return
+
+    // Handle browser back button
+    const handlePopState = () => {
+      console.warn("[GlobalError] Browser back button detected - checking data persistence")
+      try {
+        const savedDraft = localStorage.getItem(DRAFT_STORAGE_KEY)
+        if (!savedDraft) {
+          console.warn("[GlobalError] ❌ Form data lost after back button")
+          setGlobalError("Your previous session was cleared. Your application data may have been lost. Please start over or check your draft.")
+        }
+      } catch (error) {
+        console.error("[GlobalError] Error checking data after back button:", error)
+      }
+    }
+
+    window.addEventListener("popstate", handlePopState)
+
+    // Session timeout - 30 minutes of inactivity
+    const resetSessionTimeout = () => {
+      if (sessionTimeoutRef.current) {
+        clearTimeout(sessionTimeoutRef.current)
+      }
+
+      sessionTimeoutRef.current = setTimeout(() => {
+        console.warn("[SessionTimeout] ⏱️ Session timeout after 30 minutes of inactivity")
+        setSessionTimeoutWarning(true)
+        setGlobalError("Your session has expired due to inactivity. Please refresh the page and log in again.")
+      }, SESSION_TIMEOUT)
+    }
+
+    // Reset timeout on user activity
+    const handleUserActivity = () => {
+      resetSessionTimeout()
+    }
+
+    const events = [
+      "mousedown",
+      "keydown",
+      "scroll",
+      "touchstart",
+      "click",
+      "change",
+      "input",
+    ]
+
+    events.forEach((event) => {
+      document.addEventListener(event, handleUserActivity)
+    })
+
+    // Initialize timeout
+    resetSessionTimeout()
+
+    return () => {
+      window.removeEventListener("popstate", handlePopState)
+      events.forEach((event) => {
+        document.removeEventListener(event, handleUserActivity)
+      })
+      if (sessionTimeoutRef.current) {
+        clearTimeout(sessionTimeoutRef.current)
+      }
+    }
+  }, [draftLoaded])
   useEffect(() => {
     if (!draftLoaded || DEV_MODE || step >= 5) return
 
@@ -336,12 +412,45 @@ export default function ApplyPage() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, files } = e.target
     const file = files?.[0] ?? null
-    console.log("[FileChange] File selected:", name, file?.name, file?.size, "bytes")
-    setFormData((prev) => {
-      const newFormData = { ...prev, [name]: file }
-      console.log("[FileChange] Updated formData:", name, "=", newFormData[name as keyof typeof newFormData])
-      return newFormData
+    
+    setFileValidationErrors((prev) => {
+      const newErrors = { ...prev }
+      delete newErrors[name]
+      return newErrors
     })
+    
+    if (!file) {
+      console.log("[FileChange] File cleared:", name)
+      setFormData((prev) => ({ ...prev, [name]: null }))
+      return
+    }
+    
+    // Validate file format
+    const extension = '.' + file.name.split('.').pop()?.toLowerCase()
+    if (!ALLOWED_EXTENSIONS.includes(extension)) {
+      const msg = `Invalid file format for ${name === 'bankStatements' ? 'Bank Statements' : 'Other Documents'}. Allowed types: PDF, JPG, PNG`
+      console.warn("[FileValidation] ❌", msg)
+      setFileValidationErrors((prev) => ({ ...prev, [name]: msg }))
+      return
+    }
+    
+    // Validate file size
+    if (file.size > MAX_FILE_SIZE) {
+      const msg = `File is too large (${(file.size / 1024 / 1024).toFixed(2)}MB). Maximum size is 10MB`
+      console.warn("[FileValidation] ❌", msg)
+      setFileValidationErrors((prev) => ({ ...prev, [name]: msg }))
+      return
+    }
+    
+    if (file.size < 1024) {
+      const msg = "File is too small. Please select a valid document"
+      console.warn("[FileValidation] ❌", msg)
+      setFileValidationErrors((prev) => ({ ...prev, [name]: msg }))
+      return
+    }
+    
+    console.log("[FileValidation] ✅ File accepted:", name, file.name, `(${(file.size / 1024).toFixed(2)}KB)`)
+    setFormData((prev) => ({ ...prev, [name]: file }))
   }
 
   // Format EIN as XX-XXXXXXX
@@ -1090,16 +1199,35 @@ export default function ApplyPage() {
   }
 
   const handleDocumentUpload = async () => {
-    console.log("[Docs] handleDocumentUpload called")
-    console.log("[Docs] formData.bankStatements:", formData.bankStatements)
-    console.log("[Docs] formData.otherDocuments:", formData.otherDocuments)
-    console.log("[Docs] formData.bankStatements type:", typeof formData.bankStatements)
-    console.log("[Docs] formData.bankStatements instanceof File:", formData.bankStatements instanceof File)
+    const now = Date.now()
     
-    // Check if we have documents to upload
-    if (!formData.bankStatements && !formData.otherDocuments) {
-      console.log("[Docs] No documents to upload, redirecting...")
-      router.push("/apply/success")
+    // Prevent double submissions (debounce)
+    if (now - lastSubmitTime < 1000) {
+      console.warn("[Docs] ❌ Double submission prevented")
+      setGlobalError("Please wait - submission already in progress")
+      return
+    }
+    setLastSubmitTime(now)
+    
+    console.log("[Docs] handleDocumentUpload called")
+    
+    setUploadError(null)
+    setGlobalError(null)
+    
+    // ===== VALIDATION =====
+    // Validation: Bank statements required
+    if (!formData.bankStatements) {
+      const msg = "❌ Bank Statements file is required. Please select a document (PDF, JPG, or PNG) before uploading."
+      console.error("[Docs] Validation error:", msg)
+      setUploadError(msg)
+      return
+    }
+    
+    // Validation: Application folder path from Step 4
+    if (!applicationFolderPath) {
+      const msg = "❌ Application folder from Step 4 not found. Please complete Step 4 (sign your application) first, then return to Step 6."
+      console.error("[Docs] Missing folder path:", msg)
+      setUploadError(msg)
       return
     }
 
@@ -1138,57 +1266,118 @@ export default function ApplyPage() {
       let otherDocumentsFilename: string | undefined
 
       if (formData.bankStatements) {
-        console.log("[Docs] Converting bank statements to base64...")
-        console.log("[Docs] Bank statements file:", formData.bankStatements.name, formData.bankStatements.size, "bytes")
-        bankStatementsBase64 = await fileToBase64(formData.bankStatements)
-        bankStatementsFilename = formData.bankStatements.name
-        console.log("[Docs] Bank statements converted! Base64 length:", bankStatementsBase64.length)
+        try {
+          console.log("[Docs] Converting bank statements to base64...")
+          console.log("[Docs] Bank statements file:", formData.bankStatements.name, formData.bankStatements.size, "bytes")
+          bankStatementsBase64 = await fileToBase64(formData.bankStatements)
+          bankStatementsFilename = formData.bankStatements.name
+          console.log("[Docs] ✅ Bank statements converted! Base64 length:", bankStatementsBase64.length)
+        } catch (error) {
+          const msg = error instanceof Error ? error.message : String(error)
+          console.error("[Docs] ❌ Failed to read bank statements file:", msg)
+          setUploadError(`Failed to read Bank Statements file: ${msg}. Please try uploading again.`)
+          setIsUploadingDocs(false)
+          return
+        }
       }
 
       if (formData.otherDocuments) {
-        console.log("[Docs] Converting other documents to base64...")
-        console.log("[Docs] Other documents file:", formData.otherDocuments.name, formData.otherDocuments.size, "bytes")
-        otherDocumentsBase64 = await fileToBase64(formData.otherDocuments)
-        otherDocumentsFilename = formData.otherDocuments.name
-        console.log("[Docs] Other documents converted! Base64 length:", otherDocumentsBase64.length)
+        try {
+          console.log("[Docs] Converting other documents to base64...")
+          console.log("[Docs] Other documents file:", formData.otherDocuments.name, formData.otherDocuments.size, "bytes")
+          otherDocumentsBase64 = await fileToBase64(formData.otherDocuments)
+          otherDocumentsFilename = formData.otherDocuments.name
+          console.log("[Docs] ✅ Other documents converted! Base64 length:", otherDocumentsBase64.length)
+        } catch (error) {
+          const msg = error instanceof Error ? error.message : String(error)
+          console.error("[Docs] ⚠️  Failed to read other documents file:", msg)
+          // Don't fail - continue with just bank statements
+          console.log("[Docs] Continuing upload without other documents...")
+          otherDocumentsBase64 = undefined
+          otherDocumentsFilename = undefined
+        }
       }
 
       // Upload documents to folder (use same folder as the PDF from Step 4)
-      console.log("[Docs] Calling uploadApplicationDocuments...")
-      console.log("[Docs] businessName:", formData.businessName || formData.legalBusinessName)
-      console.log("[Docs] applicationFolderPath:", applicationFolderPath)
-      console.log("[Docs] bankStatementsBase64 length:", bankStatementsBase64?.length || 0)
-      console.log("[Docs] bankStatementsFilename:", bankStatementsFilename)
-      console.log("[Docs] otherDocumentsBase64 length:", otherDocumentsBase64?.length || 0)
-      console.log("[Docs] otherDocumentsFilename:", otherDocumentsFilename)
-      
-      const uploadResult = await uploadApplicationDocuments(
-        (formData.businessName || formData.legalBusinessName || "Unknown Business") as string,
-        undefined, // No PDF bytes - just uploading documents
-        bankStatementsBase64,
-        bankStatementsFilename,
-        otherDocumentsBase64,
-        otherDocumentsFilename,
-        applicationFolderPath || undefined // Pass existing folder path from Step 4
-      )
+      console.log("[Docs] Uploading to Vercel Blob storage...")
+      let uploadResult
+      try {
+        uploadResult = await uploadApplicationDocuments(
+          (formData.businessName || formData.legalBusinessName || "Unknown Business") as string,
+          undefined, // No PDF bytes - just uploading documents
+          bankStatementsBase64,
+          bankStatementsFilename,
+          otherDocumentsBase64,
+          otherDocumentsFilename,
+          applicationFolderPath || undefined // Pass existing folder path from Step 4
+        )
+      } catch (uploadError) {
+        const msg = uploadError instanceof Error ? uploadError.message : String(uploadError)
+        console.error("[Docs] ❌ Upload to Vercel Blob failed:", msg)
+        
+        // Categorize the error
+        let userMessage = "Failed to upload documents to storage. Please try again."
+        if (msg.includes("network") || msg.includes("Network")) {
+          userMessage = "Network error during upload. Please check your connection and try again."
+        } else if (msg.includes("timeout") || msg.includes("Timeout")) {
+          userMessage = "Upload took too long. Please try again with smaller files."
+        } else if (msg.includes("quota") || msg.includes("space")) {
+          userMessage = "Storage quota exceeded. Please contact support at vivsin1995@gmail.com"
+        } else if (msg.includes("permission") || msg.includes("forbidden")) {
+          userMessage = "Upload permission denied. This is likely a configuration issue. Please contact support."
+        }
+        
+        setUploadError(userMessage)
+        setIsUploadingDocs(false)
+        return
+      }
 
       console.log("[Docs] uploadApplicationDocuments returned:", JSON.stringify(uploadResult, null, 2))
 
       if (uploadResult.success && uploadResult.folder) {
-        console.log("[Docs] Documents uploaded successfully!")
+        console.log("[Docs] ✅ Documents uploaded successfully!")
         console.log("[Docs] Bank statements URL:", uploadResult.folder.bankStatementsUrl)
         console.log("[Docs] Other documents URL:", uploadResult.folder.otherDocumentsUrl)
-        alert(`Upload successful!\n\nBank Statements: ${uploadResult.folder.bankStatementsUrl || 'Not uploaded'}\n\nOther Documents: ${uploadResult.folder.otherDocumentsUrl || 'Not uploaded'}`)
+        
+        // Success - redirect to success page
+        setIsUploadingDocs(false)
+        router.push("/apply/success")
       } else {
-        console.error("[Docs] Document upload failed:", uploadResult.error)
-        alert(`Upload failed: ${uploadResult.error}`)
+        const errorMsg = uploadResult.error || "Unknown error"
+        console.error("[Docs] ❌ Document upload failed:", errorMsg)
+        
+        let userMessage = "Document upload failed"
+        if (errorMsg.includes("folder")) {
+          userMessage = "Application folder not found. Please go back and sign your application in Step 4."
+        } else if (errorMsg.includes("environment")) {
+          userMessage = "Storage service not properly configured. Please contact support at vivsin1995@gmail.com"
+        } else if (errorMsg.includes("email")) {
+          userMessage = "Documents uploaded successfully, but confirmation email failed. Your application is submitted - no action needed."
+        }
+        
+        setUploadError(userMessage)
+        setIsUploadingDocs(false)
       }
-
-      setIsUploadingDocs(false)
-      router.push("/apply/success")
     } catch (error) {
-      console.error("[Docs] Error uploading documents:", error)
-      alert(`Upload error: ${error instanceof Error ? error.message : String(error)}`)
+      console.error("[Docs] ❌ Unexpected error in handleDocumentUpload:")
+      console.error("[Docs] Error type:", error?.constructor.name)
+      console.error("[Docs] Error message:", error instanceof Error ? error.message : String(error))
+      console.error("[Docs] Error stack:", error instanceof Error ? error.stack : "N/A")
+      
+      let userMessage = "Unexpected error during upload"
+      if (error instanceof Error) {
+        if (error.message.includes("localStorage")) {
+          userMessage = "Browser storage error. Please clear browser cache and try again."
+        } else if (error.message.includes("abort")) {
+          userMessage = "Upload was cancelled. Please try again."
+        } else if (error.message.includes("network")) {
+          userMessage = "Network error. Please check your internet connection and try again."
+        } else {
+          userMessage = `Upload error: ${error.message}`
+        }
+      }
+      
+      setUploadError(userMessage)
       setIsUploadingDocs(false)
       // Don't redirect on error so user can try again
     }
@@ -1208,37 +1397,113 @@ export default function ApplyPage() {
 
   const handleDownloadPDF = async () => {
     setIsDownloadingPDF(true)
-    console.log("[v0] Starting PDF download...")
+    setPdfDownloadError(null)
+    console.log("[PDF Download] Starting PDF download...")
 
     try {
-      const result = await downloadApplicationPDF(formData)
+      // Set a timeout for the PDF generation
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error("PDF generation timeout")), 30000) // 30 second timeout
+      })
+
+      const pdfPromise = downloadApplicationPDF(formData)
+      
+      console.log("[PDF Download] Waiting for PDF generation (30s timeout)...")
+      const result = await Promise.race([pdfPromise, timeoutPromise]) as any
 
       if (result.success && result.pdfBytes) {
-        // Convert array back to Uint8Array
-        const pdfBytes = new Uint8Array(result.pdfBytes)
+        try {
+          // Validate PDF bytes
+          if (!Array.isArray(result.pdfBytes) || result.pdfBytes.length === 0) {
+            throw new Error("PDF generation returned empty data")
+          }
 
-        // Create a blob from the PDF bytes
-        const blob = new Blob([pdfBytes], { type: "application/pdf" })
+          console.log("[PDF Download] PDF generated successfully, size:", result.pdfBytes.length, "bytes")
+          
+          // Convert array back to Uint8Array
+          const pdfBytes = new Uint8Array(result.pdfBytes)
 
-        // Create a download link
-        const url = window.URL.createObjectURL(blob)
-        const link = document.createElement("a")
-        link.href = url
-        const businessName = (formData.businessName || formData.legalBusinessName || "Application").replace(/\s+/g, "_")
-        link.download = `TurboFunding_Application_${businessName}_${new Date().toISOString().split("T")[0]}.pdf`
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
-        window.URL.revokeObjectURL(url)
+          // Validate blob creation
+          const blob = new Blob([pdfBytes], { type: "application/pdf" })
+          if (blob.size === 0) {
+            throw new Error("Failed to create PDF blob - blob is empty")
+          }
 
-        console.log("[v0] PDF downloaded successfully")
+          console.log("[PDF Download] Blob created successfully, size:", blob.size, "bytes")
+
+          // Create a download link
+          try {
+            const url = window.URL.createObjectURL(blob)
+            
+            if (!url) {
+              throw new Error("Failed to create object URL for blob")
+            }
+
+            const link = document.createElement("a")
+            link.href = url
+            const businessName = (formData.businessName || formData.legalBusinessName || "Application").replace(/\s+/g, "_")
+            link.download = `TurboFunding_Application_${businessName}_${new Date().toISOString().split("T")[0]}.pdf`
+            document.body.appendChild(link)
+            
+            console.log("[PDF Download] Triggering download...")
+            link.click()
+            
+            // Cleanup
+            setTimeout(() => {
+              document.body.removeChild(link)
+              window.URL.revokeObjectURL(url)
+            }, 100)
+
+            console.log("[PDF Download] ✅ PDF downloaded successfully")
+          } catch (blobError) {
+            const errorMsg = blobError instanceof Error ? blobError.message : String(blobError)
+            console.error("[PDF Download] Blob file error:", errorMsg)
+            throw new Error(`Uploaded PDF no longer accessible: ${errorMsg}`)
+          }
+        } catch (processingError) {
+          const errorMsg = processingError instanceof Error ? processingError.message : String(processingError)
+          console.error("[PDF Download] PDF processing error:", errorMsg)
+          setPdfDownloadError(errorMsg)
+          setIsDownloadingPDF(false)
+          return
+        }
       } else {
-        console.error("[v0] PDF download failed:", result.error)
-        alert("Failed to download PDF. Please try again or contact support.")
+        const errorMsg = result.error || "Unknown error during PDF generation"
+        console.error("[PDF Download] PDF generation failed:", errorMsg)
+        
+        // Categorize the error
+        let userMessage = errorMsg
+        if (errorMsg.includes("Buffer") || errorMsg.includes("buffer")) {
+          userMessage = "Failed to generate PDF: Buffer error. Please try again."
+        } else if (errorMsg.includes("font")) {
+          userMessage = "Failed to generate PDF: Font error. Retrying with fallback..."
+        } else if (errorMsg.includes("image")) {
+          userMessage = "Failed to generate PDF: Image error. Please try again."
+        }
+        
+        setPdfDownloadError(userMessage)
+        setIsDownloadingPDF(false)
+        return
       }
-    } catch (error) {
-      console.error("[v0] Error downloading PDF:", error)
-      alert("An error occurred while downloading the PDF. Please try again.")
+    } catch (error: any) {
+      const errorMessage = error instanceof Error ? error.message : String(error)
+      console.error("[PDF Download] ❌ Error during PDF download:")
+      console.error("[PDF Download] Error type:", error.constructor.name)
+      console.error("[PDF Download] Error message:", errorMessage)
+      
+      // Categorize errors
+      let userMessage = errorMessage
+      if (errorMessage.includes("timeout")) {
+        userMessage = "Network timeout - PDF generation is taking too long. Please try again."
+      } else if (errorMessage.includes("blob") || errorMessage.includes("Blob")) {
+        userMessage = "Blob file not found - Uploaded PDF no longer accessible. Please try downloading again."
+      } else if (errorMessage.includes("URL")) {
+        userMessage = "Failed to create download link. Please try again."
+      } else if (errorMessage.includes("network") || errorMessage.includes("Network")) {
+        userMessage = "Network connection error. Please check your internet and try again."
+      }
+      
+      setPdfDownloadError(userMessage)
     } finally {
       setIsDownloadingPDF(false)
     }
@@ -2968,6 +3233,27 @@ export default function ApplyPage() {
 
                     {/* Other Actions */}
                     <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 md:p-6">
+                      {/* PDF Download Error Alert */}
+                      {pdfDownloadError && (
+                        <div className="bg-red-50 border-l-4 border-red-500 rounded-lg p-4 mb-4 flex gap-3">
+                          <div className="flex-shrink-0 flex items-center justify-center h-6 w-6">
+                            <svg className="h-6 w-6 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                            </svg>
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="text-sm font-medium text-red-800">PDF Download Error</h3>
+                            <p className="text-sm text-red-700 mt-1">{pdfDownloadError}</p>
+                            <button
+                              onClick={() => setPdfDownloadError(null)}
+                              className="text-xs text-red-600 hover:text-red-700 font-medium mt-2 underline"
+                            >
+                              Dismiss
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                      
                       <div className="space-y-3">
                         {/* Download PDF */}
                         <Button
@@ -3029,12 +3315,12 @@ export default function ApplyPage() {
                     </div>
 
                     {/* Debug Info - TODO: Remove in production */}
-                    <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4 text-xs font-mono">
+                    {/* <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-3 mb-4 text-xs font-mono">
                       <p><strong>Debug (remove later):</strong></p>
                       <p>Folder: {applicationFolderPath || "Not set"}</p>
                       <p>Bank Statements: {formData.bankStatements ? `${formData.bankStatements.name} (${formData.bankStatements.size} bytes)` : "null"}</p>
                       <p>Other Docs: {formData.otherDocuments ? `${formData.otherDocuments.name} (${formData.otherDocuments.size} bytes)` : "null"}</p>
-                    </div>
+                    </div> */}
 
                     {/* Bank Statements Upload */}
                     <div className="bg-white rounded-xl border border-gray-200 shadow-sm mb-4 overflow-hidden">
@@ -3094,6 +3380,32 @@ export default function ApplyPage() {
                         </div>
                       </div>
                     </div>
+
+                    {/* Bank Statements Error Alert */}
+                    {fileValidationErrors.bankStatements && (
+                      <div className="bg-red-50 border-l-4 border-red-500 rounded-lg p-4 mb-4 flex gap-3">
+                        <svg className="h-6 w-6 text-red-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                        </svg>
+                        <div className="flex-1">
+                          <h3 className="text-sm font-medium text-red-800">Bank Statements File Error</h3>
+                          <p className="text-sm text-red-700 mt-1">{fileValidationErrors.bankStatements}</p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Other Documents Error Alert */}
+                    {fileValidationErrors.otherDocuments && (
+                      <div className="bg-amber-50 border-l-4 border-amber-500 rounded-lg p-4 mb-4 flex gap-3">
+                        <svg className="h-6 w-6 text-amber-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                        </svg>
+                        <div className="flex-1">
+                          <h3 className="text-sm font-medium text-amber-800">Other Documents File Error</h3>
+                          <p className="text-sm text-amber-700 mt-1">{fileValidationErrors.otherDocuments}</p>
+                        </div>
+                      </div>
+                    )}
 
                     {/* Other Documents Upload */}
                     <div className="bg-white rounded-xl border border-gray-200 shadow-sm mb-4 overflow-hidden">
@@ -3198,6 +3510,42 @@ export default function ApplyPage() {
 
                     {/* Action Buttons */}
                     <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 md:p-6">
+                      {/* Upload Error Alert */}
+                      {uploadError && (
+                        <div className="bg-red-50 border-l-4 border-red-500 rounded-lg p-4 mb-4 flex gap-3">
+                          <div className="flex-shrink-0">
+                            <svg className="h-6 w-6 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                            </svg>
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="text-sm font-medium text-red-800">Upload Error</h3>
+                            <p className="text-sm text-red-700 mt-1">{uploadError}</p>
+                            <button
+                              onClick={() => setUploadError(null)}
+                              className="text-xs text-red-600 hover:text-red-700 font-medium mt-2 underline"
+                            >
+                              Dismiss
+                            </button>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Global Error Alert */}
+                      {globalError && (
+                        <div className="bg-amber-50 border-l-4 border-amber-500 rounded-lg p-4 mb-4 flex gap-3">
+                          <div className="flex-shrink-0">
+                            <svg className="h-6 w-6 text-amber-500" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                            </svg>
+                          </div>
+                          <div className="flex-1">
+                            <h3 className="text-sm font-medium text-amber-800">Warning</h3>
+                            <p className="text-sm text-amber-700 mt-1">{globalError}</p>
+                          </div>
+                        </div>
+                      )}
+
                       <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
                         <Button
                           type="button"
