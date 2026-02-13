@@ -3,6 +3,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { RotatingText } from "@/components/rotating-text"
+import { LoanCalculator } from "@/components/loan-calculator"
 import type { Metadata } from "next"
 
 export const metadata: Metadata = {
@@ -585,6 +586,9 @@ export default function Home() {
             </div>
           </div>
         </section>
+
+        {/* Loan Calculator Section */}
+        <LoanCalculator />
 
         {/* CTA Section */}
         <section className="w-full py-8 md:py-16 lg:py-20 bg-gray-900 text-white">

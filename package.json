@@ -57,6 +57,7 @@
     "nodemailer": "^8.0.0",
     "pdf-lib": "^1.17.1",
     "react": "^19",
+    "react-countup": "^6.5.3",
     "react-day-picker": "9.8.0",
     "react-dom": "^19",
     "react-hook-form": "^7.54.1",
