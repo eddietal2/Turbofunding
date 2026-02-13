@@ -367,7 +367,7 @@ export default function ApplyPage() {
     return `${digits.slice(0, 5)}-${digits.slice(5)}`
   }
 
-  const validateStep1 = (): boolean => {
+  const validateStep1 = (): Record<string, string> => {
     const newErrors: Record<string, string> = {}
     
     if (!formData.amountRequested || formData.amountRequested.trim() === "") {
@@ -385,7 +385,7 @@ export default function ApplyPage() {
     }
     
     setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
+    return newErrors
   }
 
   // Check if step 1 fields are valid (without setting errors)
@@ -444,7 +444,7 @@ export default function ApplyPage() {
     return true
   }
 
-  const validateStep2 = (): boolean => {
+  const validateStep2 = (): Record<string, string> => {
     const newErrors: Record<string, string> = {}
     
     // Business Name validation
@@ -547,7 +547,7 @@ export default function ApplyPage() {
     }
     
     setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
+    return newErrors
   }
 
   // Check if step 2 fields are valid (without setting errors)
@@ -591,32 +591,91 @@ export default function ApplyPage() {
     return `${digits.slice(0, 3)}-${digits.slice(3, 5)}-${digits.slice(5)}`
   }
 
-  const validateStep3 = (): boolean => {
+  // Date validation helper - check if date is valid and person is 18+
+  const isValidDOB = (dobStr: string) => {
+    const dob = new Date(dobStr)
+    const today = new Date()
+    
+    // Check if date is valid
+    if (isNaN(dob.getTime())) return false
+    
+    // Check if date is in the future
+    if (dob > today) return false
+    
+    // Calculate age
+    let age = today.getFullYear() - dob.getFullYear()
+    const monthDiff = today.getMonth() - dob.getMonth()
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+      age--
+    }
+    
+    // Must be at least 18 years old
+    if (age < 18) return false
+    
+    return true
+  }
+
+  // Get DOB error message specific to the issue
+  const getDOBErrorMessage = (dobStr: string) => {
+    const dob = new Date(dobStr)
+    const today = new Date()
+    
+    if (dob > today) {
+      return "Date of birth cannot be in the future"
+    }
+    
+    let age = today.getFullYear() - dob.getFullYear()
+    const monthDiff = today.getMonth() - dob.getMonth()
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < dob.getDate())) {
+      age--
+    }
+    
+    if (age < 18) {
+      return "Applicant must be at least 18 years old"
+    }
+    
+    return "Invalid date of birth"
+  }
+
+  // Name validation - check for invalid characters
+  const isValidPersonName = (name: string) => {
+    // Allow alphanumeric, spaces, hyphens, apostrophes
+    const validPattern = /^[a-zA-Z\s\-']+$/
+    return validPattern.test(name)
+  }
+
+  const validateStep3 = (): Record<string, string> => {
     const newErrors: Record<string, string> = {}
     
     // Primary Owner validation
     if (!formData.firstName.trim()) {
       newErrors.firstName = "First name is required"
+    } else if (!isValidPersonName(formData.firstName)) {
+      newErrors.firstName = "First name contains invalid characters. Use only letters, spaces, hyphens, and apostrophes"
     }
     
     if (!formData.lastName.trim()) {
       newErrors.lastName = "Last name is required"
+    } else if (!isValidPersonName(formData.lastName)) {
+      newErrors.lastName = "Last name contains invalid characters. Use only letters, spaces, hyphens, and apostrophes"
     }
     
     if (!formData.phone.trim()) {
       newErrors.phone = "Phone number is required"
     } else if (!isValidPhone(formData.phone)) {
-      newErrors.phone = "Please enter a valid phone number"
+      newErrors.phone = "Invalid phone format. Please enter at least 10 digits"
     }
     
     if (!formData.dateOfBirth) {
       newErrors.dateOfBirth = "Date of birth is required"
+    } else if (!isValidDOB(formData.dateOfBirth)) {
+      newErrors.dateOfBirth = getDOBErrorMessage(formData.dateOfBirth)
     }
     
     if (!formData.ssn.trim()) {
       newErrors.ssn = "Social Security Number is required"
     } else if (!isValidSSN(formData.ssn)) {
-      newErrors.ssn = "Please enter a valid 9-digit SSN"
+      newErrors.ssn = "Invalid SSN format. Please use XXX-XX-XXXX"
     }
     
     if (!formData.homeAddress.trim()) {
@@ -634,7 +693,7 @@ export default function ApplyPage() {
     if (!formData.zip.trim()) {
       newErrors.zip = "Zip code is required"
     } else if (!isValidZip(formData.zip)) {
-      newErrors.zip = "Please enter a valid 5-digit zip code"
+      newErrors.zip = "Invalid zip code format. Use XXXXX or XXXXX-XXXX"
     }
     
     if (!formData.creditScore) {
@@ -643,21 +702,102 @@ export default function ApplyPage() {
     
     if (!formData.ownershipPercentage.trim()) {
       newErrors.ownershipPercentage = "Ownership percentage is required"
-    } else if (isNaN(Number(formData.ownershipPercentage)) || Number(formData.ownershipPercentage) <= 0 || Number(formData.ownershipPercentage) > 100) {
-      newErrors.ownershipPercentage = "Please enter a valid percentage (1-100)"
+    } else if (isNaN(Number(formData.ownershipPercentage))) {
+      newErrors.ownershipPercentage = "Please enter a valid percentage"
+    } else if (Number(formData.ownershipPercentage) <= 0) {
+      newErrors.ownershipPercentage = "Ownership percentage must be greater than 0%"
+    } else if (Number(formData.ownershipPercentage) > 100) {
+      newErrors.ownershipPercentage = "Ownership percentage cannot exceed 100%"
+    }
+    
+    // Second Owner validation (if added)
+    if (showSecondOwner) {
+      if (!formData.secondOwnerFirstName.trim()) {
+        newErrors.secondOwnerFirstName = "Second owner first name is required"
+      } else if (!isValidPersonName(formData.secondOwnerFirstName)) {
+        newErrors.secondOwnerFirstName = "First name contains invalid characters. Use only letters, spaces, hyphens, and apostrophes"
+      }
+      
+      if (!formData.secondOwnerLastName.trim()) {
+        newErrors.secondOwnerLastName = "Second owner last name is required"
+      } else if (!isValidPersonName(formData.secondOwnerLastName)) {
+        newErrors.secondOwnerLastName = "Last name contains invalid characters. Use only letters, spaces, hyphens, and apostrophes"
+      }
+      
+      if (!formData.secondOwnerPhone.trim()) {
+        newErrors.secondOwnerPhone = "Phone number is required"
+      } else if (!isValidPhone(formData.secondOwnerPhone)) {
+        newErrors.secondOwnerPhone = "Invalid phone format. Please enter at least 10 digits"
+      }
+      
+      if (!formData.secondOwnerDateOfBirth) {
+        newErrors.secondOwnerDateOfBirth = "Date of birth is required"
+      } else if (!isValidDOB(formData.secondOwnerDateOfBirth)) {
+        newErrors.secondOwnerDateOfBirth = getDOBErrorMessage(formData.secondOwnerDateOfBirth)
+      }
+      
+      if (!formData.secondOwnerSsn.trim()) {
+        newErrors.secondOwnerSsn = "Social Security Number is required"
+      } else if (!isValidSSN(formData.secondOwnerSsn)) {
+        newErrors.secondOwnerSsn = "Invalid SSN format. Please use XXX-XX-XXXX"
+      }
+      
+      if (!formData.secondOwnerHomeAddress.trim()) {
+        newErrors.secondOwnerHomeAddress = "Home address is required"
+      }
+      
+      if (!formData.secondOwnerCity.trim()) {
+        newErrors.secondOwnerCity = "City is required"
+      }
+      
+      if (!formData.secondOwnerState) {
+        newErrors.secondOwnerState = "State is required"
+      }
+      
+      if (!formData.secondOwnerZipCode.trim()) {
+        newErrors.secondOwnerZipCode = "Zip code is required"
+      } else if (!isValidZip(formData.secondOwnerZipCode)) {
+        newErrors.secondOwnerZipCode = "Invalid zip code format. Use XXXXX or XXXXX-XXXX"
+      }
+      
+      if (!formData.secondOwnerCreditScore) {
+        newErrors.secondOwnerCreditScore = "Please select a credit score range"
+      }
+      
+      if (!formData.secondOwnerPercentageOwnership.trim()) {
+        newErrors.secondOwnerPercentageOwnership = "Ownership percentage is required"
+      } else if (isNaN(Number(formData.secondOwnerPercentageOwnership))) {
+        newErrors.secondOwnerPercentageOwnership = "Please enter a valid percentage"
+      } else if (Number(formData.secondOwnerPercentageOwnership) <= 0) {
+        newErrors.secondOwnerPercentageOwnership = "Ownership percentage must be greater than 0%"
+      } else if (Number(formData.secondOwnerPercentageOwnership) > 100) {
+        newErrors.secondOwnerPercentageOwnership = "Ownership percentage cannot exceed 100%"
+      }
+      
+      // Combined ownership validation
+      const primaryOwnership = Number(formData.ownershipPercentage) || 0
+      const secondaryOwnership = Number(formData.secondOwnerPercentageOwnership) || 0
+      const totalOwnership = primaryOwnership + secondaryOwnership
+      
+      if (totalOwnership !== 100) {
+        newErrors.ownershipPercentage = `Combined ownership must equal 100% (currently ${totalOwnership}%)`
+      }
     }
     
     setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
+    return newErrors
   }
 
   // Check if step 3 fields are valid (without setting errors)
   const isStep3Valid = 
     formData.firstName.trim() !== "" &&
+    isValidPersonName(formData.firstName) &&
     formData.lastName.trim() !== "" &&
+    isValidPersonName(formData.lastName) &&
     formData.phone.trim() !== "" &&
     isValidPhone(formData.phone) &&
     formData.dateOfBirth !== "" &&
+    isValidDOB(formData.dateOfBirth) &&
     formData.ssn.trim() !== "" &&
     isValidSSN(formData.ssn) &&
     formData.homeAddress.trim() !== "" &&
@@ -669,36 +809,80 @@ export default function ApplyPage() {
     formData.ownershipPercentage.trim() !== "" &&
     !isNaN(Number(formData.ownershipPercentage)) &&
     Number(formData.ownershipPercentage) > 0 &&
-    Number(formData.ownershipPercentage) <= 100
+    Number(formData.ownershipPercentage) <= 100 &&
+    (!showSecondOwner || (
+      formData.secondOwnerFirstName.trim() !== "" &&
+      isValidPersonName(formData.secondOwnerFirstName) &&
+      formData.secondOwnerLastName.trim() !== "" &&
+      isValidPersonName(formData.secondOwnerLastName) &&
+      formData.secondOwnerPhone.trim() !== "" &&
+      isValidPhone(formData.secondOwnerPhone) &&
+      formData.secondOwnerDateOfBirth !== "" &&
+      isValidDOB(formData.secondOwnerDateOfBirth) &&
+      formData.secondOwnerSsn.trim() !== "" &&
+      isValidSSN(formData.secondOwnerSsn) &&
+      formData.secondOwnerHomeAddress.trim() !== "" &&
+      formData.secondOwnerCity.trim() !== "" &&
+      formData.secondOwnerState !== "" &&
+      formData.secondOwnerZipCode.trim() !== "" &&
+      isValidZip(formData.secondOwnerZipCode) &&
+      formData.secondOwnerCreditScore !== "" &&
+      formData.secondOwnerPercentageOwnership.trim() !== "" &&
+      !isNaN(Number(formData.secondOwnerPercentageOwnership)) &&
+      Number(formData.secondOwnerPercentageOwnership) > 0 &&
+      Number(formData.secondOwnerPercentageOwnership) <= 100 &&
+      (Number(formData.ownershipPercentage) + Number(formData.secondOwnerPercentageOwnership) === 100)
+    ))
 
   // Helper function to scroll to the first field with an error
   const scrollToFirstError = (errorObj: Record<string, string>) => {
     if (Object.keys(errorObj).length === 0) return
     
     const firstErrorKey = Object.keys(errorObj)[0]
-    const element = document.getElementById(firstErrorKey)
     
-    if (element) {
-      setTimeout(() => {
+    // Try multiple times to find and scroll to the element
+    const attemptScroll = () => {
+      const element = document.getElementById(firstErrorKey)
+      
+      if (element) {
         element.scrollIntoView({ behavior: "smooth", block: "center" })
-        element.focus()
-      }, 100)
+        // Try to focus if it's an input element
+        if (element instanceof HTMLInputElement || element instanceof HTMLTextAreaElement || element instanceof HTMLSelectElement) {
+          element.focus()
+        }
+        return true
+      }
+      return false
+    }
+    
+    // Try immediately, then wait for DOM updates
+    if (!attemptScroll()) {
+      setTimeout(attemptScroll, 50)
     }
   }
 
   const nextStep = () => {
     // Validate current step before proceeding
-    if (step === 1 && !validateStep1()) {
-      scrollToFirstError(errors)
-      return
-    }
-    if (step === 2 && !validateStep2()) {
-      scrollToFirstError(errors)
-      return
-    }
-    if (step === 3 && !validateStep3()) {
-      scrollToFirstError(errors)
-      return
+    let validationErrors: Record<string, string> = {}
+    
+    if (step === 1) {
+      validationErrors = validateStep1()
+      if (Object.keys(validationErrors).length > 0) {
+        scrollToFirstError(validationErrors)
+        return
+      }
+    } else if (step === 2) {
+      validationErrors = validateStep2()
+      if (Object.keys(validationErrors).length > 0) {
+        scrollToFirstError(validationErrors)
+        return
+      }
+    } else if (step === 3) {
+      validationErrors = validateStep3()
+      if (Object.keys(validationErrors).length > 0) {
+        scrollToFirstError(validationErrors)
+        return
+      }
     }
     
     if (typeof window !== "undefined") {
@@ -1853,32 +2037,40 @@ export default function ApplyPage() {
 
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 <div className="space-y-2">
-                                  <Label htmlFor="secondOwnerFirstName">First Name</Label>
+                                  <Label htmlFor="secondOwnerFirstName">First Name <span className="text-red-500">*</span></Label>
                                   <Input
                                     id="secondOwnerFirstName"
                                     name="secondOwnerFirstName"
                                     value={formData.secondOwnerFirstName}
-                                    onChange={handleChange}
+                                    onChange={(e) => {
+                                      handleChange(e)
+                                      if (errors.secondOwnerFirstName) setErrors((prev) => ({ ...prev, secondOwnerFirstName: "" }))
+                                    }}
                                     placeholder="Enter first name"
-                                    className="bg-white border-gray-300 text-gray-900"
+                                    className={`bg-white border-gray-300 text-gray-900 ${errors.secondOwnerFirstName ? "border-red-500" : ""}`}
                                   />
+                                  {errors.secondOwnerFirstName && <p className="text-red-500 text-sm">{errors.secondOwnerFirstName}</p>}
                                 </div>
                                 <div className="space-y-2">
-                                  <Label htmlFor="secondOwnerLastName">Last Name</Label>
+                                  <Label htmlFor="secondOwnerLastName">Last Name <span className="text-red-500">*</span></Label>
                                   <Input
                                     id="secondOwnerLastName"
                                     name="secondOwnerLastName"
                                     value={formData.secondOwnerLastName}
-                                    onChange={handleChange}
+                                    onChange={(e) => {
+                                      handleChange(e)
+                                      if (errors.secondOwnerLastName) setErrors((prev) => ({ ...prev, secondOwnerLastName: "" }))
+                                    }}
                                     placeholder="Enter last name"
-                                    className="bg-white border-gray-300 text-gray-900"
+                                    className={`bg-white border-gray-300 text-gray-900 ${errors.secondOwnerLastName ? "border-red-500" : ""}`}
                                   />
+                                  {errors.secondOwnerLastName && <p className="text-red-500 text-sm">{errors.secondOwnerLastName}</p>}
                                 </div>
                               </div>
 
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                                 <div className="space-y-2">
-                                  <Label htmlFor="secondOwnerPhone">Phone</Label>
+                                  <Label htmlFor="secondOwnerPhone">Phone <span className="text-red-500">*</span></Label>
                                   <Input
                                     id="secondOwnerPhone"
                                     name="secondOwnerPhone"
@@ -1888,26 +2080,32 @@ export default function ApplyPage() {
                                     onChange={(e) => {
                                       const formatted = formatPhone(e.target.value)
                                       setFormData({ ...formData, secondOwnerPhone: formatted })
+                                      if (errors.secondOwnerPhone) setErrors((prev) => ({ ...prev, secondOwnerPhone: "" }))
                                     }}
                                     placeholder="(XXX) XXX-XXXX"
-                                    className="bg-white border-gray-300 text-gray-900"
+                                    className={`bg-white border-gray-300 text-gray-900 ${errors.secondOwnerPhone ? "border-red-500" : ""}`}
                                   />
+                                  {errors.secondOwnerPhone && <p className="text-red-500 text-sm">{errors.secondOwnerPhone}</p>}
                                 </div>
                                 <div className="space-y-2">
-                                  <Label htmlFor="secondOwnerDateOfBirth">Date of Birth</Label>
+                                  <Label htmlFor="secondOwnerDateOfBirth">Date of Birth <span className="text-red-500">*</span></Label>
                                   <Input
                                     id="secondOwnerDateOfBirth"
                                     name="secondOwnerDateOfBirth"
                                     type="date"
                                     value={formData.secondOwnerDateOfBirth}
-                                    onChange={handleChange}
-                                    className="bg-white border-gray-300 text-gray-900"
+                                    onChange={(e) => {
+                                      handleChange(e)
+                                      if (errors.secondOwnerDateOfBirth) setErrors((prev) => ({ ...prev, secondOwnerDateOfBirth: "" }))
+                                    }}
+                                    className={`bg-white border-gray-300 text-gray-900 ${errors.secondOwnerDateOfBirth ? "border-red-500" : ""}`}
                                   />
+                                  {errors.secondOwnerDateOfBirth && <p className="text-red-500 text-sm">{errors.secondOwnerDateOfBirth}</p>}
                                 </div>
                               </div>
 
                               <div className="space-y-2">
-                                <Label htmlFor="secondOwnerSsn">Social Security Number</Label>
+                                <Label htmlFor="secondOwnerSsn">Social Security Number <span className="text-red-500">*</span></Label>
                                 <Input
                                   id="secondOwnerSsn"
                                   name="secondOwnerSsn"
@@ -1917,43 +2115,56 @@ export default function ApplyPage() {
                                   onChange={(e) => {
                                     const formatted = formatSSN(e.target.value)
                                     setFormData({ ...formData, secondOwnerSsn: formatted })
+                                    if (errors.secondOwnerSsn) setErrors((prev) => ({ ...prev, secondOwnerSsn: "" }))
                                   }}
                                   placeholder="XXX-XX-XXXX"
-                                  className="bg-white border-gray-300 text-gray-900"
+                                  className={`bg-white border-gray-300 text-gray-900 ${errors.secondOwnerSsn ? "border-red-500" : ""}`}
                                 />
+                                {errors.secondOwnerSsn && <p className="text-red-500 text-sm">{errors.secondOwnerSsn}</p>}
                               </div>
 
                               <div className="space-y-2">
-                                <Label htmlFor="secondOwnerHomeAddress">Home Street Address</Label>
+                                <Label htmlFor="secondOwnerHomeAddress">Home Street Address <span className="text-red-500">*</span></Label>
                                 <Input
                                   id="secondOwnerHomeAddress"
                                   name="secondOwnerHomeAddress"
                                   value={formData.secondOwnerHomeAddress}
-                                  onChange={handleChange}
+                                  onChange={(e) => {
+                                    handleChange(e)
+                                    if (errors.secondOwnerHomeAddress) setErrors((prev) => ({ ...prev, secondOwnerHomeAddress: "" }))
+                                  }}
                                   placeholder="Enter home address"
-                                  className="bg-white border-gray-300 text-gray-900"
+                                  className={`bg-white border-gray-300 text-gray-900 ${errors.secondOwnerHomeAddress ? "border-red-500" : ""}`}
                                 />
+                                {errors.secondOwnerHomeAddress && <p className="text-red-500 text-sm">{errors.secondOwnerHomeAddress}</p>}
                               </div>
 
                               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
                                 <div className="space-y-2">
-                                  <Label htmlFor="secondOwnerCity">City</Label>
+                                  <Label htmlFor="secondOwnerCity">City <span className="text-red-500">*</span></Label>
                                   <Input
                                     id="secondOwnerCity"
                                     name="secondOwnerCity"
                                     value={formData.secondOwnerCity}
-                                    onChange={handleChange}
+                                    onChange={(e) => {
+                                      handleChange(e)
+                                      if (errors.secondOwnerCity) setErrors((prev) => ({ ...prev, secondOwnerCity: "" }))
+                                    }}
                                     placeholder="Enter city"
-                                    className="bg-white border-gray-300 text-gray-900"
+                                    className={`bg-white border-gray-300 text-gray-900 ${errors.secondOwnerCity ? "border-red-500" : ""}`}
                                   />
+                                  {errors.secondOwnerCity && <p className="text-red-500 text-sm">{errors.secondOwnerCity}</p>}
                                 </div>
                                 <div className="space-y-2">
-                                  <Label htmlFor="secondOwnerState">State</Label>
+                                  <Label htmlFor="secondOwnerState">State <span className="text-red-500">*</span></Label>
                                   <Select
-                                    onValueChange={(value) => handleSelectChange("secondOwnerState", value)}
+                                    onValueChange={(value) => {
+                                      handleSelectChange("secondOwnerState", value)
+                                      if (errors.secondOwnerState) setErrors((prev) => ({ ...prev, secondOwnerState: "" }))
+                                    }}
                                     value={formData.secondOwnerState}
                                   >
-                                    <SelectTrigger className="bg-white border-gray-300 text-gray-900">
+                                    <SelectTrigger className={`bg-white border-gray-300 text-gray-900 ${errors.secondOwnerState ? "border-red-500" : ""}`}>
                                       <SelectValue placeholder="Select state" />
                                     </SelectTrigger>
                                     <SelectContent className="bg-white border-gray-300 text-gray-900 max-h-[300px]">
@@ -1964,9 +2175,10 @@ export default function ApplyPage() {
                                       ))}
                                     </SelectContent>
                                   </Select>
+                                  {errors.secondOwnerState && <p className="text-red-500 text-sm">{errors.secondOwnerState}</p>}
                                 </div>
                                 <div className="space-y-2">
-                                  <Label htmlFor="secondOwnerZipCode">Zip Code</Label>
+                                  <Label htmlFor="secondOwnerZipCode">Zip Code <span className="text-red-500">*</span></Label>
                                   <Input
                                     id="secondOwnerZipCode"
                                     name="secondOwnerZipCode"
@@ -1975,19 +2187,24 @@ export default function ApplyPage() {
                                     onChange={(e) => {
                                       const formatted = formatZipCode(e.target.value)
                                       setFormData({ ...formData, secondOwnerZipCode: formatted })
+                                      if (errors.secondOwnerZipCode) setErrors((prev) => ({ ...prev, secondOwnerZipCode: "" }))
                                     }}
                                     placeholder="XXXXX"
-                                    className="bg-white border-gray-300 text-gray-900"
+                                    className={`bg-white border-gray-300 text-gray-900 ${errors.secondOwnerZipCode ? "border-red-500" : ""}`}
                                   />
+                                  {errors.secondOwnerZipCode && <p className="text-red-500 text-sm">{errors.secondOwnerZipCode}</p>}
                                 </div>
                               </div>
 
                               <div className="space-y-2">
-                                <Label>Credit Score Range</Label>
+                                <Label>Credit Score Range <span className="text-red-500">*</span></Label>
                                 <RadioGroup
                                   value={formData.secondOwnerCreditScore}
-                                  onValueChange={(value) => handleSelectChange("secondOwnerCreditScore", value)}
-                                  className="grid grid-cols-1 md:grid-cols-3 gap-2"
+                                  onValueChange={(value) => {
+                                    handleSelectChange("secondOwnerCreditScore", value)
+                                    if (errors.secondOwnerCreditScore) setErrors((prev) => ({ ...prev, secondOwnerCreditScore: "" }))
+                                  }}
+                                  className={`grid grid-cols-1 md:grid-cols-3 gap-2 ${errors.secondOwnerCreditScore ? "border border-red-500 rounded-md p-2" : ""}`}
                                 >
                                   <div className="flex items-center space-x-2">
                                     <RadioGroupItem
@@ -2040,10 +2257,11 @@ export default function ApplyPage() {
                                     </Label>
                                   </div>
                                 </RadioGroup>
+                                {errors.secondOwnerCreditScore && <p className="text-red-500 text-sm">{errors.secondOwnerCreditScore}</p>}
                               </div>
 
                               <div className="space-y-2">
-                                <Label htmlFor="secondOwnerPercentageOwnership">Percentage Ownership</Label>
+                                <Label htmlFor="secondOwnerPercentageOwnership">Percentage Ownership <span className="text-red-500">*</span></Label>
                                 <Input
                                   id="secondOwnerPercentageOwnership"
                                   name="secondOwnerPercentageOwnership"
@@ -2051,11 +2269,14 @@ export default function ApplyPage() {
                                   min="0"
                                   max="100"
                                   value={formData.secondOwnerPercentageOwnership}
-                                  onChange={handleChange}
+                                  onChange={(e) => {
+                                    handleChange(e)
+                                    if (errors.secondOwnerPercentageOwnership) setErrors((prev) => ({ ...prev, secondOwnerPercentageOwnership: "" }))
+                                  }}
                                   placeholder="Enter ownership percentage"
-                                  className="bg-white border-gray-300 text-gray-900 pr-8"
+                                  className={`bg-white border-gray-300 text-gray-900 pr-8 ${errors.secondOwnerPercentageOwnership ? "border-red-500" : ""}`}
                                 />
-                                <span className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400">%</span>
+                                {errors.secondOwnerPercentageOwnership && <p className="text-red-500 text-sm">{errors.secondOwnerPercentageOwnership}</p>}
                               </div>
                             </div>
                           )}
