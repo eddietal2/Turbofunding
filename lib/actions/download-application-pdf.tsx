@@ -7,7 +7,7 @@ import * as path from "path"
 
 export async function downloadApplicationPDF(formData: any) {
   try {
-    console.log("[v0] Generating PDF for download...")
+    console.log("[PDF] Generating PDF for download...")
 
     const pdfDoc = await PDFDocument.create()
     pdfDoc.registerFontkit(fontkit)
@@ -15,35 +15,11 @@ export async function downloadApplicationPDF(formData: any) {
     const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
     const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
 
-    // Load Space Grotesk for headers from local file
-    let headerFont = helveticaBold
-    try {
-      const fontPath = path.join(process.cwd(), "public", "fonts", "SpaceGrotesk-Bold.ttf")
-      const fontBytes = await fs.readFile(fontPath)
-      headerFont = await pdfDoc.embedFont(new Uint8Array(fontBytes))
-      console.log("[v0] Space Grotesk font loaded successfully from local file")
-    } catch (error) {
-      console.log("[v0] Could not load Space Grotesk, using Helvetica Bold fallback:", error)
-    }
+    // Use standard fonts only - no custom fonts to avoid buffer issues
+    const headerFont = helveticaBold
+    const cursiveFont = await pdfDoc.embedFont(StandardFonts.HelveticaOblique)
 
-    let cursiveFont
-    try {
-      const fontResponse = await fetch(
-        "https://cdn.jsdelivr.net/npm/@fontsource/dancing-script@5.0.18/files/dancing-script-latin-400-normal.woff",
-        { cache: "force-cache" },
-      )
-
-      if (!fontResponse.ok) {
-        throw new Error("Font fetch failed")
-      }
-
-      const fontBytes = await fontResponse.arrayBuffer()
-      cursiveFont = await pdfDoc.embedFont(new Uint8Array(fontBytes))
-      console.log("[v0] Cursive font loaded successfully for download")
-    } catch (error) {
-      console.log("[v0] Could not load cursive font, using italic fallback:", error)
-      cursiveFont = await pdfDoc.embedFont(StandardFonts.HelveticaOblique)
-    }
+    console.log("[PDF] Using standard fonts only (Helvetica, HelveticaBold, HelveticaOblique)")
 
     // TurboFunding brand colors
     const brandBlue = rgb(30 / 255, 64 / 255, 175 / 255) // Deep blue for headers
@@ -74,16 +50,28 @@ export async function downloadApplicationPDF(formData: any) {
     const logoWidth = 75
     try {
       const logoPath = path.join(process.cwd(), "public", "images", "tf-logo.png")
-      const logoBytes = await fs.readFile(logoPath)
-      const logoImage = await pdfDoc.embedPng(new Uint8Array(logoBytes))
+      console.log("[PDF] Attempting to load logo from:", logoPath)
+      
+      const logoBuffer = await fs.readFile(logoPath)
+      console.log("[PDF] Logo file read, size:", logoBuffer.length, "bytes")
+      
+      if (logoBuffer.length === 0) {
+        throw new Error("Logo file is empty")
+      }
+      
+      // Properly convert Buffer to Uint8Array
+      const logoUint8Array = new Uint8Array(logoBuffer.buffer, logoBuffer.byteOffset, logoBuffer.length)
+      const logoImage = await pdfDoc.embedPng(logoUint8Array)
       page.drawImage(logoImage, {
         x: margin,
         y: yPosition - logoHeight + 10,
         width: logoWidth,
         height: logoHeight,
       })
+      console.log("[PDF] Logo embedded successfully")
     } catch (error) {
-      console.log("[v0] Could not load logo:", error)
+      const errorMsg = error instanceof Error ? error.message : String(error)
+      console.warn("[PDF] Logo load failed:", errorMsg)
     }
 
     // Contact info on right - single line like Clarify Capital
@@ -324,8 +312,20 @@ export async function downloadApplicationPDF(formData: any) {
     const signatureDataUrl = formData.signatureImage || formData.signature
     if (signatureDataUrl && typeof signatureDataUrl === 'string' && signatureDataUrl.startsWith("data:image")) {
       try {
+        console.log("[PDF] Processing signature image...")
         const base64Data = signatureDataUrl.split(",")[1]
+        
+        if (!base64Data) {
+          throw new Error("Invalid data URL format: No base64 data found")
+        }
+        
         const imageBytes = Uint8Array.from(atob(base64Data), (c) => c.charCodeAt(0))
+        console.log("[PDF] Decoded signature image, size:", imageBytes.length, "bytes")
+        
+        if (imageBytes.length === 0) {
+          throw new Error("Signature image data is empty")
+        }
+        
         const signatureImage = await pdfDoc.embedPng(imageBytes)
         
         page.drawImage(signatureImage, {
@@ -334,9 +334,12 @@ export async function downloadApplicationPDF(formData: any) {
           width: 180,
           height: 50,
         })
+        console.log("[PDF] Signature image embedded successfully")
       } catch (error) {
-        console.error("[v0] Error embedding signature image:", error)
-        page.drawText(formData.signature || "", {
+        const errorMsg = error instanceof Error ? error.message : String(error)
+        console.warn("[PDF] Error embedding signature image:", errorMsg)
+        // Fall back to text signature
+        page.drawText(formData.signature || "Signature", {
           x: leftColX,
           y: yPosition - 20,
           size: 20,
@@ -444,9 +447,15 @@ export async function downloadApplicationPDF(formData: any) {
     })
 
     // Serialize the PDF to bytes
+    console.log("[PDF] Serializing PDF document...")
     const pdfBytes = await pdfDoc.save()
+    console.log("[PDF] PDF serialized successfully, size:", pdfBytes.length, "bytes")
 
-    console.log("[v0] PDF generated successfully for download")
+    if (pdfBytes.length === 0) {
+      throw new Error("PDF serialization resulted in empty document")
+    }
+
+    console.log("[PDF] PDF generated successfully")
 
     return {
       success: true,
@@ -454,10 +463,28 @@ export async function downloadApplicationPDF(formData: any) {
       blobUrl: null,
     }
   } catch (error: any) {
-    console.error("[v0] Error generating PDF for download:", error)
+    console.error("[PDF] ❌ Error generating PDF:")
+    console.error("[PDF] Error type:", error.constructor.name)
+    console.error("[PDF] Error message:", error.message)
+    console.error("[PDF] Error stack:", error.stack)
+    
+    // Provide more specific error messages
+    let userMessage = error.message
+    
+    if (error.message?.includes("buffer")) {
+      userMessage = "Buffer error during PDF generation. This usually means a font file is corrupted. Try clearing browser cache and resubmitting."
+    } else if (error.message?.includes("font")) {
+      userMessage = "Font embedding error. The PDF will be generated with fallback fonts."
+    } else if (error.message?.includes("image")) {
+      userMessage = "Image embedding error. The PDF will be generated without images."
+    } else if (error.message?.includes("timeout")) {
+      userMessage = "PDF generation timed out. Please try again."
+    }
+    
     return {
       success: false,
-      error: error.message,
+      error: userMessage,
+      pdfBytes: null,
     }
   }
 }

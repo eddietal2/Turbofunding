@@ -905,8 +905,31 @@ export default function ApplyPage() {
     setShowSignatureModal(true)
   }
 
+  // Handle signature modal close without signing
+  const handleSignatureModalClose = () => {
+    setShowSignatureModal(false)
+    setErrors((prev) => ({ ...prev, signature: "" }))
+  }
+
+  // Validate signature is not empty
+  const validateSignature = (signatureDataUrl: string): boolean => {
+    if (!signatureDataUrl || signatureDataUrl.trim() === "") {
+      setErrors((prev) => ({
+        ...prev,
+        signature: "Please sign the application before submitting"
+      }))
+      return false
+    }
+    return true
+  }
+
   // Handle signature and submit
   const handleSignatureAndSubmit = async (signatureDataUrl: string) => {
+    // Validate signature is not empty
+    if (!validateSignature(signatureDataUrl)) {
+      return
+    }
+
     // Update formData with signature
     const updatedFormData = {
       ...formData,
@@ -917,12 +940,13 @@ export default function ApplyPage() {
     setFormData(updatedFormData)
     setShowSignatureModal(false)
     setIsSubmitting(true)
+    setErrors({}) // Clear any previous errors
     
     console.log("[Submit] Form submission started with signature")
     console.log("[Submit] Submitting application with data:", updatedFormData)
 
     try {
-      // First, generate the PDF (still uploads to legacy location)
+      // First, generate the PDF
       console.log("[Submit] Generating PDF for email attachment...")
       let pdfBytes: number[] | null = null
       
@@ -930,16 +954,29 @@ export default function ApplyPage() {
         const pdfResult = await downloadApplicationPDF(updatedFormData)
         if (pdfResult.success && pdfResult.pdfBytes) {
           pdfBytes = pdfResult.pdfBytes
-          console.log("[Submit] PDF generated successfully")
+          console.log("[Submit] PDF generated successfully, size:", pdfResult.pdfBytes.length, "bytes")
         } else {
-          console.warn("[Submit] PDF generation failed, continuing without PDF")
+          console.error("[Submit] PDF generation failed:", pdfResult.error)
+          setIsSubmitting(false)
+          setErrors((prev) => ({
+            ...prev,
+            submit: `PDF generation failed: ${pdfResult.error || 'Unknown error'}. Please try again or contact support.`
+          }))
+          return
         }
       } catch (pdfError) {
-        console.warn("[Submit] PDF generation error (non-critical):", pdfError)
+        const pdfErrorMsg = pdfError instanceof Error ? pdfError.message : String(pdfError)
+        console.error("[Submit] PDF generation exception:", pdfErrorMsg)
+        setIsSubmitting(false)
+        setErrors((prev) => ({
+          ...prev,
+          submit: `Failed to create application PDF: ${pdfErrorMsg}. Please try again or contact support.`
+        }))
+        return
       }
 
-      // Upload PDF to organized folder (documents will be uploaded later in Step 6)
-      console.log("[Submit] Uploading application PDF to organized folder...")
+      // Upload PDF to organized folder
+      console.log("[Submit] Uploading application PDF to blob storage...")
       let applicationFolder: ApplicationFolder | null = null
       
       try {
@@ -955,42 +992,100 @@ export default function ApplyPage() {
         if (uploadResult.success && uploadResult.folder) {
           applicationFolder = uploadResult.folder
           setApplicationFolderPath(uploadResult.folder.folderPath)
-          console.log("[Submit] PDF uploaded to folder:", applicationFolder.folderPath)
+          console.log("[Submit] PDF uploaded successfully to:", applicationFolder.folderPath)
         } else {
-          console.warn("[Submit] PDF upload failed:", uploadResult.error)
+          const uploadError = uploadResult.error || "Unknown error"
+          console.error("[Submit] PDF upload failed:", uploadError)
+          setIsSubmitting(false)
+          setErrors((prev) => ({
+            ...prev,
+            submit: `Failed to upload PDF to storage: ${uploadError}. Your application was not submitted. Please try again.`
+          }))
+          return
         }
       } catch (uploadError) {
-        console.warn("[Submit] PDF upload error (non-critical):", uploadError)
+        const uploadErrorMsg = uploadError instanceof Error ? uploadError.message : String(uploadError)
+        console.error("[Submit] PDF upload exception:", uploadErrorMsg)
+        setIsSubmitting(false)
+        setErrors((prev) => ({
+          ...prev,
+          submit: `Failed to upload PDF: ${uploadErrorMsg}. Your application was not submitted. Please try again.`
+        }))
+        return
       }
 
-      console.log("[Submit] Calling submitApplication...")
-      const result = await submitApplication(updatedFormData, applicationFolder)
-      console.log("[Submit] Submit result:", result)
+      // Submit application to API
+      console.log("[Submit] Submitting application to API...")
+      try {
+        const result = await submitApplication(updatedFormData, applicationFolder)
+        console.log("[Submit] Submit result:", result)
 
-      if (result.success) {
-        console.log("[Submit] Application submitted successfully!")
-        if (result.emailSent) {
-          console.log("[Submit] Confirmation email sent to:", formData.email)
+        if (result.success) {
+          console.log("[Submit] Application submitted successfully!")
+          if (result.emailSent) {
+            console.log("[Submit] Confirmation email sent to:", formData.email)
+          } else {
+            console.warn("[Submit] Application submitted but email notification failed")
+          }
+          
+          // Clear draft from localStorage
+          try {
+            clearDraft()
+            console.log("[Submit] Draft cleared from localStorage")
+          } catch (clearError) {
+            const clearErrorMsg = clearError instanceof Error ? clearError.message : String(clearError)
+            console.warn("[Submit] Failed to clear draft:", clearErrorMsg)
+            // Don't block submission on draft clear failure
+          }
+          
+          setIsSubmitting(false)
+          nextStep()
+        } else {
+          console.error("[Submit] Application submission API failed:", result.error)
+          setIsSubmitting(false)
+          
+          // Provide specific error message based on error type
+          let errorMsg = result.error || "Unknown error"
+          if (errorMsg.includes("network") || errorMsg.includes("Network")) {
+            errorMsg = `Network connection error. Please check your internet connection and try again.`
+          } else if (errorMsg.includes("500") || errorMsg.includes("Internal Server Error")) {
+            errorMsg = `Server error (500). Our system is temporarily unavailable. Please try again in a few moments.`
+          } else if (errorMsg.includes("timeout") || errorMsg.includes("Timeout")) {
+            errorMsg = `Request timeout. The submission took too long. Please try again.`
+          }
+          
+          setErrors((prev) => ({
+            ...prev,
+            submit: `Application submission failed: ${errorMsg}. Please try again or contact support at vivsin1995@gmail.com`
+          }))
         }
-        clearDraft() // Clear draft after successful submission
+      } catch (apiError) {
+        const apiErrorMsg = apiError instanceof Error ? apiError.message : String(apiError)
+        console.error("[Submit] Application submission exception:", apiErrorMsg)
         setIsSubmitting(false)
-        nextStep()
-      } else {
-        console.error("[Submit] Application submission failed:", result.error)
-        setIsSubmitting(false)
-        alert(
-          `Application submission failed:\n\n${result.error}\n\nPlease try again or contact support at vivsin1995@gmail.com`,
-        )
+        
+        let userMsg = apiErrorMsg
+        if (apiErrorMsg.includes("NetworkError") || apiErrorMsg.includes("Failed to fetch")) {
+          userMsg = "Network error: Unable to reach the server. Please check your internet connection and try again."
+        } else if (apiErrorMsg.includes("timeout")) {
+          userMsg = "Request timeout: The server took too long to respond. Please try again."
+        }
+        
+        setErrors((prev) => ({
+          ...prev,
+          submit: `Unexpected error during submission: ${userMsg}. Please try again or contact support at vivsin1995@gmail.com`
+        }))
       }
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : "Unknown error"
       const errorStack = error instanceof Error ? error.stack : ""
-      console.error("[Submit] Error in handleSubmit:", error)
+      console.error("[Submit] Unexpected error in handleSignatureAndSubmit:", error)
       console.error("[Submit] Error details:", errorMessage, errorStack)
       setIsSubmitting(false)
-      alert(
-        `An unexpected error occurred:\n\n${errorMessage}\n\nPlease contact support at vivsin1995@gmail.com with this error message.`,
-      )
+      setErrors((prev) => ({
+        ...prev,
+        submit: `An unexpected error occurred: ${errorMessage}. Please contact support at vivsin1995@gmail.com with this error message.`
+      }))
     }
   }
 
@@ -1199,7 +1294,7 @@ export default function ApplyPage() {
       {/* Signature Modal */}
       <SignatureModal
         isOpen={showSignatureModal}
-        onClose={() => setShowSignatureModal(false)}
+        onClose={handleSignatureModalClose}
         onSign={handleSignatureAndSubmit}
         signerName={`${formData.firstName} ${formData.lastName}`.trim() || "Applicant"}
       />
@@ -2683,6 +2778,36 @@ export default function ApplyPage() {
                               <p className="text-sm text-gray-900">{formData.secondOwnerCity}, {formData.secondOwnerState} {formData.secondOwnerZipCode}</p>
                             </div>
                           </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Submission Error Alert */}
+                    {errors.submit && (
+                      <div className="bg-red-50 border-l-4 border-red-500 rounded-lg p-4 mb-6 flex gap-3">
+                        <div className="flex-shrink-0 flex items-center justify-center h-6 w-6">
+                          <svg className="h-6 w-6 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-sm font-medium text-red-800">Submission Error</h3>
+                          <p className="text-sm text-red-700 mt-1">{errors.submit}</p>
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Signature Error Alert */}
+                    {errors.signature && (
+                      <div className="bg-red-50 border-l-4 border-red-500 rounded-lg p-4 mb-6 flex gap-3">
+                        <div className="flex-shrink-0 flex items-center justify-center h-6 w-6">
+                          <svg className="h-6 w-6 text-red-500" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                          </svg>
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-sm font-medium text-red-800">Signature Required</h3>
+                          <p className="text-sm text-red-700 mt-1">{errors.signature}</p>
                         </div>
                       </div>
                     )}
