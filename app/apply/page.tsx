@@ -6,6 +6,7 @@ import { useState, useEffect, useCallback, useRef } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { useRouter } from "next/navigation"
+import { v4 as uuidv4 } from "uuid"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -1039,19 +1040,51 @@ export default function ApplyPage() {
       return
     }
 
-    // Update formData with signature
+    // Capture signing certificate data (IP address, user agent, timestamp)
+    let signingCertificate: {
+      ipAddress: string
+      userAgent: string
+      signedAt: string
+      signingId: string
+    } = {
+      ipAddress: "Unavailable",
+      userAgent: typeof navigator !== "undefined" ? navigator.userAgent : "Unknown",
+      signedAt: new Date().toISOString(),
+      signingId: uuidv4(),
+    }
+
+    try {
+      console.log("[Submit] Fetching signer IP address...")
+      const ipResponse = await fetch("/api/ip")
+      if (ipResponse.ok) {
+        const ipData = await ipResponse.json()
+        signingCertificate.ipAddress = ipData.ip || "Unavailable"
+        console.log("[Submit] Signer IP captured:", signingCertificate.ipAddress)
+      }
+    } catch (ipError) {
+      console.warn("[Submit] Could not fetch IP address, continuing without:", ipError)
+    }
+
+    console.log("[Submit] Signing certificate generated:", {
+      signingId: signingCertificate.signingId,
+      signedAt: signingCertificate.signedAt,
+      ipAddress: signingCertificate.ipAddress,
+    })
+
+    // Update formData with signature and signing certificate
     const updatedFormData = {
       ...formData,
       signatureImage: signatureDataUrl,
       signature: formData.signature || `${formData.firstName} ${formData.lastName}`,
       signatureDate: new Date().toISOString().split('T')[0],
+      signingCertificate,
     }
     setFormData(updatedFormData)
     setShowSignatureModal(false)
     setIsSubmitting(true)
     setErrors({}) // Clear any previous errors
     
-    console.log("[Submit] Form submission started with signature")
+    console.log("[Submit] Form submission started with signature and signing certificate")
     console.log("[Submit] Submitting application with data:", updatedFormData)
 
     try {

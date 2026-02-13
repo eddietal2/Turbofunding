@@ -437,6 +437,226 @@ export async function downloadApplicationPDF(formData: any) {
       color: lineGray,
     })
 
+    // ========== ELECTRONIC SIGNATURE CERTIFICATE (DocuSign-style) ==========
+    const cert = formData.signingCertificate
+    if (cert) {
+      // Check if we have enough space on the current page, otherwise add a new page
+      const certHeight = 120 // approximate height needed for certificate
+      let certPage = page
+      let certY = yPosition - 30
+
+      if (certY - certHeight < 30) {
+        // Add a new page for the certificate
+        certPage = pdfDoc.addPage([612, 792])
+        certY = 750
+
+        // Top accent bar on new page
+        certPage.drawRectangle({
+          x: 0,
+          y: 792 - 4,
+          width: pageWidth,
+          height: 4,
+          color: brandBlue,
+        })
+
+        // Footer accent bar on new page
+        certPage.drawRectangle({
+          x: 0,
+          y: 0,
+          width: pageWidth,
+          height: 4,
+          color: brandBlue,
+        })
+      }
+
+      // Certificate container - full width box
+      const certBoxX = margin
+      const certBoxWidth = pageWidth - margin * 2
+      const certBoxY = certY - certHeight
+      const certBoxHeight = certHeight
+
+      // Certificate background
+      certPage.drawRectangle({
+        x: certBoxX,
+        y: certBoxY,
+        width: certBoxWidth,
+        height: certBoxHeight,
+        color: rgb(248 / 255, 250 / 255, 252 / 255), // Very light gray-blue
+        borderColor: rgb(203 / 255, 213 / 255, 225 / 255),
+        borderWidth: 0.75,
+      })
+
+      // Certificate header bar
+      certPage.drawRectangle({
+        x: certBoxX,
+        y: certBoxY + certBoxHeight - 22,
+        width: certBoxWidth,
+        height: 22,
+        color: brandBlue,
+      })
+
+      // Lock icon text and title
+      certPage.drawText("ELECTRONIC SIGNATURE CERTIFICATE", {
+        x: certBoxX + 12,
+        y: certBoxY + certBoxHeight - 16,
+        size: 8,
+        font: helveticaBold,
+        color: rgb(1, 1, 1),
+      })
+
+      // Certificate ID on right side of header
+      const certIdText = `ID: ${cert.signingId || "N/A"}`
+      const certIdWidth = helveticaFont.widthOfTextAtSize(certIdText, 7)
+      certPage.drawText(certIdText, {
+        x: certBoxX + certBoxWidth - certIdWidth - 12,
+        y: certBoxY + certBoxHeight - 15,
+        size: 7,
+        font: helveticaFont,
+        color: rgb(200 / 255, 220 / 255, 255 / 255),
+      })
+
+      // Certificate content
+      const certContentX = certBoxX + 15
+      let certContentY = certBoxY + certBoxHeight - 40
+
+      // Row 1: Signer Name and Signing Status
+      const signerFullName = `${formData.firstName || ""} ${formData.lastName || ""}`.trim() || "N/A"
+      certPage.drawText("Signer:", {
+        x: certContentX,
+        y: certContentY,
+        size: 7,
+        font: helveticaBold,
+        color: darkGray,
+      })
+      certPage.drawText(signerFullName, {
+        x: certContentX + 40,
+        y: certContentY,
+        size: 7,
+        font: helveticaFont,
+        color: black,
+      })
+
+      certPage.drawText("Status:", {
+        x: certContentX + 250,
+        y: certContentY,
+        size: 7,
+        font: helveticaBold,
+        color: darkGray,
+      })
+      certPage.drawText("COMPLETED", {
+        x: certContentX + 290,
+        y: certContentY,
+        size: 7,
+        font: helveticaBold,
+        color: rgb(22 / 255, 163 / 255, 74 / 255), // Green
+      })
+
+      certContentY -= 14
+
+      // Row 2: Email
+      certPage.drawText("Email:", {
+        x: certContentX,
+        y: certContentY,
+        size: 7,
+        font: helveticaBold,
+        color: darkGray,
+      })
+      certPage.drawText(formData.email || "N/A", {
+        x: certContentX + 40,
+        y: certContentY,
+        size: 7,
+        font: helveticaFont,
+        color: black,
+      })
+
+      certContentY -= 14
+
+      // Row 3: IP Address and User Agent
+      certPage.drawText("IP Address:", {
+        x: certContentX,
+        y: certContentY,
+        size: 7,
+        font: helveticaBold,
+        color: darkGray,
+      })
+      certPage.drawText(cert.ipAddress || "Unavailable", {
+        x: certContentX + 55,
+        y: certContentY,
+        size: 7,
+        font: helveticaFont,
+        color: black,
+      })
+
+      certContentY -= 14
+
+      // Row 4: Signed Date/Time
+      const signedDate = cert.signedAt ? new Date(cert.signedAt) : new Date()
+      const formattedDate = signedDate.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+      const formattedTime = signedDate.toLocaleTimeString("en-US", {
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        timeZoneName: "short",
+      })
+
+      certPage.drawText("Signed:", {
+        x: certContentX,
+        y: certContentY,
+        size: 7,
+        font: helveticaBold,
+        color: darkGray,
+      })
+      certPage.drawText(`${formattedDate} at ${formattedTime}`, {
+        x: certContentX + 40,
+        y: certContentY,
+        size: 7,
+        font: helveticaFont,
+        color: black,
+      })
+
+      certContentY -= 14
+
+      // Row 5: Browser / User Agent (truncated)
+      const userAgentDisplay = cert.userAgent
+        ? cert.userAgent.length > 90
+          ? cert.userAgent.substring(0, 90) + "..."
+          : cert.userAgent
+        : "Unknown"
+
+      certPage.drawText("Browser:", {
+        x: certContentX,
+        y: certContentY,
+        size: 7,
+        font: helveticaBold,
+        color: darkGray,
+      })
+      certPage.drawText(userAgentDisplay, {
+        x: certContentX + 45,
+        y: certContentY,
+        size: 6,
+        font: helveticaFont,
+        color: lightGray,
+      })
+
+      certContentY -= 16
+
+      // Disclaimer
+      certPage.drawText(
+        "This electronic signature is legally binding under the ESIGN Act (15 U.S.C. §7001) and UETA. This certificate verifies the identity and intent of the signer.",
+        {
+          x: certContentX,
+          y: certContentY,
+          size: 6,
+          font: helveticaFont,
+          color: lightGray,
+        }
+      )
+    }
+
     // ========== FOOTER ACCENT BAR ==========
     page.drawRectangle({
       x: 0,
