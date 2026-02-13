@@ -408,71 +408,142 @@ export default function ApplyPage() {
   // EIN validation helper (XX-XXXXXXX format)
   const isValidEIN = (ein: string) => /^\d{2}-?\d{7}$/.test(ein.replace(/\s/g, ""))
 
+  // URL validation helper
+  const isValidURL = (url: string) => {
+    if (!url.trim()) return true // Optional field
+    try {
+      new URL(url.startsWith("http") ? url : `https://${url}`)
+      return true
+    } catch {
+      return false
+    }
+  }
+
+  // Business name validation - check for invalid characters
+  const isValidBusinessName = (name: string) => {
+    // Allow alphanumeric, spaces, hyphens, ampersands, periods, apostrophes, and commas
+    const validPattern = /^[a-zA-Z0-9\s\-&.,']+$/
+    return validPattern.test(name)
+  }
+
+  // Date validation helper - check if date is in the future or too old
+  const isValidBusinessDate = (dateStr: string) => {
+    const date = new Date(dateStr)
+    const today = new Date()
+    const minDate = new Date("1900-01-01") // Reasonable minimum year
+    
+    // Check if date is valid
+    if (isNaN(date.getTime())) return false
+    
+    // Check if date is in the future
+    if (date > today) return false
+    
+    // Check if date is too old (before 1900)
+    if (date < minDate) return false
+    
+    return true
+  }
+
   const validateStep2 = (): boolean => {
     const newErrors: Record<string, string> = {}
     
+    // Business Name validation
     if (!formData.businessName.trim()) {
       newErrors.businessName = "Legal business name is required"
+    } else if (!isValidBusinessName(formData.businessName)) {
+      newErrors.businessName = "Business name contains invalid characters. Use only letters, numbers, spaces, hyphens, ampersands, periods, apostrophes, and commas"
     }
     
+    // DBA validation - only validate if provided and different from business name
+    if (formData.dba && formData.dba.trim() && formData.dba.trim() !== formData.businessName.trim()) {
+      if (!isValidBusinessName(formData.dba)) {
+        newErrors.dba = "DBA contains invalid characters. Use only letters, numbers, spaces, hyphens, ampersands, periods, apostrophes, and commas"
+      }
+    }
+    
+    // EIN/Tax ID validation
     if (!formData.federalTaxId.trim()) {
       newErrors.federalTaxId = "Federal Tax ID is required"
     } else if (!isValidEIN(formData.federalTaxId)) {
-      newErrors.federalTaxId = "Please enter a valid EIN (XX-XXXXXXX)"
+      newErrors.federalTaxId = "Invalid EIN format. Please use XX-XXXXXXX"
     }
     
+    // Business Address validation
     if (!formData.businessAddress.trim()) {
       newErrors.businessAddress = "Business address is required"
     }
     
+    // City validation
     if (!formData.businessCity.trim()) {
       newErrors.businessCity = "City is required"
     }
     
+    // State validation
     if (!formData.businessState) {
       newErrors.businessState = "State is required"
     }
     
+    // Zip code validation
     if (!formData.businessZip.trim()) {
       newErrors.businessZip = "Zip code is required"
     } else if (!isValidZip(formData.businessZip)) {
-      newErrors.businessZip = "Please enter a valid 5-digit zip code"
+      newErrors.businessZip = "Invalid zip code format. Use XXXXX or XXXXX-XXXX"
     }
     
+    // Phone validation
     if (!formData.businessPhone.trim()) {
       newErrors.businessPhone = "Business phone is required"
     } else if (!isValidPhone(formData.businessPhone)) {
-      newErrors.businessPhone = "Please enter a valid phone number"
+      newErrors.businessPhone = "Invalid phone format. Please enter at least 10 digits"
     }
     
+    // Email validation
     if (!formData.businessEmail.trim()) {
       newErrors.businessEmail = "Business email is required"
     } else if (!isValidEmail(formData.businessEmail)) {
-      newErrors.businessEmail = "Please enter a valid email address"
+      newErrors.businessEmail = "Invalid email address format"
     }
     
+    // Industry validation
     if (!formData.industry) {
-      newErrors.industry = "Industry is required"
+      newErrors.industry = "Please select an industry"
     }
     
+    // Business Start Date validation
     if (!formData.businessStartDate) {
       newErrors.businessStartDate = "Business start date is required"
+    } else if (!isValidBusinessDate(formData.businessStartDate)) {
+      const date = new Date(formData.businessStartDate)
+      const today = new Date()
+      if (date > today) {
+        newErrors.businessStartDate = "Business start date cannot be in the future"
+      } else {
+        newErrors.businessStartDate = "Invalid business start date. Date must be after 1900"
+      }
     }
     
+    // Entity Type validation
+    if (!formData.entityType) {
+      newErrors.entityType = "Please select an entity type"
+    }
+    
+    // Years in Business validation
     if (!formData.yearsInBusiness.trim()) {
       newErrors.yearsInBusiness = "Years in business is required"
     } else if (isNaN(Number(formData.yearsInBusiness)) || Number(formData.yearsInBusiness) < 0) {
-      newErrors.yearsInBusiness = "Please enter a valid number"
+      newErrors.yearsInBusiness = "Please enter a valid number (0 or greater)"
     }
     
+    // Annual Revenue validation
     if (!formData.annualRevenue) {
-      newErrors.annualRevenue = "Annual revenue is required"
+      newErrors.annualRevenue = "Please select an annual revenue range"
     }
     
+    // Owner Email validation
     if (!formData.email.trim()) {
       newErrors.email = "Email address is required"
     } else if (!isValidEmail(formData.email)) {
-      newErrors.email = "Please enter a valid email address"
+      newErrors.email = "Invalid email address format"
     }
     
     setErrors(newErrors)
@@ -482,6 +553,8 @@ export default function ApplyPage() {
   // Check if step 2 fields are valid (without setting errors)
   const isStep2Valid = 
     formData.businessName.trim() !== "" &&
+    isValidBusinessName(formData.businessName) &&
+    (!formData.dba || !formData.dba.trim() || isValidBusinessName(formData.dba)) &&
     formData.federalTaxId.trim() !== "" &&
     isValidEIN(formData.federalTaxId) &&
     formData.businessAddress.trim() !== "" &&
@@ -495,6 +568,8 @@ export default function ApplyPage() {
     isValidEmail(formData.businessEmail) &&
     formData.industry !== "" &&
     formData.businessStartDate !== "" &&
+    isValidBusinessDate(formData.businessStartDate) &&
+    formData.entityType !== "" &&
     formData.yearsInBusiness.trim() !== "" &&
     !isNaN(Number(formData.yearsInBusiness)) &&
     Number(formData.yearsInBusiness) >= 0 &&
@@ -596,15 +671,33 @@ export default function ApplyPage() {
     Number(formData.ownershipPercentage) > 0 &&
     Number(formData.ownershipPercentage) <= 100
 
+  // Helper function to scroll to the first field with an error
+  const scrollToFirstError = (errorObj: Record<string, string>) => {
+    if (Object.keys(errorObj).length === 0) return
+    
+    const firstErrorKey = Object.keys(errorObj)[0]
+    const element = document.getElementById(firstErrorKey)
+    
+    if (element) {
+      setTimeout(() => {
+        element.scrollIntoView({ behavior: "smooth", block: "center" })
+        element.focus()
+      }, 100)
+    }
+  }
+
   const nextStep = () => {
     // Validate current step before proceeding
     if (step === 1 && !validateStep1()) {
+      scrollToFirstError(errors)
       return
     }
     if (step === 2 && !validateStep2()) {
+      scrollToFirstError(errors)
       return
     }
     if (step === 3 && !validateStep3()) {
+      scrollToFirstError(errors)
       return
     }
     
@@ -1161,9 +1254,13 @@ export default function ApplyPage() {
                               id="dba"
                               placeholder="Doing Business As"
                               value={formData.dba}
-                              onChange={(e) => setFormData({ ...formData, dba: e.target.value })}
-                              className="bg-white border-gray-300 text-gray-900"
+                              onChange={(e) => {
+                                setFormData({ ...formData, dba: e.target.value })
+                                if (errors.dba) setErrors((prev) => ({ ...prev, dba: "" }))
+                              }}
+                              className={`bg-white border-gray-300 text-gray-900 ${errors.dba ? "border-red-500" : ""}`}
                             />
+                            {errors.dba && <p className="text-red-500 text-sm">{errors.dba}</p>}
                           </div>
 
                           <div className="space-y-3">
@@ -1356,22 +1453,26 @@ export default function ApplyPage() {
 
                           <div className="space-y-3">
                             <Label htmlFor="entityType" className="text-gray-800">
-                              Entity Type
+                              Entity Type <span className="text-red-500">*</span>
                             </Label>
                             <Select
                               value={formData.entityType}
-                              onValueChange={(value) => setFormData({ ...formData, entityType: value })}
+                              onValueChange={(value) => {
+                                setFormData({ ...formData, entityType: value })
+                                if (errors.entityType) setErrors((prev) => ({ ...prev, entityType: "" }))
+                              }}
                             >
-                              <SelectTrigger className="bg-[#F5F7FA] border-gray-300 text-gray-900">
+                              <SelectTrigger className={`bg-white border-gray-300 text-gray-900 ${errors.entityType ? "border-red-500" : ""}`}>
                                 <SelectValue placeholder="Select entity type" />
                               </SelectTrigger>
-                              <SelectContent className="bg-[#F5F7FA] border-gray-300 text-gray-900">
+                              <SelectContent className="bg-white border-gray-300 text-gray-900">
                                 <SelectItem value="LLC">LLC</SelectItem>
                                 <SelectItem value="Corporation">Corporation</SelectItem>
                                 <SelectItem value="Partnership">Partnership</SelectItem>
                                 <SelectItem value="Sole Proprietorship">Sole Proprietorship</SelectItem>
                               </SelectContent>
                             </Select>
+                            {errors.entityType && <p className="text-red-500 text-sm">{errors.entityType}</p>}
                           </div>
 
                           <div className="space-y-3">
