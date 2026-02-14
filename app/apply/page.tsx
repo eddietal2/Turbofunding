@@ -3292,7 +3292,7 @@ export default function ApplyPage() {
                         <Button
                           onClick={handleDownloadPDF}
                           disabled={isDownloadingPDF}
-                          className="w-full btn-gold-elite text-white font-semibold py-3 disabled:opacity-70"
+                          className="w-full btn-green-elite text-white font-semibold py-3 disabled:opacity-70"
                         >
                           {isDownloadingPDF ? (
                             <span className="flex items-center justify-center gap-2">
