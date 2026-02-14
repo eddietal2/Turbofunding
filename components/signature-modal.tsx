@@ -10,9 +10,11 @@ interface SignatureModalProps {
   onClose: () => void
   onSign: (signatureDataUrl: string) => void
   signerName: string
+  signerNumber?: number // Current signer number (1-based)
+  totalSigners?: number // Total number of signers
 }
 
-export function SignatureModal({ isOpen, onClose, onSign, signerName }: SignatureModalProps) {
+export function SignatureModal({ isOpen, onClose, onSign, signerName, signerNumber = 1, totalSigners = 1 }: SignatureModalProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const [isDrawing, setIsDrawing] = useState(false)
@@ -178,7 +180,7 @@ export function SignatureModal({ isOpen, onClose, onSign, signerName }: Signatur
       <div className="bg-white w-full sm:rounded-xl sm:shadow-2xl sm:max-w-lg sm:w-full animate-in slide-in-from-bottom-4 sm:zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="sticky top-0 bg-white border-b border-gray-200 px-4 sm:px-6 py-4 flex items-center justify-between rounded-t-xl">
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 flex-1">
             <Image
               src="/images/tf-logo.png"
               alt="TurboFunding"
@@ -186,14 +188,21 @@ export function SignatureModal({ isOpen, onClose, onSign, signerName }: Signatur
               height={40}
               className="w-10 h-10"
             />
-            <div>
-              <h2 className="text-lg font-bold text-gray-900">Sign Your Application</h2>
+            <div className="flex-1">
+              <div className="flex items-center gap-2 mb-1">
+                <h2 className="text-lg font-bold text-gray-900">Sign Your Application</h2>
+                {totalSigners > 1 && (
+                  <span className="text-xs bg-blue-100 text-blue-700 px-2.5 py-0.5 rounded-full font-semibold">
+                    Signer {signerNumber} of {totalSigners}
+                  </span>
+                )}
+              </div>
               <p className="text-sm text-gray-500">Use your finger or mouse to sign below</p>
             </div>
           </div>
           <button
             onClick={onClose}
-            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors"
+            className="p-2 text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-full transition-colors flex-shrink-0"
             aria-label="Close"
           >
             <XIcon className="h-5 w-5" />
@@ -282,7 +291,9 @@ export function SignatureModal({ isOpen, onClose, onSign, signerName }: Signatur
             className="w-full sm:flex-1 bg-orange-500 hover:bg-orange-600 text-white disabled:bg-gray-300 disabled:cursor-not-allowed order-1 sm:order-2"
           >
             <CheckIcon className="h-4 w-4 mr-2" />
-            Sign & Submit Application
+            {totalSigners > 1 && signerNumber < totalSigners
+              ? "Sign & Continue"
+              : "Sign & Submit Application"}
           </Button>
         </div>
       </div>

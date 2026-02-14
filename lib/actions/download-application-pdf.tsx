@@ -307,101 +307,12 @@ export async function downloadApplicationPDF(formData: any) {
 
     yPosition -= 35
 
-    // ========== SIGNATURE SECTION ==========
-    // Draw signature image or text
-    const signatureDataUrl = formData.signatureImage || formData.signature
-    if (signatureDataUrl && typeof signatureDataUrl === 'string' && signatureDataUrl.startsWith("data:image")) {
-      try {
-        console.log("[PDF] Processing signature image...")
-        const base64Data = signatureDataUrl.split(",")[1]
-        
-        if (!base64Data) {
-          throw new Error("Invalid data URL format: No base64 data found")
-        }
-        
-        const imageBytes = Uint8Array.from(atob(base64Data), (c) => c.charCodeAt(0))
-        console.log("[PDF] Decoded signature image, size:", imageBytes.length, "bytes")
-        
-        if (imageBytes.length === 0) {
-          throw new Error("Signature image data is empty")
-        }
-        
-        const signatureImage = await pdfDoc.embedPng(imageBytes)
-        
-        page.drawImage(signatureImage, {
-          x: leftColX,
-          y: yPosition - 40,
-          width: 180,
-          height: 50,
-        })
-        console.log("[PDF] Signature image embedded successfully")
-      } catch (error) {
-        const errorMsg = error instanceof Error ? error.message : String(error)
-        console.warn("[PDF] Error embedding signature image:", errorMsg)
-        // Fall back to text signature
-        page.drawText(formData.signature || "Signature", {
-          x: leftColX,
-          y: yPosition - 20,
-          size: 20,
-          font: cursiveFont,
-          color: brandBlue,
-        })
-      }
-    } else if (formData.signature) {
-      page.drawText(formData.signature, {
-        x: leftColX,
-        y: yPosition - 20,
-        size: 20,
-        font: cursiveFont,
-        color: brandBlue,
-      })
-    }
-
-    // Signature line
-    page.drawLine({
-      start: { x: leftColX, y: yPosition - 45 },
-      end: { x: leftColX + 200, y: yPosition - 45 },
-      thickness: 0.75,
-      color: lineGray,
-    })
-    page.drawText("SIGNATURE", {
-      x: leftColX,
-      y: yPosition - 57,
-      size: 6,
-      font: helveticaFont,
-      color: lightGray,
-    })
-
-    // Date field
-    page.drawText(formData.signatureDate || new Date().toLocaleDateString(), {
-      x: leftColX + 250,
-      y: yPosition - 40,
-      size: 10,
-      font: helveticaFont,
-      color: black,
-    })
-    page.drawLine({
-      start: { x: leftColX + 250, y: yPosition - 45 },
-      end: { x: leftColX + 400, y: yPosition - 45 },
-      thickness: 0.75,
-      color: lineGray,
-    })
-    page.drawText("DATE", {
-      x: leftColX + 250,
-      y: yPosition - 57,
-      size: 6,
-      font: helveticaFont,
-      color: lightGray,
-    })
-
-    yPosition -= 70
-
     // ========== LEGAL DISCLAIMER ==========
     const disclaimer = `By signing above, each of the above listed business and business owners/officers/members (individually and collectively, "you") authorize TurboFunding LLC ("TF") and each of its representatives, successors, assignees, affiliates and designees (collectively "Recipients") that may be involved with the acquiring of commercial loans and/or other products that have daily repayment features for the purchase of future receivables, including Merchant Cash Advance transactions, including without limitation the application therefore (collectively, "Transactions") to obtain consumer or personal business and investigative reports and other information about you, including without limitation credit card processor statements and bank statements, from one or more consumer reporting agencies, such as TransUnion, Experian and Equifax, and from other credit bureaus, banks, creditors and other third parties. You also authorize TF to transmit this application form, along with any of the foregoing information obtained in connection with this application, to any or all of the Recipients for the foregoing purposes; however TF shall not disclose information in your credit report to third parties. You also consent to the release, by any credit or financial institution, of any information relating to you, to TF and to each of the Recipients, on its own behalf.`
     
     const disclaimerLines = wrapText(disclaimer, helveticaFont, 7, pageWidth - margin * 2)
     for (const line of disclaimerLines) {
-      if (yPosition < 60) break
+      if (yPosition < 100) break
       page.drawText(line, {
         x: leftColX,
         y: yPosition,
@@ -437,46 +348,241 @@ export async function downloadApplicationPDF(formData: any) {
       color: lineGray,
     })
 
-    // ========== ELECTRONIC SIGNATURE CERTIFICATE (DocuSign-style) ==========
-    const cert = formData.signingCertificate
-    if (cert) {
-      // Check if we have enough space on the current page, otherwise add a new page
-      const certHeight = 120 // approximate height needed for certificate
-      let certPage = page
-      let certY = yPosition - 30
+    // ========== PAGE 2: SIGNATURES & ELECTRONIC CERTIFICATE ==========
+    const signaturePage = pdfDoc.addPage([612, 792])
+    let signaturePageY = 760
 
-      if (certY - certHeight < 30) {
-        // Add a new page for the certificate
-        certPage = pdfDoc.addPage([612, 792])
-        certY = 750
+    // Top accent bar
+    signaturePage.drawRectangle({
+      x: 0,
+      y: 792 - 4,
+      width: pageWidth,
+      height: 4,
+      color: brandBlue,
+    })
 
-        // Top accent bar on new page
-        certPage.drawRectangle({
-          x: 0,
-          y: 792 - 4,
-          width: pageWidth,
-          height: 4,
-          color: brandBlue,
+    // Logo on signature page
+    try {
+      const logoPath = path.join(process.cwd(), "public", "images", "tf-logo.png")
+      const logoBuffer = await fs.readFile(logoPath)
+      if (logoBuffer.length > 0) {
+        const logoUint8Array = new Uint8Array(logoBuffer.buffer, logoBuffer.byteOffset, logoBuffer.length)
+        const logoImage = await pdfDoc.embedPng(logoUint8Array)
+        signaturePage.drawImage(logoImage, {
+          x: margin,
+          y: signaturePageY - 35,
+          width: 75,
+          height: 50,
         })
+      }
+    } catch (error) {
+      console.warn("[PDF] Logo load failed on signature page")
+    }
 
-        // Footer accent bar on new page
-        certPage.drawRectangle({
-          x: 0,
-          y: 0,
-          width: pageWidth,
-          height: 4,
+    // Contact info on signature page
+    const signaturePageContactText = "help@turbofunding.com    877.838.3919    646.695.6767"
+    signaturePage.drawText(signaturePageContactText, {
+      x: pageWidth - margin - helveticaFont.widthOfTextAtSize(signaturePageContactText, 9),
+      y: signaturePageY - 15,
+      size: 9,
+      font: helveticaFont,
+      color: darkGray,
+    })
+
+    // Header line
+    signaturePageY -= 40
+
+    signaturePageY -= 30
+
+    // ========== PRIMARY OWNER SIGNATURE ==========
+    signaturePage.drawText("Primary Owner Signature:", {
+      x: leftColX,
+      y: signaturePageY,
+      size: 9,
+      font: helveticaBold,
+      color: darkGray,
+    })
+
+    signaturePageY -= 15
+
+    // Draw signature image or text
+    const signatureDataUrl = formData.signatureImage || formData.signature
+    if (signatureDataUrl && typeof signatureDataUrl === 'string' && signatureDataUrl.startsWith("data:image")) {
+      try {
+        console.log("[PDF] Processing signature image on page 2...")
+        const base64Data = signatureDataUrl.split(",")[1]
+        
+        if (!base64Data) {
+          throw new Error("Invalid data URL format: No base64 data found")
+        }
+        
+        const imageBytes = Uint8Array.from(atob(base64Data), (c) => c.charCodeAt(0))
+        console.log("[PDF] Decoded signature image on page 2, size:", imageBytes.length, "bytes")
+        
+        if (imageBytes.length === 0) {
+          throw new Error("Signature image data is empty")
+        }
+        
+        const signatureImage = await pdfDoc.embedPng(imageBytes)
+        
+        signaturePage.drawImage(signatureImage, {
+          x: leftColX,
+          y: signaturePageY - 40,
+          width: 180,
+          height: 50,
+        })
+        console.log("[PDF] Signature image embedded on page 2")
+      } catch (error) {
+        const errorMsg = error instanceof Error ? error.message : String(error)
+        console.warn("[PDF] Error embedding signature image on page 2:", errorMsg)
+        // Fall back to text signature
+        signaturePage.drawText(formData.signature || "Signature", {
+          x: leftColX,
+          y: signaturePageY - 20,
+          size: 20,
+          font: cursiveFont,
           color: brandBlue,
         })
       }
+    } else if (formData.signature) {
+      signaturePage.drawText(formData.signature, {
+        x: leftColX,
+        y: signaturePageY - 20,
+        size: 20,
+        font: cursiveFont,
+        color: brandBlue,
+      })
+    }
 
+    // Single signature line spanning both signature and date areas
+    signaturePage.drawLine({
+      start: { x: leftColX, y: signaturePageY - 65 },
+      end: { x: leftColX + 400, y: signaturePageY - 65 },
+      thickness: 0.75,
+      color: lineGray,
+    })
+    signaturePage.drawText("SIGNATURE", {
+      x: leftColX,
+      y: signaturePageY - 75,
+      size: 6,
+      font: helveticaFont,
+      color: lightGray,
+    })
+
+    // Date field
+    signaturePage.drawText(formData.signatureDate || new Date().toLocaleDateString(), {
+      x: leftColX + 250,
+      y: signaturePageY - 60,
+      size: 10,
+      font: helveticaFont,
+      color: black,
+    })
+    signaturePage.drawText("DATE", {
+      x: leftColX + 250,
+      y: signaturePageY - 75,
+      size: 6,
+      font: helveticaFont,
+      color: lightGray,
+    })
+
+    signaturePageY -= 70
+
+    // ========== SECOND OWNER SIGNATURE (IF EXISTS) ==========
+    const secondOwnerSignatureDataUrl = formData.secondOwnerSignatureImage
+    if (secondOwnerSignatureDataUrl && typeof secondOwnerSignatureDataUrl === 'string' && secondOwnerSignatureDataUrl.startsWith("data:image")) {
+      try {
+        console.log("[PDF] Processing second owner signature image on page 2...")
+        const base64Data = secondOwnerSignatureDataUrl.split(",")[1]
+        
+        if (!base64Data) {
+          throw new Error("Invalid data URL format for second owner signature: No base64 data found")
+        }
+        
+        const imageBytes = Uint8Array.from(atob(base64Data), (c) => c.charCodeAt(0))
+        console.log("[PDF] Decoded second owner signature image on page 2, size:", imageBytes.length, "bytes")
+        
+        if (imageBytes.length === 0) {
+          throw new Error("Second owner signature image data is empty")
+        }
+        
+        const secondOwnerSignatureImage = await pdfDoc.embedPng(imageBytes)
+        
+        // Add top margin before second owner section
+        signaturePageY -= 30
+        
+        // Label for second owner
+        signaturePage.drawText("Second Owner Signature:", {
+          x: leftColX,
+          y: signaturePageY,
+          size: 9,
+          font: helveticaBold,
+          color: darkGray,
+        })
+        
+        signaturePageY -= 15
+
+        signaturePage.drawImage(secondOwnerSignatureImage, {
+          x: leftColX,
+          y: signaturePageY - 40,
+          width: 180,
+          height: 50,
+        })
+        console.log("[PDF] Second owner signature image embedded on page 2")
+
+        // Single signature line spanning both signature and date areas
+        signaturePage.drawLine({
+          start: { x: leftColX, y: signaturePageY - 65 },
+          end: { x: leftColX + 400, y: signaturePageY - 65 },
+          thickness: 0.75,
+          color: lineGray,
+        })
+        signaturePage.drawText("SIGNATURE", {
+          x: leftColX,
+          y: signaturePageY - 75,
+          size: 6,
+          font: helveticaFont,
+          color: lightGray,
+        })
+
+        // Date field for second owner
+        signaturePage.drawText(formData.signatureDate || new Date().toLocaleDateString(), {
+          x: leftColX + 250,
+          y: signaturePageY - 60,
+          size: 10,
+          font: helveticaFont,
+          color: black,
+        })
+        signaturePage.drawText("DATE", {
+          x: leftColX + 250,
+          y: signaturePageY - 75,
+          size: 6,
+          font: helveticaFont,
+          color: lightGray,
+        })
+
+        signaturePageY -= 70
+      } catch (error) {
+        const errorMsg = error instanceof Error ? error.message : String(error)
+        console.warn("[PDF] Error embedding second owner signature image on page 2:", errorMsg)
+      }
+    }
+
+    signaturePageY -= 20
+
+    // ========== ELECTRONIC SIGNATURE CERTIFICATE ON PAGE 2 ==========
+    const cert = formData.signingCertificate
+    if (cert) {
+      let certPageY = signaturePageY
+      const certHeight = 160  // Increased to accommodate wrapped text
+      
       // Certificate container - full width box
       const certBoxX = margin
       const certBoxWidth = pageWidth - margin * 2
-      const certBoxY = certY - certHeight
+      const certBoxY = certPageY - certHeight
       const certBoxHeight = certHeight
 
       // Certificate background
-      certPage.drawRectangle({
+      signaturePage.drawRectangle({
         x: certBoxX,
         y: certBoxY,
         width: certBoxWidth,
@@ -487,7 +593,7 @@ export async function downloadApplicationPDF(formData: any) {
       })
 
       // Certificate header bar
-      certPage.drawRectangle({
+      signaturePage.drawRectangle({
         x: certBoxX,
         y: certBoxY + certBoxHeight - 22,
         width: certBoxWidth,
@@ -496,7 +602,7 @@ export async function downloadApplicationPDF(formData: any) {
       })
 
       // Lock icon text and title
-      certPage.drawText("ELECTRONIC SIGNATURE CERTIFICATE", {
+      signaturePage.drawText("ELECTRONIC SIGNATURE CERTIFICATE", {
         x: certBoxX + 12,
         y: certBoxY + certBoxHeight - 16,
         size: 8,
@@ -507,7 +613,7 @@ export async function downloadApplicationPDF(formData: any) {
       // Certificate ID on right side of header
       const certIdText = `ID: ${cert.signingId || "N/A"}`
       const certIdWidth = helveticaFont.widthOfTextAtSize(certIdText, 7)
-      certPage.drawText(certIdText, {
+      signaturePage.drawText(certIdText, {
         x: certBoxX + certBoxWidth - certIdWidth - 12,
         y: certBoxY + certBoxHeight - 15,
         size: 7,
@@ -519,31 +625,34 @@ export async function downloadApplicationPDF(formData: any) {
       const certContentX = certBoxX + 15
       let certContentY = certBoxY + certBoxHeight - 40
 
-      // Row 1: Signer Name and Signing Status
+      // Check if there are two signers
+      const hasSecondOwner = formData.secondOwnerFirstName && formData.secondOwnerLastName
+      
+      // Row 1: Primary Signer Name and Signing Status
       const signerFullName = `${formData.firstName || ""} ${formData.lastName || ""}`.trim() || "N/A"
-      certPage.drawText("Signer:", {
+      signaturePage.drawText("Signer 1:", {
         x: certContentX,
         y: certContentY,
         size: 7,
         font: helveticaBold,
         color: darkGray,
       })
-      certPage.drawText(signerFullName, {
-        x: certContentX + 40,
+      signaturePage.drawText(signerFullName, {
+        x: certContentX + 50,
         y: certContentY,
         size: 7,
         font: helveticaFont,
         color: black,
       })
 
-      certPage.drawText("Status:", {
+      signaturePage.drawText("Status:", {
         x: certContentX + 250,
         y: certContentY,
         size: 7,
         font: helveticaBold,
         color: darkGray,
       })
-      certPage.drawText("COMPLETED", {
+      signaturePage.drawText("SIGNED", {
         x: certContentX + 290,
         y: certContentY,
         size: 7,
@@ -551,17 +660,55 @@ export async function downloadApplicationPDF(formData: any) {
         color: rgb(22 / 255, 163 / 255, 74 / 255), // Green
       })
 
+      certContentY -= 12
+
+      // Secondary Signer (if exists) - on same line to save space
+      if (hasSecondOwner) {
+        const secondSignerFullName = `${formData.secondOwnerFirstName || ""} ${formData.secondOwnerLastName || ""}`.trim()
+        signaturePage.drawText("Signer 2:", {
+          x: certContentX,
+          y: certContentY,
+          size: 7,
+          font: helveticaBold,
+          color: darkGray,
+        })
+        signaturePage.drawText(secondSignerFullName, {
+          x: certContentX + 50,
+          y: certContentY,
+          size: 7,
+          font: helveticaFont,
+          color: black,
+        })
+
+        signaturePage.drawText("Status:", {
+          x: certContentX + 250,
+          y: certContentY,
+          size: 7,
+          font: helveticaBold,
+          color: darkGray,
+        })
+        signaturePage.drawText("SIGNED", {
+          x: certContentX + 290,
+          y: certContentY,
+          size: 7,
+          font: helveticaBold,
+          color: rgb(22 / 255, 163 / 255, 74 / 255), // Green
+        })
+
+        certContentY -= 12
+      }
+
       certContentY -= 14
 
       // Row 2: Email
-      certPage.drawText("Email:", {
+      signaturePage.drawText("Email:", {
         x: certContentX,
         y: certContentY,
         size: 7,
         font: helveticaBold,
         color: darkGray,
       })
-      certPage.drawText(formData.email || "N/A", {
+      signaturePage.drawText(formData.email || "N/A", {
         x: certContentX + 40,
         y: certContentY,
         size: 7,
@@ -572,14 +719,14 @@ export async function downloadApplicationPDF(formData: any) {
       certContentY -= 14
 
       // Row 3: IP Address and User Agent
-      certPage.drawText("IP Address:", {
+      signaturePage.drawText("IP Address:", {
         x: certContentX,
         y: certContentY,
         size: 7,
         font: helveticaBold,
         color: darkGray,
       })
-      certPage.drawText(cert.ipAddress || "Unavailable", {
+      signaturePage.drawText(cert.ipAddress || "Unavailable", {
         x: certContentX + 55,
         y: certContentY,
         size: 7,
@@ -603,14 +750,14 @@ export async function downloadApplicationPDF(formData: any) {
         timeZoneName: "short",
       })
 
-      certPage.drawText("Signed:", {
+      signaturePage.drawText("Signed:", {
         x: certContentX,
         y: certContentY,
         size: 7,
         font: helveticaBold,
         color: darkGray,
       })
-      certPage.drawText(`${formattedDate} at ${formattedTime}`, {
+      signaturePage.drawText(`${formattedDate} at ${formattedTime}`, {
         x: certContentX + 40,
         y: certContentY,
         size: 7,
@@ -627,14 +774,14 @@ export async function downloadApplicationPDF(formData: any) {
           : cert.userAgent
         : "Unknown"
 
-      certPage.drawText("Browser:", {
+      signaturePage.drawText("Browser:", {
         x: certContentX,
         y: certContentY,
         size: 7,
         font: helveticaBold,
         color: darkGray,
       })
-      certPage.drawText(userAgentDisplay, {
+      signaturePage.drawText(userAgentDisplay, {
         x: certContentX + 45,
         y: certContentY,
         size: 6,
@@ -644,20 +791,55 @@ export async function downloadApplicationPDF(formData: any) {
 
       certContentY -= 16
 
-      // Disclaimer
-      certPage.drawText(
-        "This electronic signature is legally binding under the ESIGN Act (15 U.S.C. §7001) and UETA. This certificate verifies the identity and intent of the signer.",
-        {
+      // Disclaimer - wrapped to fit within box
+      const disclaimerText = "This electronic signature is legally binding under the ESIGN Act (15 U.S.C. §7001) and UETA. This certificate verifies the identity and intent of the signer."
+      const maxWidth = certBoxWidth - 30
+      const lineHeight = 8
+      
+      // Simple text wrapping
+      let words = disclaimerText.split(" ")
+      let currentLine = ""
+      let lines: string[] = []
+      
+      for (let word of words) {
+        const testLine = currentLine + (currentLine ? " " : "") + word
+        const testWidth = helveticaFont.widthOfTextAtSize(testLine, 6)
+        
+        if (testWidth > maxWidth && currentLine) {
+          lines.push(currentLine)
+          currentLine = word
+        } else {
+          currentLine = testLine
+        }
+      }
+      if (currentLine) {
+        lines.push(currentLine)
+      }
+      
+      // Draw wrapped disclaimer
+      let disclaimerY = certContentY
+      for (let line of lines) {
+        signaturePage.drawText(line, {
           x: certContentX,
-          y: certContentY,
+          y: disclaimerY,
           size: 6,
           font: helveticaFont,
           color: lightGray,
-        }
-      )
+        })
+        disclaimerY -= lineHeight
+      }
     }
 
-    // ========== FOOTER ACCENT BAR ==========
+    // ========== FOOTER ACCENT BAR ON PAGE 2 ==========
+    signaturePage.drawRectangle({
+      x: 0,
+      y: 0,
+      width: pageWidth,
+      height: 4,
+      color: brandBlue,
+    })
+
+    // ========== FOOTER ACCENT BAR ON PAGE 1 ==========
     page.drawRectangle({
       x: 0,
       y: 0,

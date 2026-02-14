@@ -1,6 +1,6 @@
 "use client"
 // DEV MODE: Set to true to pre-fill all required fields for quick testing
-const DEV_MODE = true
+const DEV_MODE = false
 
 import { useState, useEffect, useCallback, useRef } from "react"
 import Link from "next/link"
@@ -23,6 +23,9 @@ import { uploadApplicationDocuments, ApplicationFolder } from "@/lib/actions/upl
 
 const DRAFT_STORAGE_KEY = "turbo_funding_application_draft"
 const DRAFT_STEP_KEY = "turbo_funding_application_step"
+const PRIMARY_SIGNATURE_KEY = "turbo_funding_primary_signature"
+const SECONDARY_SIGNATURE_KEY = "turbo_funding_secondary_signature"
+const APPLICATION_COMPLETED_KEY = "turbo_funding_completed_applications"
 
 const US_STATES = [
   "Alabama",
@@ -125,6 +128,18 @@ const devFormData = {
   signature: "John Doe",
   signatureDate: new Date().toISOString().split("T")[0],
   additionalInfo: "",
+  // Second Owner (Dev Mode placeholder)
+  secondOwnerFirstName: "Jane",
+  secondOwnerLastName: "Smith",
+  secondOwnerPhone: "(555) 222-3333",
+  secondOwnerDateOfBirth: "1988-03-22",
+  secondOwnerSsn: "987-65-4321",
+  secondOwnerHomeAddress: "789 Partner Ave",
+  secondOwnerCity: "Los Angeles",
+  secondOwnerState: "California",
+  secondOwnerZipCode: "90003",
+  secondOwnerCreditScore: "excellent",
+  secondOwnerPercentageOwnership: "50",
 }
 
 const getInitialFormData = () => ({
@@ -211,6 +226,8 @@ export default function ApplyPage() {
   const sessionTimeoutRef = useRef<NodeJS.Timeout | null>(null)
   const [showDraftModal, setShowDraftModal] = useState(false)
   const [showSignatureModal, setShowSignatureModal] = useState(false)
+  const [currentSignerIndex, setCurrentSignerIndex] = useState(0) // 0 = primary owner, 1 = second owner
+  const [secondOwnerSignatureImage, setSecondOwnerSignatureImage] = useState("") // Store second owner signature
   const [draftLoaded, setDraftLoaded] = useState(false)
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
   const [formData, setFormData] = useState(getInitialFormData())
@@ -232,6 +249,8 @@ export default function ApplyPage() {
     try {
       localStorage.removeItem(DRAFT_STORAGE_KEY)
       localStorage.removeItem(DRAFT_STEP_KEY)
+      localStorage.removeItem(PRIMARY_SIGNATURE_KEY)
+      localStorage.removeItem(SECONDARY_SIGNATURE_KEY)
     } catch (error) {
       console.error("Error clearing draft:", error)
     }
@@ -247,6 +266,8 @@ export default function ApplyPage() {
     try {
       const savedDraft = localStorage.getItem(DRAFT_STORAGE_KEY)
       const savedStep = localStorage.getItem(DRAFT_STEP_KEY)
+      const primarySig = localStorage.getItem(PRIMARY_SIGNATURE_KEY)
+      const secondarySig = localStorage.getItem(SECONDARY_SIGNATURE_KEY)
 
       if (savedDraft) {
         const parsedDraft = JSON.parse(savedDraft)
@@ -262,6 +283,8 @@ export default function ApplyPage() {
           // Store draft temporarily
           sessionStorage.setItem("temp_draft", savedDraft)
           sessionStorage.setItem("temp_step", savedStep || "1")
+          if (primarySig) sessionStorage.setItem("temp_primary_sig", primarySig)
+          if (secondarySig) sessionStorage.setItem("temp_secondary_sig", secondarySig)
           setShowDraftModal(true)
         }
       }
@@ -348,6 +371,15 @@ export default function ApplyPage() {
 
         localStorage.setItem(DRAFT_STORAGE_KEY, JSON.stringify(dataToSave))
         localStorage.setItem(DRAFT_STEP_KEY, String(step))
+        
+        // Save signatures separately
+        if (formData.signatureImage) {
+          localStorage.setItem(PRIMARY_SIGNATURE_KEY, formData.signatureImage)
+        }
+        if (secondOwnerSignatureImage) {
+          localStorage.setItem(SECONDARY_SIGNATURE_KEY, secondOwnerSignatureImage)
+        }
+        
         setLastSaved(new Date())
       } catch (error) {
         console.error("Error saving draft:", error)
@@ -355,13 +387,15 @@ export default function ApplyPage() {
     }, 1000)
 
     return () => clearTimeout(timeoutId)
-  }, [formData, step, draftLoaded])
+  }, [formData, step, secondOwnerSignatureImage, draftLoaded])
 
   // Restore draft from session storage
   const restoreDraft = useCallback(() => {
     try {
       const savedDraft = sessionStorage.getItem("temp_draft")
       const savedStep = sessionStorage.getItem("temp_step")
+      const primarySig = sessionStorage.getItem("temp_primary_sig")
+      const secondarySig = sessionStorage.getItem("temp_secondary_sig")
 
       if (savedDraft) {
         const parsedDraft = JSON.parse(savedDraft)
@@ -372,6 +406,13 @@ export default function ApplyPage() {
         // Check if second owner has data
         if (parsedDraft.secondOwnerFirstName || parsedDraft.secondOwnerLastName) {
           setShowSecondOwner(true)
+        }
+        // Restore signatures
+        if (primarySig) {
+          setFormData(prev => ({ ...prev, signatureImage: primarySig }))
+        }
+        if (secondarySig) {
+          setSecondOwnerSignatureImage(secondarySig)
         }
       }
     } catch (error) {
@@ -385,7 +426,10 @@ export default function ApplyPage() {
     clearDraft()
     sessionStorage.removeItem("temp_draft")
     sessionStorage.removeItem("temp_step")
+    sessionStorage.removeItem("temp_primary_sig")
+    sessionStorage.removeItem("temp_secondary_sig")
     setFormData(getInitialFormData())
+    setSecondOwnerSignatureImage("")
     setStep(1)
     setShowDraftModal(false)
     if (typeof window !== "undefined") {
@@ -1015,6 +1059,166 @@ export default function ApplyPage() {
     setShowSignatureModal(true)
   }
 
+  // Open signature modal for a specific owner (0 = primary, 1 = second)
+  const openSignatureModalForOwner = (ownerIndex: number) => {
+    setCurrentSignerIndex(ownerIndex)
+    setShowSignatureModal(true)
+  }
+
+  // Check if all required signatures are collected
+  const hasTwoOwners = showSecondOwner && formData.secondOwnerFirstName && formData.secondOwnerLastName
+  const allSignaturesCollected = formData.signatureImage && (!hasTwoOwners || secondOwnerSignatureImage)
+
+  // Handle direct submission when all signatures are already collected
+  const handleSubmitApplication = async () => {
+    if (!allSignaturesCollected) {
+      setErrors((prev) => ({
+        ...prev,
+        signature: "All owner signatures are required before submitting"
+      }))
+      return
+    }
+
+    // Capture signing certificate data (IP address, user agent, timestamp)
+    let signingCertificate: {
+      ipAddress: string
+      userAgent: string
+      signedAt: string
+      signingId: string
+    } = {
+      ipAddress: "Unavailable",
+      userAgent: typeof navigator !== "undefined" ? navigator.userAgent : "Unknown",
+      signedAt: new Date().toISOString(),
+      signingId: uuidv4(),
+    }
+
+    try {
+      console.log("[Submit] Fetching signer IP address...")
+      const ipResponse = await fetch("/api/ip")
+      if (ipResponse.ok) {
+        const ipData = await ipResponse.json()
+        signingCertificate.ipAddress = ipData.ip || "Unavailable"
+      }
+    } catch (ipError) {
+      console.warn("[Submit] Could not fetch IP address, continuing without:", ipError)
+    }
+
+    // Prepare submission data with all signatures
+    const updatedFormData = {
+      ...formData,
+      secondOwnerSignatureImage: secondOwnerSignatureImage || "",
+      secondOwnerSignature: hasTwoOwners ? `${formData.secondOwnerFirstName} ${formData.secondOwnerLastName}` : "",
+      signatureDate: new Date().toISOString().split('T')[0],
+      signingCertificate,
+    }
+    setFormData(updatedFormData)
+    setIsSubmitting(true)
+    setErrors({})
+
+    console.log("[Submit] Form submission started with signature(s) and signing certificate")
+
+    try {
+      // Generate the PDF
+      console.log("[Submit] Generating PDF for email attachment...")
+      let pdfBytes: number[] | null = null
+      
+      try {
+        const pdfResult = await downloadApplicationPDF(updatedFormData)
+        if (pdfResult.success && pdfResult.pdfBytes) {
+          pdfBytes = pdfResult.pdfBytes
+          console.log("[Submit] PDF generated successfully, size:", pdfResult.pdfBytes.length, "bytes")
+        } else {
+          console.error("[Submit] PDF generation failed:", pdfResult.error)
+          setIsSubmitting(false)
+          setErrors((prev) => ({
+            ...prev,
+            submit: `PDF generation failed: ${pdfResult.error || 'Unknown error'}. Please try again or contact support.`
+          }))
+          return
+        }
+      } catch (pdfError) {
+        const pdfErrorMsg = pdfError instanceof Error ? pdfError.message : String(pdfError)
+        console.error("[Submit] PDF generation exception:", pdfErrorMsg)
+        setIsSubmitting(false)
+        setErrors((prev) => ({
+          ...prev,
+          submit: `Failed to create application PDF: ${pdfErrorMsg}. Please try again or contact support.`
+        }))
+        return
+      }
+
+      // Upload PDF to organized folder
+      console.log("[Submit] Uploading application PDF to blob storage...")
+      let applicationFolder: ApplicationFolder | null = null
+      
+      try {
+        const uploadResult = await uploadApplicationDocuments(
+          (formData.businessName || formData.legalBusinessName || "Unknown Business") as string,
+          pdfBytes || undefined,
+          undefined,
+          undefined,
+          undefined,
+          undefined
+        )
+        
+        if (uploadResult.success && uploadResult.folder) {
+          applicationFolder = uploadResult.folder
+          setApplicationFolderPath(uploadResult.folder.folderPath)
+          console.log("[Submit] PDF uploaded successfully to:", applicationFolder.folderPath)
+        } else {
+          const uploadError = uploadResult.error || "Unknown error"
+          console.error("[Submit] PDF upload failed:", uploadError)
+          setIsSubmitting(false)
+          setErrors((prev) => ({
+            ...prev,
+            submit: `Failed to upload PDF to storage: ${uploadError}. Your application was not submitted. Please try again.`
+          }))
+          return
+        }
+      } catch (uploadError) {
+        const uploadErrorMsg = uploadError instanceof Error ? uploadError.message : String(uploadError)
+        console.error("[Submit] PDF upload exception:", uploadErrorMsg)
+        setIsSubmitting(false)
+        setErrors((prev) => ({
+          ...prev,
+          submit: `Failed to upload PDF: ${uploadErrorMsg}. Your application was not submitted. Please try again.`
+        }))
+        return
+      }
+
+      // Submit application to API
+      console.log("[Submit] Submitting application to API...")
+      try {
+        const result = await submitApplication(updatedFormData, applicationFolder)
+        console.log("[Submit] Submit result:", result)
+
+        if (result.success) {
+          console.log("[Submit] Application submitted successfully!")
+          setIsSubmitting(false)
+          nextStep()
+        } else {
+          throw new Error(result.error || "Submission failed")
+        }
+      } catch (submitError) {
+        const submitErrorMsg = submitError instanceof Error ? submitError.message : String(submitError)
+        console.error("[Submit] API submission failed:", submitErrorMsg)
+        setIsSubmitting(false)
+        setErrors((prev) => ({
+          ...prev,
+          submit: `Application submission failed: ${submitErrorMsg}. Please try again.`
+        }))
+      }
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error)
+      console.error("[Submit] Unexpected error:", errorMsg)
+      setIsSubmitting(false)
+      setErrors((prev) => ({
+        ...prev,
+        submit: `An unexpected error occurred: ${errorMsg}. Please try again.`
+      }))
+    }
+  }
+
   // Handle signature modal close without signing
   const handleSignatureModalClose = () => {
     setShowSignatureModal(false)
@@ -1033,6 +1237,40 @@ export default function ApplyPage() {
     return true
   }
 
+  // Handle inline signature capture (without submission) - for Step 4 owner dropdowns
+  const handleInlineSignature = (signatureDataUrl: string) => {
+    if (!validateSignature(signatureDataUrl)) {
+      return
+    }
+
+    if (currentSignerIndex === 0) {
+      // Primary owner signed
+      setFormData(prev => ({
+        ...prev,
+        signatureImage: signatureDataUrl,
+        signature: `${prev.firstName} ${prev.lastName}`,
+      }))
+      // Save primary signature to localStorage immediately
+      try {
+        localStorage.setItem(PRIMARY_SIGNATURE_KEY, signatureDataUrl)
+      } catch (error) {
+        console.error("Error saving primary signature:", error)
+      }
+    } else {
+      // Second owner signed
+      setSecondOwnerSignatureImage(signatureDataUrl)
+      // Save secondary signature to localStorage immediately
+      try {
+        localStorage.setItem(SECONDARY_SIGNATURE_KEY, signatureDataUrl)
+      } catch (error) {
+        console.error("Error saving secondary signature:", error)
+      }
+    }
+
+    setShowSignatureModal(false)
+    setCurrentSignerIndex(0) // Reset signer index
+  }
+
   // Handle signature and submit
   const handleSignatureAndSubmit = async (signatureDataUrl: string) => {
     // Validate signature is not empty
@@ -1040,6 +1278,36 @@ export default function ApplyPage() {
       return
     }
 
+    // Check if there are two owners and we're on the primary owner
+    const hasTwoOwners = showSecondOwner && formData.secondOwnerFirstName && formData.secondOwnerLastName
+    
+    if (currentSignerIndex === 0 && hasTwoOwners) {
+      // Primary owner just signed - store signature and show second owner modal
+      setFormData(prev => ({
+        ...prev,
+        signatureImage: signatureDataUrl,
+        signature: prev.signature || `${prev.firstName} ${prev.lastName}`,
+      }))
+      
+      // Save primary signature to localStorage
+      try {
+        localStorage.setItem(PRIMARY_SIGNATURE_KEY, signatureDataUrl)
+      } catch (error) {
+        console.error("Error saving primary signature:", error)
+      }
+      
+      setShowSignatureModal(false)
+      
+      // Brief delay before showing second owner modal for better UX
+      setTimeout(() => {
+        setCurrentSignerIndex(1)
+        setShowSignatureModal(true)
+      }, 500)
+      
+      return
+    }
+
+    // If we're on the second owner or only one owner, proceed with full submission
     // Capture signing certificate data (IP address, user agent, timestamp)
     let signingCertificate: {
       ipAddress: string
@@ -1071,20 +1339,43 @@ export default function ApplyPage() {
       ipAddress: signingCertificate.ipAddress,
     })
 
-    // Update formData with signature and signing certificate
+    // Update formData with both signatures (if applicable)
     const updatedFormData = {
       ...formData,
-      signatureImage: signatureDataUrl,
+      signatureImage: formData.signatureImage || signatureDataUrl, // Use primary owner's signature if already set
       signature: formData.signature || `${formData.firstName} ${formData.lastName}`,
+      ...(currentSignerIndex === 1 ? { secondOwnerSignatureImage: signatureDataUrl } : {}),
+      secondOwnerSignature: currentSignerIndex === 1 ? `${formData.secondOwnerFirstName} ${formData.secondOwnerLastName}` : "",
       signatureDate: new Date().toISOString().split('T')[0],
       signingCertificate,
     }
     setFormData(updatedFormData)
+    
+    // Save signatures to localStorage when capturing them during submission
+    if (currentSignerIndex === 0 && (updatedFormData.signatureImage || formData.signatureImage)) {
+      try {
+        const sigToSave = updatedFormData.signatureImage || formData.signatureImage
+        if (sigToSave) {
+          localStorage.setItem(PRIMARY_SIGNATURE_KEY, sigToSave)
+        }
+      } catch (error) {
+        console.error("Error saving primary signature:", error)
+      }
+    } else if (currentSignerIndex === 1 && signatureDataUrl) {
+      try {
+        localStorage.setItem(SECONDARY_SIGNATURE_KEY, signatureDataUrl)
+        setSecondOwnerSignatureImage(signatureDataUrl)
+      } catch (error) {
+        console.error("Error saving secondary signature:", error)
+      }
+    }
+    
     setShowSignatureModal(false)
+    setCurrentSignerIndex(0) // Reset for next submission
     setIsSubmitting(true)
     setErrors({}) // Clear any previous errors
     
-    console.log("[Submit] Form submission started with signature and signing certificate")
+    console.log("[Submit] Form submission started with signature(s) and signing certificate")
     console.log("[Submit] Submitting application with data:", updatedFormData)
 
     try {
@@ -1168,6 +1459,27 @@ export default function ApplyPage() {
             console.log("[Submit] Confirmation email sent to:", formData.email)
           } else {
             console.warn("[Submit] Application submitted but email notification failed")
+          }
+          
+          // Archive completed application to localStorage before clearing draft
+          try {
+            const completedApps = JSON.parse(localStorage.getItem(APPLICATION_COMPLETED_KEY) || "[]")
+            const completedApp = {
+              submittedAt: new Date().toISOString(),
+              applicationId: uuidv4(),
+              email: formData.email,
+              businessName: formData.businessName,
+              formData: updatedFormData,
+              primarySignature: localStorage.getItem(PRIMARY_SIGNATURE_KEY),
+              secondarySignature: localStorage.getItem(SECONDARY_SIGNATURE_KEY),
+            }
+            completedApps.push(completedApp)
+            localStorage.setItem(APPLICATION_COMPLETED_KEY, JSON.stringify(completedApps))
+            console.log("[Submit] Completed application archived to localStorage")
+          } catch (archiveError) {
+            const archiveErrorMsg = archiveError instanceof Error ? archiveError.message : String(archiveError)
+            console.warn("[Submit] Failed to archive completed application:", archiveErrorMsg)
+            // Don't block submission on archive failure
           }
           
           // Clear draft from localStorage
@@ -1593,8 +1905,14 @@ export default function ApplyPage() {
       <SignatureModal
         isOpen={showSignatureModal}
         onClose={handleSignatureModalClose}
-        onSign={handleSignatureAndSubmit}
-        signerName={`${formData.firstName} ${formData.lastName}`.trim() || "Applicant"}
+        onSign={handleInlineSignature}
+        signerName={
+          currentSignerIndex === 0 
+            ? `${formData.firstName} ${formData.lastName}`.trim() || "Primary Owner"
+            : `${formData.secondOwnerFirstName} ${formData.secondOwnerLastName}`.trim() || "Second Owner"
+        }
+        signerNumber={currentSignerIndex + 1}
+        totalSigners={showSecondOwner && formData.secondOwnerFirstName && formData.secondOwnerLastName ? 2 : 1}
       />
 
       <div className="flex min-h-screen flex-col bg-[#F5F7FA]">
@@ -1608,7 +1926,10 @@ export default function ApplyPage() {
                   <div className="mb-4 flex items-center justify-end gap-2">
                     <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
                     <span className="text-xs text-gray-500">
-                      Draft auto-saved at {lastSaved.toLocaleTimeString()}
+                      Draft auto-saved at {lastSaved.toLocaleString()} 
+                      {formData.businessName && ` • ${formData.businessName}`}
+                      {(formData.bankStatements || formData.otherDocuments) && ` • ${(formData.bankStatements ? 1 : 0) + (formData.otherDocuments ? 1 : 0)} files`}
+                      {formData.signatureImage && ` • signature`}
                     </span>
                   </div>
                 )}
@@ -2406,7 +2727,29 @@ export default function ApplyPage() {
                               <Button
                                 type="button"
                                 className="w-full bg-blue-600 text-white hover:bg-blue-700"
-                                onClick={() => setShowSecondOwner(true)}
+                                onClick={() => {
+                                  setShowSecondOwner(true)
+                                  // Pre-fill second owner fields in dev mode
+                                  if (DEV_MODE) {
+                                    setFormData(prev => ({
+                                      ...prev,
+                                      secondOwnerFirstName: devFormData.secondOwnerFirstName,
+                                      secondOwnerLastName: devFormData.secondOwnerLastName,
+                                      secondOwnerPhone: devFormData.secondOwnerPhone,
+                                      secondOwnerDateOfBirth: devFormData.secondOwnerDateOfBirth,
+                                      secondOwnerSsn: devFormData.secondOwnerSsn,
+                                      secondOwnerHomeAddress: devFormData.secondOwnerHomeAddress,
+                                      secondOwnerCity: devFormData.secondOwnerCity,
+                                      secondOwnerState: devFormData.secondOwnerState,
+                                      secondOwnerZipCode: devFormData.secondOwnerZipCode,
+                                      secondOwnerCreditScore: devFormData.secondOwnerCreditScore,
+                                      secondOwnerPercentageOwnership: devFormData.secondOwnerPercentageOwnership,
+                                      // Adjust primary owner percentage when adding second owner
+                                      percentageOwnership: "50",
+                                      ownershipPercentage: "50",
+                                    }))
+                                  }
+                                }}
                               >
                                 + Add Second Owner
                               </Button>
@@ -2968,7 +3311,7 @@ export default function ApplyPage() {
                           </div>
                         </div>
                       </div>
-                      <div className={`transition-all duration-300 ease-in-out ${expandedSections.primaryOwner ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+                      <div className={`transition-all duration-300 ease-in-out ${expandedSections.primaryOwner ? 'max-h-[800px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
                         <div className="p-4 md:p-6">
                           {/* Owner Name Highlight */}
                           <div className="bg-gray-50 rounded-lg p-4 mb-4">
@@ -3002,6 +3345,34 @@ export default function ApplyPage() {
                           <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Home Address</p>
                           <p className="text-sm text-gray-900">{formData.homeAddress}</p>
                           <p className="text-sm text-gray-900">{formData.city}, {formData.state} {formData.zip}</p>
+                        </div>
+
+                        {/* E-Signature Section */}
+                        <div className="mt-4 pt-4 border-t border-gray-100">
+                          <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">E-Signature</p>
+                          {formData.signatureImage ? (
+                            <div className="flex items-center gap-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                              <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-500 flex items-center justify-center">
+                                <CheckCircleIcon className="h-5 w-5 text-white" />
+                              </div>
+                              <div className="flex-1">
+                                <p className="text-sm font-medium text-green-800">Signed</p>
+                                <p className="text-xs text-green-600">{formData.firstName} {formData.lastName}</p>
+                              </div>
+                              <img src={formData.signatureImage} alt="Signature" className="h-10 max-w-[120px] object-contain" />
+                            </div>
+                          ) : (
+                            <Button
+                              type="button"
+                              onClick={() => openSignatureModalForOwner(0)}
+                              className="w-full sm:w-auto btn-green-elite text-white font-medium px-6 py-2"
+                            >
+                              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                              </svg>
+                              Sign Here
+                            </Button>
+                          )}
                         </div>
                         </div>
                       </div>
@@ -3040,7 +3411,7 @@ export default function ApplyPage() {
                             </div>
                           </div>
                         </div>
-                        <div className={`transition-all duration-300 ease-in-out ${expandedSections.secondOwner ? 'max-h-[600px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
+                        <div className={`transition-all duration-300 ease-in-out ${expandedSections.secondOwner ? 'max-h-[800px] opacity-100' : 'max-h-0 opacity-0 overflow-hidden'}`}>
                           <div className="p-4 md:p-6">
                             {/* Second Owner Name Highlight */}
                             <div className="bg-gray-50 rounded-lg p-4 mb-4">
@@ -3074,6 +3445,34 @@ export default function ApplyPage() {
                               <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">Home Address</p>
                               <p className="text-sm text-gray-900">{formData.secondOwnerHomeAddress}</p>
                               <p className="text-sm text-gray-900">{formData.secondOwnerCity}, {formData.secondOwnerState} {formData.secondOwnerZipCode}</p>
+                            </div>
+
+                            {/* E-Signature Section */}
+                            <div className="mt-4 pt-4 border-t border-gray-100">
+                              <p className="text-xs text-gray-500 uppercase tracking-wide mb-2">E-Signature</p>
+                              {secondOwnerSignatureImage ? (
+                                <div className="flex items-center gap-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                                  <div className="flex-shrink-0 w-8 h-8 rounded-full bg-green-500 flex items-center justify-center">
+                                    <CheckCircleIcon className="h-5 w-5 text-white" />
+                                  </div>
+                                  <div className="flex-1">
+                                    <p className="text-sm font-medium text-green-800">Signed</p>
+                                    <p className="text-xs text-green-600">{formData.secondOwnerFirstName} {formData.secondOwnerLastName}</p>
+                                  </div>
+                                  <img src={secondOwnerSignatureImage} alt="Signature" className="h-10 max-w-[120px] object-contain" />
+                                </div>
+                              ) : (
+                                <Button
+                                  type="button"
+                                  onClick={() => openSignatureModalForOwner(1)}
+                                  className="w-full sm:w-auto btn-green-elite text-white font-medium px-6 py-2"
+                                >
+                                  <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                  </svg>
+                                  Sign Here
+                                </Button>
+                              )}
                             </div>
                           </div>
                         </div>
@@ -3123,12 +3522,26 @@ export default function ApplyPage() {
                           ← Previous Step
                         </Button>
                         <div className="w-full sm:w-auto text-center order-1 sm:order-2">
-                          <p className="text-xs text-gray-500 mb-2 hidden sm:block">Ready to submit?</p>
+                          {!allSignaturesCollected && (
+                            <p className="text-xs text-orange-600 mb-2 hidden sm:block">
+                              {hasTwoOwners 
+                                ? `${!formData.signatureImage ? 'Primary owner' : ''}${!formData.signatureImage && !secondOwnerSignatureImage ? ' and ' : ''}${!secondOwnerSignatureImage ? 'Second owner' : ''} signature required`
+                                : 'Owner signature required'
+                              }
+                            </p>
+                          )}
+                          {allSignaturesCollected && (
+                            <p className="text-xs text-green-600 mb-2 hidden sm:block">All signatures collected ✓</p>
+                          )}
                           <Button
                             type="button"
-                            onClick={openSignatureModal}
-                            disabled={isSubmitting}
-                            className="w-full sm:w-auto bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold px-8 py-3 shadow-lg shadow-orange-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
+                            onClick={handleSubmitApplication}
+                            disabled={isSubmitting || !allSignaturesCollected}
+                            className={`w-full sm:w-auto font-semibold px-8 py-3 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed ${
+                              allSignaturesCollected 
+                                ? 'bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-orange-500/25'
+                                : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                            }`}
                           >
                             Submit Application →
                           </Button>
