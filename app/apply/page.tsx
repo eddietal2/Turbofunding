@@ -1,6 +1,6 @@
 "use client"
 // DEV MODE: Set to true to pre-fill all required fields for quick testing
-const DEV_MODE = false
+const DEV_MODE = true
 
 import { useState, useEffect, useCallback, useRef } from "react"
 import Link from "next/link"
@@ -447,8 +447,8 @@ export default function ApplyPage() {
         if (zip) { updates.businessZip = zip; errorClears.businessZip = "" }
 
         if (Object.keys(updates).length > 0) {
-          setFormData(prev => ({ ...prev, ...updates }))
-          setErrors(prev => ({ ...prev, ...errorClears }))
+          setFormData((prev: typeof formData) => ({ ...prev, ...updates }))
+          setErrors((prev: Record<string, string>) => ({ ...prev, ...errorClears }))
           console.log("[Address Autocomplete] Business address updated with:", updates)
         }
       } else if (addressType === "homeOwner") {

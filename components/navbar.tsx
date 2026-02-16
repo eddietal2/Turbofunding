@@ -58,10 +58,10 @@ export function Navbar() {
             <Link
               key={item.href}
               href={item.href}
-              className={`text-sm tracking-wide transition-colors ${
+              className={`text-sm tracking-wide transition-colors whitespace-nowrap leading-tight font-semibold ${
                 isActive(item.href)
-                  ? "text-orange-500 font-bold"
-                  : "text-white font-normal hover:text-orange-500"
+                  ? "text-orange-500"
+                  : "text-white hover:text-orange-500"
               }`}
               aria-current={isActive(item.href) ? "page" : undefined}
             >
