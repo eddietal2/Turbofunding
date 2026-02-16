@@ -174,56 +174,108 @@ export default function Home() {
         }}
       />
 
-      {/* Changed main background from bg-black to bg-[#F5F7FA] */}
-      <div className="flex min-h-screen flex-col bg-[#F5F7FA]">
-        {/* Hero Section with Background Image */}
-        <section className="relative w-full py-12 md:py-16 lg:py-24 xl:py-32 overflow-hidden">
-          {/* Background Image */}
-          <div className="absolute inset-0 z-0">
-            <Image
-              src="/images/turbofunding-hero-professional.png"
-              alt="Professional business funding advisor representing TurboFunding's personalized service"
-              fill
-              className="object-cover object-[center_15%] opacity-85"
-              priority
-            />
-            <div className="absolute inset-0 bg-[#F5F7FA]/20"></div>
-            <div className="absolute inset-0 bg-gradient-to-r from-black/40 to-black/20"></div>
-          </div>
-
-          {/* Content */}
-          <div className="container relative z-10 px-4 md:px-6">
-            <div className="max-w-4xl">
+      <div className="flex flex-col">
+        {/* Hero Section */}
+      <section className="relative w-full bg-[#999] md:h-screen md:flex md:items-center overflow-hidden">
+        {/* Content Container */}
+        <div className="container relative z-10 px-4 md:px-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center py-8 md:py-0">
+            {/* Left Column - Text Content */}
+            <div className="space-y-6">
               <div className="space-y-4">
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight">
+                <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-tight">
                   <span style={{ color: "#F97316", whiteSpace: "nowrap" }}>Turbo</span>
-                  <span style={{ color: "#2460e3" }}>Charge your Business</span>
+                  <span style={{ color: "#2460e3" }}>Charge your</span>
                   <br />
-                  <span style={{ color: "#2460e3" }}>with </span>
+                  <span style={{ color: "#2460e3" }}>Business with</span>
+                  <br />
                   <RotatingText
                     words={productNames}
                     className="font-bold"
                     style={{
-                      color: "#F97316", // Changed from blue to orange to match "Turbo"
+                      color: "#F97316",
                       display: "inline",
                       fontSize: "inherit",
                       lineHeight: "inherit",
                     }}
                   />
                 </h1>
-                <p className="text-base md:text-lg font-bold" style={{ color: "#FFFFFF" }}>
+                <p className="text-lg md:text-xl font-normal" style={{ color: "#FFFFFF" }}>
                   The place that helps businesses scale through secure, fast and transparent funding.
                 </p>
               </div>
-              <div className="flex flex-col gap-2 min-[400px]:flex-row pt-6">
-                <Button asChild className="bg-blue-600 text-white hover:bg-blue-700 text-lg px-8 py-6">
+              <div className="flex flex-col gap-3 min-[400px]:flex-row pt-4">
+                <Button asChild className="bg-blue-600 text-white hover:bg-blue-700 text-lg px-8 py-6 w-fit">
                   <Link href="/apply">See Your Loan Options</Link>
                 </Button>
               </div>
-              <p className="text-sm text-white mt-3 drop-shadow-lg">Applying will not impact your credit score</p>
+              <p className="text-sm text-gray-400">Applying will not impact your credit score</p>
+            </div>
+
+            {/* Right Column - iPhone Frame Illustration */}
+            <div className="flex items-center justify-center hidden md:flex -mt-16">
+              <div className="relative" style={{ width: "280px", height: "560px" }}>
+                {/* iPhone Body */}
+                <div className="absolute inset-0 bg-gradient-to-b from-gray-800 to-gray-900 rounded-3xl shadow-2xl" style={{ borderRadius: "40px" }} />
+                
+                {/* Screen Bezel/Frame */}
+                <div className="absolute inset-0 rounded-3xl border-[12px] border-black" style={{ borderRadius: "40px" }} />
+                
+                {/* Notch */}
+                <div className="absolute top-0 left-1/2 transform -translate-x-1/2 z-20" style={{
+                  width: "150px",
+                  height: "28px",
+                  backgroundColor: "#000",
+                  borderRadius: "0 0 24px 24px",
+                  marginTop: "10px"
+                }} />
+                
+                {/* Screen Content Area */}
+                <div className="absolute inset-0 rounded-3xl overflow-hidden flex flex-col" style={{
+                  left: "12px",
+                  right: "12px",
+                  top: "12px",
+                  bottom: "12px",
+                  borderRadius: "32px"
+                }}>
+                  {/* Status Bar Area (top) */}
+                  <div className="h-7 bg-gradient-to-b from-gray-950 to-transparent" />
+                  
+                  {/* Main Screen Content */}
+                  <div className="flex-1 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-900 flex flex-col items-center justify-center relative overflow-hidden">
+                    {/* Decorative background elements */}
+                    <div className="absolute inset-0 opacity-10">
+                      <div className="absolute w-96 h-96 bg-white rounded-full blur-3xl -top-20 -left-20" />
+                    </div>
+                    
+                    {/* TF Logo */}
+                    <div className="relative z-10 flex flex-col items-center justify-center">
+                      <Image
+                        src="/images/tf-logo.png"
+                        alt="TurboFunding Logo"
+                        width={120}
+                        height={120}
+                        className="opacity-60"
+                      />
+                    </div>
+                  </div>
+                  
+                  {/* Home Indicator (bottom) */}
+                  <div className="h-6 bg-black flex items-center justify-center">
+                    <div className="w-32 h-1 bg-white rounded-full opacity-80" />
+                  </div>
+                </div>
+                
+                {/* Subtle reflection/shine */}
+                <div className="absolute inset-0 rounded-3xl opacity-20 pointer-events-none" style={{
+                  background: "linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%, rgba(0,0,0,0.1) 100%)",
+                  borderRadius: "40px"
+                }} />
+              </div>
             </div>
           </div>
-        </section>
+        </div>
+      </section>
 
         {/* How To Qualify Section */}
         {/* Changed section background from gray-800 to bg-[#F5F7FA] with updated text colors */}
