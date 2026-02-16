@@ -375,7 +375,7 @@ export default function ApplyPage() {
       clearInterval(interval)
       clearTimeout(timeout)
     }
-  }, [step])
+  }, [step, showSecondOwner])
 
   // Handle place selection from Google Places
   const handlePlaceSelected = (addressType: "business" | "homeOwner" | "secondOwner") => {
@@ -457,7 +457,7 @@ export default function ApplyPage() {
         if (streetAddress) { updates.homeAddress = streetAddress; errorClears.homeAddress = "" }
         if (city) { updates.city = city; errorClears.city = "" }
         if (fullStateName) { updates.state = fullStateName; errorClears.state = "" }
-        if (zip) { updates.zipCode = zip; errorClears.zipCode = "" }
+        if (zip) { updates.zip = zip; errorClears.zip = "" }
 
         if (Object.keys(updates).length > 0) {
           setFormData(prev => ({ ...prev, ...updates }))
