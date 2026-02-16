@@ -2255,7 +2255,13 @@ export default function ApplyPage() {
                           { num: 5, label: "Confirmation" },
                           { num: 6, label: "Documents" },
                         ].map(({ num, label }) => (
-                          <div key={num} className="flex flex-col items-center">
+                          <div 
+                            key={num} 
+                            className={`flex flex-col items-center transition-opacity ${
+                              num <= step ? "cursor-pointer hover:opacity-80" : "cursor-not-allowed"
+                            }`}
+                            onClick={() => num <= step && setStep(num)}
+                          >
                             <div
                               className={`w-12 h-12 rounded-full flex items-center justify-center text-lg font-bold transition-all duration-300 ${
                                 step > num
