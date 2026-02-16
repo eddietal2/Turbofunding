@@ -82,10 +82,11 @@ interface ApplicationEmailData {
   businessName: string
   amountRequested: string
   pdfUrl?: string | null
+  bankStatementsUrl?: string | null
 }
 
 export async function sendApplicationConfirmationEmail(data: ApplicationEmailData) {
-  const { recipientEmail, recipientName, businessName, amountRequested, pdfUrl } = data
+  const { recipientEmail, recipientName, businessName, amountRequested, pdfUrl, bankStatementsUrl } = data
 
   const formattedAmount = amountRequested
     ? `$${Number(amountRequested).toLocaleString()}`
@@ -208,16 +209,14 @@ export async function sendApplicationConfirmationEmail(data: ApplicationEmailDat
     ${pdfUrl ? `
     <!-- View Application Button -->
     <div style="text-align: center; margin-bottom: 24px;">
-      <a href="${pdfUrl}" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #f97316 0%, #ea580c 100%); color: white; padding: 16px 32px; text-decoration: none; border-radius: 8px; font-weight: 700; font-size: 16px; box-shadow: 0 4px 14px rgba(249, 115, 22, 0.4);">
-        📄 View Application
-      </a>
+      <p style="color: #64748b; font-size: 13px; margin: 0 0 12px 0;">📎 <strong>Application PDF attached to this email</strong></p>
     </div>
     ` : ""}
 
     <!-- Pro Tip -->
     <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border-radius: 12px; padding: 20px; border-left: 4px solid #f59e0b;">
       <p style="margin: 0; color: #92400e; font-size: 14px;">
-        <strong>💡 Pro Tip:</strong> To expedite your application, make sure to upload your recent bank statements through our portal.
+        <strong>💡 Pro Tip:</strong> Check your email attachments for your complete application and supporting documents.
       </p>
     </div>
   `
@@ -244,9 +243,7 @@ WHAT HAPPENS NEXT?
 3. Tailored Solutions - We'll present funding options customized for your business
 4. Fast Funding - Receive funds in as little as 24-48 hours
 
-${pdfUrl ? `Download your application PDF: ${pdfUrl}` : ""}
-
-Pro Tip: To expedite your application, make sure to upload your recent bank statements through our portal.
+Attached: Your complete application PDF and supporting documents.
 
 Questions? Contact us at help@turbofunding.com
 
@@ -256,13 +253,36 @@ Funding Solutions for Growing Businesses
   `
 
   try {
-    const info = await transporter.sendMail({
+    // Build attachments array
+    const attachments: Array<{ filename: string; path: string }> = []
+    
+    if (pdfUrl) {
+      attachments.push({
+        filename: `TurboFunding-Application-${new Date().toISOString().split('T')[0]}.pdf`,
+        path: pdfUrl,
+      })
+    }
+
+    if (bankStatementsUrl) {
+      attachments.push({
+        filename: `TurboFunding-BankStatements-${new Date().toISOString().split('T')[0]}.pdf`,
+        path: bankStatementsUrl,
+      })
+    }
+
+    const mailOptions: any = {
       from: `"TurboFunding.com" <${process.env.NODEMAILER_EMAIL}>`,
       to: recipientEmail,
       subject: `✓ Application Received - ${businessName} | TurboFunding.com`,
       text: textContent,
       html: htmlContent,
-    })
+    }
+
+    if (attachments.length > 0) {
+      mailOptions.attachments = attachments
+    }
+
+    const info = await transporter.sendMail(mailOptions)
 
     console.log("[Email] Confirmation email sent:", info.messageId)
     return { success: true, messageId: info.messageId }
