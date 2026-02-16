@@ -8,6 +8,19 @@ import Image from "next/image"
 import { useRouter } from "next/navigation"
 import { v4 as uuidv4 } from "uuid"
 import { Button } from "@/components/ui/button"
+
+// Extend Window interface for Google Maps API
+declare global {
+  interface Window {
+    google: {
+      maps: {
+        places: {
+          Autocomplete: any
+        }
+      }
+    }
+  }
+}
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
@@ -242,6 +255,219 @@ export default function ApplyPage() {
 
   const toggleSection = (section: string) => {
     setExpandedSections(prev => ({ ...prev, [section]: !prev[section] }))
+  }
+
+  // Google Places API refs
+  const addressInputRef = useRef<HTMLInputElement>(null)
+  const autocompleteRef = useRef<any>(null)
+  const homeAddressInputRef = useRef<HTMLInputElement>(null)
+  const homeAutocompleteRef = useRef<any>(null)
+  const secondOwnerAddressInputRef = useRef<HTMLInputElement>(null)
+  const secondOwnerAutocompleteRef = useRef<any>(null)
+
+  // Initialize Google Places Autocomplete
+  useEffect(() => {
+    const apiKey = process.env.NEXT_PUBLIC_GOOGLE_PLACES_API_KEY
+    if (!apiKey) {
+      console.warn("[Address Autocomplete] Google Places API key not configured")
+      return
+    }
+
+    let cancelled = false
+
+    function initializeAutocompletes() {
+      if (cancelled) return
+      console.log("[Address Autocomplete] Initializing autocompletes for step", step)
+      
+      // Business Address Autocomplete (Step 2)
+      if (addressInputRef.current && !autocompleteRef.current) {
+        try {
+          autocompleteRef.current = new window.google.maps.places.Autocomplete(
+            addressInputRef.current,
+            {
+              componentRestrictions: { country: "us" },
+              fields: ["address_components", "formatted_address"],
+              types: ["address"],
+            }
+          )
+          autocompleteRef.current.addListener("place_changed", () => handlePlaceSelected("business"))
+          console.log("[Address Autocomplete] ✅ Business address autocomplete initialized")
+        } catch (error) {
+          console.error("[Address Autocomplete] ❌ Error initializing business address autocomplete:", error)
+        }
+      }
+
+      // Home Address Autocomplete (Step 3)
+      if (homeAddressInputRef.current && !homeAutocompleteRef.current) {
+        try {
+          homeAutocompleteRef.current = new window.google.maps.places.Autocomplete(
+            homeAddressInputRef.current,
+            {
+              componentRestrictions: { country: "us" },
+              fields: ["address_components", "formatted_address"],
+              types: ["address"],
+            }
+          )
+          homeAutocompleteRef.current.addListener("place_changed", () => handlePlaceSelected("homeOwner"))
+          console.log("[Address Autocomplete] ✅ Home address autocomplete initialized")
+        } catch (error) {
+          console.error("[Address Autocomplete] ❌ Error initializing home address autocomplete:", error)
+        }
+      }
+
+      // Second Owner Home Address Autocomplete (Step 3)
+      if (secondOwnerAddressInputRef.current && !secondOwnerAutocompleteRef.current) {
+        try {
+          secondOwnerAutocompleteRef.current = new window.google.maps.places.Autocomplete(
+            secondOwnerAddressInputRef.current,
+            {
+              componentRestrictions: { country: "us" },
+              fields: ["address_components", "formatted_address"],
+              types: ["address"],
+            }
+          )
+          secondOwnerAutocompleteRef.current.addListener("place_changed", () => handlePlaceSelected("secondOwner"))
+          console.log("[Address Autocomplete] ✅ Second owner address autocomplete initialized")
+        } catch (error) {
+          console.error("[Address Autocomplete] ❌ Error initializing second owner address autocomplete:", error)
+        }
+      }
+    }
+
+    // If Google Maps API is already fully loaded, just initialize
+    if (window.google && window.google.maps && window.google.maps.places) {
+      initializeAutocompletes()
+      return () => { cancelled = true }
+    }
+
+    // Load the script if it hasn't been added yet
+    const existingScript = document.getElementById("google-maps-api")
+    if (!existingScript) {
+      console.log("[Address Autocomplete] Loading Google Maps API script...")
+      const script = document.createElement("script")
+      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&libraries=places&loading=async`
+      script.async = true
+      script.id = "google-maps-api"
+      script.onerror = () => {
+        console.error("[Address Autocomplete] Failed to load Google Maps API script")
+      }
+      document.head.appendChild(script)
+    }
+
+    // Poll for google.maps.places to be available (handles both fresh load and re-mount)
+    const interval = setInterval(() => {
+      if (window.google && window.google.maps && window.google.maps.places) {
+        clearInterval(interval)
+        initializeAutocompletes()
+      }
+    }, 100)
+
+    // Safety timeout - stop polling after 10s
+    const timeout = setTimeout(() => {
+      clearInterval(interval)
+      if (!window.google?.maps?.places) {
+        console.error("[Address Autocomplete] Timed out waiting for Google Maps API")
+      }
+    }, 10000)
+
+    return () => {
+      cancelled = true
+      clearInterval(interval)
+      clearTimeout(timeout)
+    }
+  }, [step])
+
+  // Handle place selection from Google Places
+  const handlePlaceSelected = (addressType: "business" | "homeOwner" | "secondOwner") => {
+    let autocompleteInstance
+    
+    if (addressType === "business") {
+      autocompleteInstance = autocompleteRef.current
+    } else if (addressType === "homeOwner") {
+      autocompleteInstance = homeAutocompleteRef.current
+    } else {
+      autocompleteInstance = secondOwnerAutocompleteRef.current
+    }
+
+    if (!autocompleteInstance) return
+
+    try {
+      const place = autocompleteInstance.getPlace()
+      if (!place.address_components) return
+
+      console.log("[Address Autocomplete] Place selected for", addressType, ":", place)
+
+      let streetAddress = ""
+      let city = ""
+      let state = ""
+      let zip = ""
+
+      // Parse address components
+      for (const component of place.address_components) {
+        const types = component.types
+
+        if (types.includes("street_number") && types.includes("route")) {
+          streetAddress = `${component.long_name} ${streetAddress}`.trim()
+        } else if (types.includes("route") && !streetAddress) {
+          streetAddress = component.long_name
+        } else if (types.includes("street_number")) {
+          streetAddress = `${component.long_name} ${streetAddress}`.trim()
+        } else if (types.includes("locality")) {
+          city = component.long_name
+        } else if (types.includes("administrative_area_level_1")) {
+          state = component.short_name // Use short code (CA, NY, etc.)
+        } else if (types.includes("postal_code")) {
+          zip = component.long_name.substring(0, 5) // Get first 5 digits
+        }
+      }
+
+      // Update form with parsed address based on type
+      if (addressType === "business") {
+        const updates: Partial<typeof formData> = {}
+        if (streetAddress) updates.businessAddress = streetAddress
+        if (city) updates.businessCity = city
+        if (state) {
+          const fullStateName = US_STATES.find(s => s.toUpperCase().startsWith(state.toUpperCase())) || state
+          updates.businessState = fullStateName
+        }
+        if (zip) updates.businessZip = zip
+
+        if (Object.keys(updates).length > 0) {
+          setFormData(prev => ({ ...prev, ...updates }))
+          console.log("[Address Autocomplete] Business address updated with:", updates)
+        }
+      } else if (addressType === "homeOwner") {
+        const updates: Partial<typeof formData> = {}
+        if (streetAddress) updates.homeAddress = streetAddress
+        if (city) updates.city = city
+        if (state) {
+          const fullStateName = US_STATES.find(s => s.toUpperCase().startsWith(state.toUpperCase())) || state
+          updates.state = fullStateName
+        }
+        if (zip) updates.zipCode = zip
+
+        if (Object.keys(updates).length > 0) {
+          setFormData(prev => ({ ...prev, ...updates }))
+          console.log("[Address Autocomplete] Home address updated with:", updates)
+        }
+      } else if (addressType === "secondOwner") {
+        const updates: Partial<typeof formData> = {}
+        if (streetAddress) updates.secondOwnerHomeAddress = streetAddress
+        if (city) updates.secondOwnerCity = city
+        if (state) {
+          const fullStateName = US_STATES.find(s => s.toUpperCase().startsWith(state.toUpperCase())) || state
+          updates.secondOwnerState = fullStateName
+        }
+        if (zip) updates.secondOwnerZipCode = zip
+
+        if (Object.keys(updates).length > 0) {
+          setFormData(prev => ({ ...prev, ...updates }))
+          console.log("[Address Autocomplete] Second owner address updated with:", updates)
+        }
+      }
+    } catch (error) {
+      console.error("[Address Autocomplete] Error processing place:", error)
+    }
   }
 
   // Clear draft from localStorage
@@ -2186,6 +2412,7 @@ export default function ApplyPage() {
                               Business Address <span className="text-red-500">*</span>
                             </Label>
                             <Input
+                              ref={addressInputRef}
                               id="businessAddress"
                               placeholder="123 Main St"
                               value={formData.businessAddress}
@@ -2195,8 +2422,10 @@ export default function ApplyPage() {
                               }}
                               className={`bg-white border-gray-300 text-gray-900 ${errors.businessAddress ? "border-red-500" : ""}`}
                               required
+                              autoComplete="off"
                             />
                             {errors.businessAddress && <p className="text-red-500 text-sm">{errors.businessAddress}</p>}
+                            <p className="text-xs text-gray-500">Start typing to see address suggestions</p>
                           </div>
 
                           <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -2568,6 +2797,7 @@ export default function ApplyPage() {
                             <div className="space-y-2">
                               <Label htmlFor="homeAddress">Home Street Address <span className="text-red-500">*</span></Label>
                               <Input
+                                ref={homeAddressInputRef}
                                 id="homeAddress"
                                 name="homeAddress"
                                 value={formData.homeAddress}
@@ -2578,8 +2808,10 @@ export default function ApplyPage() {
                                 placeholder="Enter your home address"
                                 className={`bg-white border-gray-300 text-gray-900 ${errors.homeAddress ? "border-red-500" : ""}`}
                                 required
+                                autoComplete="off"
                               />
                               {errors.homeAddress && <p className="text-red-500 text-sm">{errors.homeAddress}</p>}
+                              <p className="text-xs text-gray-500">Start typing to see address suggestions</p>
                             </div>
 
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
@@ -2862,6 +3094,7 @@ export default function ApplyPage() {
                               <div className="space-y-2">
                                 <Label htmlFor="secondOwnerHomeAddress">Home Street Address <span className="text-red-500">*</span></Label>
                                 <Input
+                                  ref={secondOwnerAddressInputRef}
                                   id="secondOwnerHomeAddress"
                                   name="secondOwnerHomeAddress"
                                   value={formData.secondOwnerHomeAddress}
@@ -2871,8 +3104,10 @@ export default function ApplyPage() {
                                   }}
                                   placeholder="Enter home address"
                                   className={`bg-white border-gray-300 text-gray-900 ${errors.secondOwnerHomeAddress ? "border-red-500" : ""}`}
+                                  autoComplete="off"
                                 />
                                 {errors.secondOwnerHomeAddress && <p className="text-red-500 text-sm">{errors.secondOwnerHomeAddress}</p>}
+                                <p className="text-xs text-gray-500">Start typing to see address suggestions</p>
                               </div>
 
                               <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
