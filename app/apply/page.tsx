@@ -2347,8 +2347,7 @@ export default function ApplyPage() {
                         <Button
                           type="button"
                           onClick={nextStep}
-                          disabled={!DEV_MODE && !isStep1Valid}
-                          className="bg-orange-500 hover:bg-orange-600 text-white disabled:bg-gray-300 disabled:cursor-not-allowed"
+                          className="bg-orange-500 hover:bg-orange-600 text-white"
                         >
                           Next Step
                         </Button>
@@ -2693,8 +2692,7 @@ export default function ApplyPage() {
                         <Button
                           type="button"
                           onClick={nextStep}
-                          disabled={!DEV_MODE && !isStep2Valid}
-                          className="bg-orange-500 hover:bg-orange-600 text-white disabled:bg-gray-300 disabled:cursor-not-allowed"
+                          className="bg-orange-500 hover:bg-orange-600 text-white"
                         >
                           Next Step
                         </Button>
@@ -3282,8 +3280,7 @@ export default function ApplyPage() {
                               nextStep()
                             }
                           }}
-                          disabled={!DEV_MODE && !isStep3Valid}
-                          className="bg-orange-500 hover:bg-orange-600 text-white disabled:bg-gray-300 disabled:cursor-not-allowed"
+                          className="bg-orange-500 hover:bg-orange-600 text-white"
                         >
                           Next Step
                         </Button>
