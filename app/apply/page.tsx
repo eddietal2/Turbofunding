@@ -397,71 +397,84 @@ export default function ApplyPage() {
 
       console.log("[Address Autocomplete] Place selected for", addressType, ":", place)
 
-      let streetAddress = ""
+      let streetNumber = ""
+      let route = ""
       let city = ""
-      let state = ""
+      let stateCode = ""
       let zip = ""
+
+      // State code to full name mapping
+      const STATE_CODE_MAP: Record<string, string> = {
+        AL: "Alabama", AK: "Alaska", AZ: "Arizona", AR: "Arkansas", CA: "California",
+        CO: "Colorado", CT: "Connecticut", DE: "Delaware", FL: "Florida", GA: "Georgia",
+        HI: "Hawaii", ID: "Idaho", IL: "Illinois", IN: "Indiana", IA: "Iowa",
+        KS: "Kansas", KY: "Kentucky", LA: "Louisiana", ME: "Maine", MD: "Maryland",
+        MA: "Massachusetts", MI: "Michigan", MN: "Minnesota", MS: "Mississippi", MO: "Missouri",
+        MT: "Montana", NE: "Nebraska", NV: "Nevada", NH: "New Hampshire", NJ: "New Jersey",
+        NM: "New Mexico", NY: "New York", NC: "North Carolina", ND: "North Dakota", OH: "Ohio",
+        OK: "Oklahoma", OR: "Oregon", PA: "Pennsylvania", RI: "Rhode Island", SC: "South Carolina",
+        SD: "South Dakota", TN: "Tennessee", TX: "Texas", UT: "Utah", VT: "Vermont",
+        VA: "Virginia", WA: "Washington", WV: "West Virginia", WI: "Wisconsin", WY: "Wyoming",
+      }
 
       // Parse address components
       for (const component of place.address_components) {
         const types = component.types
 
-        if (types.includes("street_number") && types.includes("route")) {
-          streetAddress = `${component.long_name} ${streetAddress}`.trim()
-        } else if (types.includes("route") && !streetAddress) {
-          streetAddress = component.long_name
-        } else if (types.includes("street_number")) {
-          streetAddress = `${component.long_name} ${streetAddress}`.trim()
+        if (types.includes("street_number")) {
+          streetNumber = component.long_name
+        } else if (types.includes("route")) {
+          route = component.long_name
         } else if (types.includes("locality")) {
           city = component.long_name
         } else if (types.includes("administrative_area_level_1")) {
-          state = component.short_name // Use short code (CA, NY, etc.)
+          stateCode = component.short_name
         } else if (types.includes("postal_code")) {
-          zip = component.long_name.substring(0, 5) // Get first 5 digits
+          zip = component.long_name.substring(0, 5)
         }
       }
+
+      const streetAddress = [streetNumber, route].filter(Boolean).join(" ")
+      const fullStateName = STATE_CODE_MAP[stateCode.toUpperCase()] || stateCode
 
       // Update form with parsed address based on type
       if (addressType === "business") {
         const updates: Partial<typeof formData> = {}
-        if (streetAddress) updates.businessAddress = streetAddress
-        if (city) updates.businessCity = city
-        if (state) {
-          const fullStateName = US_STATES.find(s => s.toUpperCase().startsWith(state.toUpperCase())) || state
-          updates.businessState = fullStateName
-        }
-        if (zip) updates.businessZip = zip
+        const errorClears: Record<string, string> = {}
+        if (streetAddress) { updates.businessAddress = streetAddress; errorClears.businessAddress = "" }
+        if (city) { updates.businessCity = city; errorClears.businessCity = "" }
+        if (fullStateName) { updates.businessState = fullStateName; errorClears.businessState = "" }
+        if (zip) { updates.businessZip = zip; errorClears.businessZip = "" }
 
         if (Object.keys(updates).length > 0) {
           setFormData(prev => ({ ...prev, ...updates }))
+          setErrors(prev => ({ ...prev, ...errorClears }))
           console.log("[Address Autocomplete] Business address updated with:", updates)
         }
       } else if (addressType === "homeOwner") {
         const updates: Partial<typeof formData> = {}
-        if (streetAddress) updates.homeAddress = streetAddress
-        if (city) updates.city = city
-        if (state) {
-          const fullStateName = US_STATES.find(s => s.toUpperCase().startsWith(state.toUpperCase())) || state
-          updates.state = fullStateName
-        }
-        if (zip) updates.zipCode = zip
+        const errorClears: Record<string, string> = {}
+        if (streetAddress) { updates.homeAddress = streetAddress; errorClears.homeAddress = "" }
+        if (city) { updates.city = city; errorClears.city = "" }
+        if (fullStateName) { updates.state = fullStateName; errorClears.state = "" }
+        if (zip) { updates.zipCode = zip; errorClears.zipCode = "" }
 
         if (Object.keys(updates).length > 0) {
           setFormData(prev => ({ ...prev, ...updates }))
+          setErrors(prev => ({ ...prev, ...errorClears }))
           console.log("[Address Autocomplete] Home address updated with:", updates)
         }
       } else if (addressType === "secondOwner") {
         const updates: Partial<typeof formData> = {}
-        if (streetAddress) updates.secondOwnerHomeAddress = streetAddress
-        if (city) updates.secondOwnerCity = city
-        if (state) {
-          const fullStateName = US_STATES.find(s => s.toUpperCase().startsWith(state.toUpperCase())) || state
-          updates.secondOwnerState = fullStateName
-        }
-        if (zip) updates.secondOwnerZipCode = zip
+        const errorClears: Record<string, string> = {}
+        if (streetAddress) { updates.secondOwnerHomeAddress = streetAddress; errorClears.secondOwnerHomeAddress = "" }
+        if (city) { updates.secondOwnerCity = city; errorClears.secondOwnerCity = "" }
+        if (fullStateName) { updates.secondOwnerState = fullStateName; errorClears.secondOwnerState = "" }
+        if (zip) { updates.secondOwnerZipCode = zip; errorClears.secondOwnerZipCode = "" }
 
         if (Object.keys(updates).length > 0) {
           setFormData(prev => ({ ...prev, ...updates }))
+          setErrors(prev => ({ ...prev, ...errorClears }))
           console.log("[Address Autocomplete] Second owner address updated with:", updates)
         }
       }
