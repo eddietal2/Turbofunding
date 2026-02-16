@@ -95,8 +95,47 @@ export async function sendApplicationConfirmationEmail(data: ApplicationEmailDat
   const content = `
     <!-- Success Banner -->
     <div style="background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%); border-radius: 12px; padding: 24px; margin-bottom: 24px; text-align: center;">
-      <div style="background-color: rgba(255,255,255,0.2); width: 60px; height: 60px; border-radius: 50%; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center;">
-        <span style="font-size: 32px;">✓</span>
+      <style>
+        @keyframes drawCheckmark {
+          0% {
+            stroke-dashoffset: 50;
+            opacity: 0;
+          }
+          50% {
+            opacity: 1;
+          }
+          100% {
+            stroke-dashoffset: 0;
+            opacity: 1;
+          }
+        }
+        @keyframes popCircle {
+          0% {
+            transform: scale(0.8);
+            opacity: 0;
+          }
+          100% {
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
+        .animated-checkmark {
+          animation: popCircle 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) 0s both;
+        }
+        .animated-checkmark-path {
+          stroke-dasharray: 50;
+          animation: drawCheckmark 0.8s ease-out 0.3s both;
+        }
+      </style>
+      <div style="margin: 0 auto 15px; text-align: center;">
+        <svg width="80" height="80" viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg" style="display: inline-block;" class="animated-checkmark">
+          <!-- Outer circle background -->
+          <circle cx="40" cy="40" r="38" fill="#ffffff" opacity="0.2" stroke="#ffffff" stroke-width="2"/>
+          <!-- Inner circle -->
+          <circle cx="40" cy="40" r="32" fill="none" stroke="#ffffff" stroke-width="3"/>
+          <!-- Animated Checkmark -->
+          <path class="animated-checkmark-path" d="M 28 40 L 36 48 L 52 32" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
       </div>
       <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: 700;">Application Received!</h1>
     </div>
@@ -357,12 +396,35 @@ export async function sendAdminNotificationEmail(formData: Record<string, unknow
   const htmlContent = getEmailTemplate(content, process.env.NODEMAILER_EMAIL || "admin")
 
   try {
-    const info = await transporter.sendMail({
+    // Build attachments array
+    const attachments: Array<{ filename: string; path: string }> = []
+    
+    if (pdfUrl) {
+      attachments.push({
+        filename: `TurboFunding-Application-${new Date().toISOString().split('T')[0]}.pdf`,
+        path: pdfUrl,
+      })
+    }
+
+    if (bankStatementsUrl) {
+      attachments.push({
+        filename: `TurboFunding-BankStatements-${new Date().toISOString().split('T')[0]}.pdf`,
+        path: bankStatementsUrl,
+      })
+    }
+
+    const mailOptions: any = {
       from: `"TurboFunding.com" <${process.env.NODEMAILER_EMAIL}>`,
       to: process.env.NODEMAILER_EMAIL,
       subject: `🆕 New Application: ${formData.businessName || formData.legalBusinessName} - $${Number(formData.amountRequested || 0).toLocaleString()}`,
       html: htmlContent,
-    })
+    }
+
+    if (attachments.length > 0) {
+      mailOptions.attachments = attachments
+    }
+
+    const info = await transporter.sendMail(mailOptions)
 
     console.log("[Email] Admin notification sent:", info.messageId)
     return { success: true, messageId: info.messageId }
