@@ -458,7 +458,7 @@ export default function Home() {
 
         {/* How To Qualify Section */}
         {/* Changed section background from gray-800 to bg-[#F5F7FA] with updated text colors */}
-        <section className="w-full py-32 md:py-0 md:h-screen md:flex md:flex-col md:justify-center lg:py-0 bg-[#F5F7FA]" id="qualify">
+        <section className="w-full py-16 md:py-0 md:h-screen md:flex md:flex-col md:justify-center lg:py-0 bg-[#F5F7FA]" id="qualify">
           <style>{`
             @keyframes cardHoverGlow {
               0%, 100% {
@@ -510,6 +510,26 @@ export default function Home() {
             
             .qualify-card:hover .qualify-title {
               color: #2460e3;
+            }
+            
+            @media (max-width: 768px) {
+              .qualify-card:hover {
+                transform: none;
+                box-shadow: 0 4px 15px rgba(36, 96, 227, 0.1);
+                border: 1px solid rgba(36, 96, 227, 0.15);
+                background: linear-gradient(135deg, #F5F7FA 0%, #FFFFFF 100%);
+              }
+              
+              .qualify-card:hover .qualify-badge {
+                animation: none;
+                box-shadow: 0 4px 15px rgba(36, 96, 227, 0.3);
+                background: linear-gradient(135deg, #2460e3 0%, #1947b8 100%);
+                transform: none;
+              }
+              
+              .qualify-card:hover .qualify-title {
+                color: #0D1B2A;
+              }
             }
           `}</style>
           <div className="container px-4 md:px-6">
