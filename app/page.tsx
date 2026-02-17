@@ -369,7 +369,7 @@ export default function Home() {
                 </Button>
               </div>
               <p 
-                className="text-xs md:text-sm font-medium tracking-wider" 
+                className="text-[0.6em] md:text-sm font-medium tracking-wider" 
                 style={{ 
                   color: "#4B5563", 
                   textTransform: "uppercase", 
