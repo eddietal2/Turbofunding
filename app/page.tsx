@@ -364,12 +364,7 @@ export default function Home() {
               <div className="flex flex-col gap-3 min-[400px]:flex-row pt-4">
                 <Button 
                   asChild 
-                  className="text-base px-6 py-5 w-fit font-semibold tracking-wide transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/50"
-                  style={{
-                    background: "linear-gradient(135deg, #2460e3 0%, #1947b8 100%)",
-                    border: "1px solid rgba(36, 96, 227, 0.5)",
-                    fontFamily: "var(--font-space-grotesk), sans-serif"
-                  }}
+                  className="btn-blue-elite text-base px-6 py-5 w-fit font-semibold tracking-wide text-white"
                 >
                   <Link href="/apply">See Your Loan Options</Link>
                 </Button>
