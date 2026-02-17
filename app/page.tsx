@@ -458,7 +458,7 @@ export default function Home() {
 
         {/* How To Qualify Section */}
         {/* Changed section background from gray-800 to bg-[#F5F7FA] with updated text colors */}
-        <section className="w-full py-8 md:py-0 md:h-screen md:flex md:flex-col md:justify-center lg:py-0 bg-[#F5F7FA]" id="qualify">
+        <section className="w-full py-32 md:py-0 md:h-screen md:flex md:flex-col md:justify-center lg:py-0 bg-[#F5F7FA]" id="qualify">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-3 text-center">
               <div className="mb-4">
