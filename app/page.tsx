@@ -93,8 +93,32 @@ export const metadata: Metadata = {
   },
 }
 
+// Weighted random selection for hero background images
+const getRandomHeroImage = () => {
+  const topPhotos = [
+    '/images/hero-bg-07.jpg',
+    '/images/hero-bg-06.jpg',
+    '/images/hero-bg-05.jpg',
+  ]
+  const otherPhotos = [
+    '/images/hero-bg-01.jpg',
+    '/images/hero-bg-02.jpg',
+    '/images/hero-bg-03.jpg',
+    '/images/hero-bg-04.jpg',
+  ]
+
+  const random = Math.random()
+  // 60% probability for top 3 performing images
+  if (random < 0.6) {
+    return topPhotos[Math.floor(Math.random() * topPhotos.length)]
+  } else {
+    return otherPhotos[Math.floor(Math.random() * otherPhotos.length)]
+  }
+}
+
 export default function Home() {
   const productNames = ["Working Capital", "Merchant Cash Advance", "SBA Loans", "Business Lines of Credit"]
+  const heroImage = getRandomHeroImage()
 
   return (
     <>
@@ -176,7 +200,75 @@ export default function Home() {
 
       <div className="flex flex-col">
         {/* Hero Section */}
-      <section className="relative w-full bg-[#999] md:h-screen md:flex md:items-center overflow-hidden">
+      <section 
+        className="relative w-full md:h-screen md:flex md:items-center overflow-hidden"
+        style={{
+          backgroundImage: `url('${heroImage}')`,
+          backgroundAttachment: "fixed",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat"
+        }}
+      >
+        {/* Background Filter/Blur Overlay */}
+        <div
+          className="absolute inset-0 w-full h-full"
+          style={{
+            filter: "blur(2px) brightness(0.8)",
+            animation: "slideHorizontal 20s linear infinite",
+            pointerEvents: "none"
+          }}
+        >
+          <style>{`
+            @keyframes slideHorizontal {
+              0% { transform: translateX(0); }
+              50% { transform: translateX(20px); }
+              100% { transform: translateX(0); }
+            }
+          `}</style>
+        </div>
+
+        {/* Dark Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0a0f1e]/40 via-[#0a0f1e]/20 to-transparent z-[1]" />
+        
+        {/* Subtle Animated Overlay Elements */}
+        <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden">
+          {/* Rising data particles */}
+          <style>{`
+            @keyframes floatUp {
+              0% { transform: translateY(100vh) scale(0); opacity: 0; }
+              10% { opacity: 0.3; }
+              90% { opacity: 0.3; }
+              100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+            }
+            @keyframes pulse {
+              0%, 100% { opacity: 0.05; }
+              50% { opacity: 0.12; }
+            }
+          `}</style>
+          {/* Floating particles */}
+          {[...Array(8)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute rounded-full"
+              style={{
+                width: `${4 + (i % 3) * 3}px`,
+                height: `${4 + (i % 3) * 3}px`,
+                left: `${10 + i * 11}%`,
+                background: i % 2 === 0 ? "#F97316" : "#2460e3",
+                animation: `floatUp ${8 + i * 1.5}s ease-in-out ${i * 1.2}s infinite`,
+                opacity: 0,
+              }}
+            />
+          ))}
+          {/* Subtle grid overlay */}
+          <div className="absolute inset-0" style={{
+            backgroundImage: `linear-gradient(rgba(36,96,227,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(36,96,227,0.03) 1px, transparent 1px)`,
+            backgroundSize: "60px 60px",
+            animation: "pulse 6s ease-in-out infinite",
+          }} />
+        </div>
+
         {/* Content Container */}
         <div className="container relative z-10 px-4 md:px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center py-8 md:py-0">
