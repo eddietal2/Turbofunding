@@ -458,11 +458,27 @@ export default function Home() {
 
         {/* How To Qualify Section */}
         {/* Changed section background from gray-800 to bg-[#F5F7FA] with updated text colors */}
-        <section className="w-full py-8 md:py-16 lg:py-20 bg-[#F5F7FA]" id="qualify">
+        <section className="w-full py-8 md:py-0 md:h-screen md:flex md:flex-col md:justify-center lg:py-0 bg-[#F5F7FA]" id="qualify">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-3 text-center">
+              <div className="mb-4">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="48"
+                  height="48"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#2460e3"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="mx-auto"
+                >
+                  <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                </svg>
+              </div>
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl" style={{ color: "#0D1B2A" }}>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
                   How To Qualify
                 </h2>
                 <p className="max-w-[900px] text-gray-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
@@ -527,7 +543,7 @@ export default function Home() {
               </Card>
             </div>
             <div className="flex justify-center mt-6">
-              <Button asChild className="bg-blue-600 text-white hover:bg-blue-700">
+              <Button asChild className="btn-blue-elite text-white">
                 <Link href="/apply">Check Your Eligibility</Link>
               </Button>
             </div>
