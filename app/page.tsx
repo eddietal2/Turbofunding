@@ -93,15 +93,15 @@ export const metadata: Metadata = {
   },
 }
 
-// Mapping of hero images to dynamic gradients for better text readability
+// Mapping of hero images to dynamic light gradients for better text readability
 const heroImageGradients: Record<string, string> = {
-  '/images/hero-bg-01.jpg': 'linear-gradient(to right, rgba(10, 15, 30, 0.95), rgba(10, 15, 30, 0.7), transparent)',
-  '/images/hero-bg-02.jpg': 'linear-gradient(to right, rgba(10, 15, 30, 0.95), rgba(10, 15, 30, 0.7), transparent)',
-  '/images/hero-bg-03.jpg': 'linear-gradient(to right, rgba(20, 30, 50, 0.95), rgba(20, 30, 50, 0.7), transparent)',
-  '/images/hero-bg-04.jpg': 'linear-gradient(to right, rgba(15, 25, 45, 0.95), rgba(15, 25, 45, 0.7), transparent)',
-  '/images/hero-bg-05.jpg': 'linear-gradient(to right, rgba(10, 15, 30, 0.92), rgba(10, 15, 30, 0.65), transparent)',
-  '/images/hero-bg-06.jpg': 'linear-gradient(to right, rgba(10, 15, 30, 0.92), rgba(10, 15, 30, 0.65), transparent)',
-  '/images/hero-bg-07.jpg': 'linear-gradient(to right, rgba(8, 12, 28, 0.95), rgba(8, 12, 28, 0.7), transparent)',
+  '/images/hero-bg-01.jpg': 'linear-gradient(to right, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.3))',
+  '/images/hero-bg-02.jpg': 'linear-gradient(to right, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.3))',
+  '/images/hero-bg-03.jpg': 'linear-gradient(to right, rgba(255, 255, 255, 0.90), rgba(255, 255, 255, 0.70), rgba(255, 255, 255, 0.3))',
+  '/images/hero-bg-04.jpg': 'linear-gradient(to right, rgba(255, 255, 255, 0.90), rgba(255, 255, 255, 0.70), rgba(255, 255, 255, 0.3))',
+  '/images/hero-bg-05.jpg': 'linear-gradient(to right, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.3))',
+  '/images/hero-bg-06.jpg': 'linear-gradient(to right, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.3))',
+  '/images/hero-bg-07.jpg': 'linear-gradient(to right, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.70), rgba(255, 255, 255, 0.3))',
 }
 
 // Weighted random selection for hero background images
@@ -264,7 +264,7 @@ export default function Home() {
         <style>{`
           @media (max-width: 768px) {
             .hero-gradient-overlay {
-              background: linear-gradient(to right, rgba(10, 15, 30, 0.98), rgba(10, 15, 30, 0.85), rgba(10, 15, 30, 0.5)) !important;
+              background: linear-gradient(to right, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.5)) !important;
             }
           }
         `}</style>
@@ -322,24 +322,24 @@ export default function Home() {
                 >
                   <span 
                     style={{ 
-                      color: "#F97316", 
+                      color: "#D97706", 
                       whiteSpace: "nowrap",
-                      textShadow: "0 0 30px rgba(249, 115, 22, 0.3)"
+                      textShadow: "none"
                     }}
                   >
                     Turbo
                   </span>
-                  <span style={{ color: "#2460e3", display: "block", marginTop: "0.2em" }}>Charge your</span>
-                  <span style={{ color: "#2460e3", display: "block" }}>Business with</span>
+                  <span style={{ color: "#1D4ED8", display: "block", marginTop: "0.2em" }}>Charge your</span>
+                  <span style={{ color: "#1D4ED8", display: "block" }}>Business with</span>
                   <RotatingText
                     words={productNames}
                     className="font-bold"
                     style={{
-                      color: "#F97316",
+                      color: "#D97706",
                       display: "inline",
                       fontSize: "inherit",
                       lineHeight: "inherit",
-                      textShadow: "0 0 30px rgba(249, 115, 22, 0.3)",
+                      textShadow: "none",
                       fontFamily: "var(--font-space-grotesk), sans-serif"
                     }}
                   />
@@ -347,12 +347,12 @@ export default function Home() {
                 <p 
                   className="text-base md:text-lg font-medium tracking-wide" 
                   style={{ 
-                    color: "#E0E7FF", 
+                    color: "#1F2937", 
                     marginTop: "1em",
                     fontFamily: "var(--font-space-grotesk), sans-serif"
                   }}
                 >
-                  The place that helps businesses scale through <span style={{ color: "#F97316", fontWeight: "600" }}>secure</span>, <span style={{ color: "#2460e3", fontWeight: "600" }}>fast</span>, and <span style={{ color: "#10B981", fontWeight: "600" }}>transparent</span> funding.
+                  The place that helps businesses scale through <span style={{ color: "#D97706", fontWeight: "600" }}>secure</span>, <span style={{ color: "#1D4ED8", fontWeight: "600" }}>fast</span>, and <span style={{ color: "#059669", fontWeight: "600" }}>transparent</span> funding.
                 </p>
               </div>
               <div className="flex flex-col gap-3 min-[400px]:flex-row pt-4">
@@ -371,7 +371,7 @@ export default function Home() {
               <p 
                 className="text-xs md:text-sm font-medium tracking-wider" 
                 style={{ 
-                  color: "#94A3B8", 
+                  color: "#4B5563", 
                   textTransform: "uppercase", 
                   letterSpacing: "0.1em",
                   fontFamily: "var(--font-space-grotesk), sans-serif"
