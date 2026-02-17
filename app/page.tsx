@@ -404,23 +404,17 @@ export default function Home() {
                   {/* Status Bar Area (top) */}
                   <div className="h-7 bg-gradient-to-b from-gray-950 to-transparent" />
                   
-                  {/* Main Screen Content */}
-                  <div className="flex-1 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-900 flex flex-col items-center justify-center relative overflow-hidden">
-                    {/* Decorative background elements */}
-                    <div className="absolute inset-0 opacity-10">
-                      <div className="absolute w-96 h-96 bg-white rounded-full blur-3xl -top-20 -left-20" />
-                    </div>
-                    
-                    {/* TF Logo */}
-                    <div className="relative z-10 flex flex-col items-center justify-center">
-                      <Image
-                        src="/images/tf-logo.png"
-                        alt="TurboFunding Logo"
-                        width={120}
-                        height={120}
-                        className="opacity-60"
-                      />
-                    </div>
+                  {/* Main Screen Content - Video */}
+                  <div className="flex-1 relative overflow-hidden bg-black">
+                    <video
+                      autoPlay
+                      muted
+                      loop
+                      playsInline
+                      className="w-full h-full object-cover"
+                    >
+                      <source src="/videos/hero-phone-video-01.mp4" type="video/mp4" />
+                    </video>
                   </div>
                   
                   {/* Home Indicator (bottom) */}
