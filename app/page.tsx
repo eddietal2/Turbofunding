@@ -336,9 +336,15 @@ export default function Home() {
                     className="font-bold"
                     style={{
                       color: "#D97706",
-                      display: "inline",
+                      background: "linear-gradient(135deg, #2460e3 0%, #1947b8 100%)",
+                      display: "inline-block",
+                      paddingTop: "0.4em",
+                      paddingBottom: "0.4em",
+                      paddingLeft: "0.3em",
+                      paddingRight: "0.3em",
+                      marginTop: "0.2em",
                       fontSize: "inherit",
-                      lineHeight: "inherit",
+                      lineHeight: "1.2",
                       textShadow: "none",
                       fontFamily: "var(--font-space-grotesk), sans-serif"
                     }}
