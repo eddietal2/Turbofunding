@@ -213,7 +213,22 @@ export default function Home() {
             </div>
 
             {/* Right Column - iPhone Frame Illustration */}
-            <div className="flex items-center justify-center hidden md:flex -mt-16">
+            <div className="flex items-center justify-center hidden md:flex -mt-16" style={{
+              animation: "fadeInUp 0.8s ease-out 1s forwards",
+              opacity: 0
+            }}>
+              <style>{`
+                @keyframes fadeInUp {
+                  from {
+                    opacity: 0;
+                    transform: translateY(200px);
+                  }
+                  to {
+                    opacity: 1;
+                    transform: translateY(0);
+                  }
+                }
+              `}</style>
               <div className="relative" style={{ width: "280px", height: "560px" }}>
                 {/* iPhone Body */}
                 <div className="absolute inset-0 bg-gradient-to-b from-gray-800 to-gray-900 rounded-3xl shadow-2xl" style={{ borderRadius: "40px" }} />
