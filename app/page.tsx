@@ -232,7 +232,7 @@ export default function Home() {
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
-          minHeight: "100vh",
+          minHeight: "auto",
           "--hero-image-mobile": `url('${heroImage.replace("/images/hero-bg-", "/images/hero-bg-xs-").replace(".jpg", ".png")}')`,
         } as any}
       >
