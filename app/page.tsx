@@ -639,16 +639,26 @@ export default function Home() {
 
         {/* Features Section */}
         {/* CHANGE> Changed Funding Solutions section from dark gray (bg-gray-900) to white background with #0D1B2A text */}
-        <section className="w-full py-16 md:py-24 lg:py-32 bg-white relative" id="features" style={{ minHeight: "600px" }}>
-          <div className="container px-4 md:px-6">
+        <section className="w-full py-16 md:py-24 lg:py-32 relative" id="features" style={{
+          backgroundImage: "url('/images/fs-image-01.jpg')",
+          backgroundSize: "cover",
+          backgroundPosition: "20% center",
+          backgroundRepeat: "no-repeat",
+          backgroundAttachment: "fixed",
+          transform: "scaleX(-1)"
+        }}>
+          {/* Dark overlay for text readability */}
+          <div className="absolute inset-0 bg-black/40" />
+          
+          <div className="container px-4 md:px-6 relative z-10" style={{ transform: "scaleX(-1)" }}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-start">
               {/* Left Column - Content & Space for Background */}
               <div className="flex flex-col items-start justify-start">
                 <div className="space-y-4">
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-orange-500" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>
                     Funding Solutions
                   </h2>
-                  <p className="max-w-[500px] text-gray-600 md:text-lg/relaxed lg:text-base/relaxed xl:text-lg/relaxed">
+                  <p className="max-w-[500px] text-gray-100 md:text-lg/relaxed lg:text-base/relaxed xl:text-lg/relaxed">
                     We offer a variety of funding options to help your business grow and succeed.
                   </p>
                 </div>
