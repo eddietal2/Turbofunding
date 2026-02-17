@@ -1,97 +1,12 @@
+'use client'
+
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { RotatingText } from "@/components/rotating-text"
 import { LoanCalculator } from "@/components/loan-calculator"
-import type { Metadata } from "next"
-
-export const metadata: Metadata = {
-  title: "Fast Business Funding Solutions - Working Capital, SBA Loans & More",
-  description:
-    "TurboCharge your business with fast, secure funding. Get working capital, SBA loans, equipment financing, and merchant cash advances. Apply now for 24-hour approval.",
-  keywords: [
-    "business funding",
-    "working capital loans",
-    "SBA loans",
-    "equipment financing",
-    "merchant cash advance",
-    "business line of credit",
-    "fast business loans",
-    "small business financing",
-  ],
-  openGraph: {
-    title: "Fast Business Funding Solutions - Working Capital, SBA Loans & More",
-    description:
-      "TurboCharge your business with fast, secure funding. Get working capital, SBA loans, equipment financing, and merchant cash advances. Apply now for 24-hour approval.",
-    url: "https://turbofunding.com",
-    images: [
-      {
-        url: "/images/turbofunding-home-og.jpg",
-        width: 1200,
-        height: 630,
-        alt: "TurboFunding.com - Fast Business Funding Solutions",
-      },
-      {
-        url: "/images/turbofunding-home-square.jpg",
-        width: 1080,
-        height: 1080,
-        alt: "TurboFunding.com - Fast Business Funding Solutions",
-      },
-    ],
-  },
-  twitter: {
-    title: "Fast Business Funding Solutions - Working Capital, SBA Loans & More",
-    description:
-      "TurboCharge your business with fast, secure funding. Get working capital, SBA loans & more. Apply now for 24-hour approval.",
-    images: ["/images/turbofunding-home-twitter.jpg"],
-  },
-  alternates: {
-    canonical: "https://turbofunding.com",
-  },
-  other: {
-    // TikTok specific tags for homepage
-    "tiktok:title": "TurboCharge Your Business with Fast Funding! 🚀💰",
-    "tiktok:description":
-      "Get approved in 24 hours! Working capital, SBA loans & more. Apply now! #BusinessFunding #SmallBusiness #Entrepreneur #FastFunding",
-    "tiktok:image": "https://turbofunding.com/images/turbofunding-home-tiktok.jpg",
-
-    // Instagram specific tags for homepage
-    "instagram:title": "TurboCharge Your Business with Fast Funding ⚡",
-    "instagram:description":
-      "Fast, secure business funding solutions 💼 Get working capital, SBA loans & equipment financing. Apply today! ✨ #BusinessGrowth #Funding",
-    "instagram:image": "https://turbofunding.com/images/turbofunding-home-instagram.jpg",
-
-    // LinkedIn specific tags for homepage
-    "linkedin:title": "Professional Business Funding Solutions | TurboFunding.com",
-    "linkedin:description":
-      "Accelerate your business growth with our comprehensive funding solutions. Working capital, SBA loans, and equipment financing with competitive rates and fast approval.",
-    "linkedin:image": "https://turbofunding.com/images/turbofunding-home-linkedin.jpg",
-
-    // Pinterest specific tags for homepage
-    "pinterest:title": "Fast Business Funding Ideas & Solutions 💡💰",
-    "pinterest:description":
-      "Discover the best business funding options! Working capital, SBA loans, equipment financing & more. Get your business funded fast! 📈 #BusinessFunding #SmallBusiness",
-    "pinterest:image": "https://turbofunding.com/images/turbofunding-home-pinterest.jpg",
-
-    // WhatsApp specific tags for homepage
-    "whatsapp:title": "TurboFunding - Fast Business Funding Solutions",
-    "whatsapp:description":
-      "Get your business funded in 24 hours! Working capital, SBA loans & equipment financing available. Apply now!",
-    "whatsapp:image": "https://turbofunding.com/images/turbofunding-home-whatsapp.jpg",
-
-    // YouTube specific tags for homepage
-    "youtube:title": "How to Get Fast Business Funding | TurboFunding.com",
-    "youtube:description":
-      "Learn about the fastest ways to get business funding. Working capital, SBA loans, equipment financing and more explained.",
-    "youtube:image": "https://turbofunding.com/images/turbofunding-home-youtube.jpg",
-
-    // Snapchat specific tags for homepage
-    "snapchat:title": "Fast Business Funding! 💰⚡",
-    "snapchat:description": "Get funded in 24hrs! Working capital, SBA loans & more! Apply now! 🚀 #BusinessFunding",
-    "snapchat:image": "https://turbofunding.com/images/turbofunding-home-snapchat.jpg",
-  },
-}
+import { useEffect } from "react"
 
 // Mapping of hero images to dynamic light gradients for better text readability
 const heroImageGradients: Record<string, string> = {
@@ -131,6 +46,42 @@ export default function Home() {
   const productNames = ["Working Capital", "Merchant Cash Advance", "SBA Loans", "Business Lines of Credit"]
   const heroImage = getRandomHeroImage()
   const heroGradient = heroImageGradients[heroImage]
+
+  // Setup Intersection Observer for scroll animations
+  useEffect(() => {
+    const setupObserver = () => {
+      const cards = document.querySelectorAll('.qualify-card');
+      if (cards.length === 0) {
+        // Retry if cards not found yet
+        setTimeout(setupObserver, 100);
+        return;
+      }
+      
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('scroll-visible');
+            observer.unobserve(entry.target);
+          }
+        });
+      }, {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+      });
+      
+      cards.forEach((card) => {
+        observer.observe(card);
+      });
+    };
+    
+    // Wait for DOM to be ready
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', setupObserver);
+      return () => document.removeEventListener('DOMContentLoaded', setupObserver);
+    } else {
+      setupObserver();
+    }
+  }, []);
 
   return (
     <>
@@ -684,62 +635,29 @@ export default function Home() {
               </Button>
             </div>
           </div>
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `
-                (function() {
-                  const setupObserver = () => {
-                    const cards = document.querySelectorAll('.qualify-card');
-                    if (cards.length === 0) {
-                      setTimeout(setupObserver, 100);
-                      return;
-                    }
-                    
-                    const observer = new IntersectionObserver((entries) => {
-                      entries.forEach((entry) => {
-                        if (entry.isIntersecting) {
-                          entry.target.classList.add('scroll-visible');
-                          observer.unobserve(entry.target);
-                        }
-                      });
-                    }, {
-                      threshold: 0.1,
-                      rootMargin: '0px 0px -50px 0px'
-                    });
-                    
-                    cards.forEach((card) => {
-                      observer.observe(card);
-                    });
-                  };
-                  
-                  if (document.readyState === 'loading') {
-                    document.addEventListener('DOMContentLoaded', setupObserver);
-                  } else {
-                    requestAnimationFrame(setupObserver);
-                  }
-                })();
-              `
-            }}
-          />
         </section>
 
         {/* Features Section */}
         {/* CHANGE> Changed Funding Solutions section from dark gray (bg-gray-900) to white background with #0D1B2A text */}
-        <section className="w-full py-8 md:py-16 lg:py-20 bg-white" id="features">
+        <section className="w-full py-16 md:py-24 lg:py-32 bg-white relative" id="features" style={{ minHeight: "600px" }}>
           <div className="container px-4 md:px-6">
-            <div className="flex flex-col items-center justify-center space-y-3 text-center">
-              <div className="space-y-2">
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-orange-500">
-                  Funding Solutions
-                </h2>
-                <p className="max-w-[900px] text-gray-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                  We offer a variety of funding options to help your business grow and succeed.
-                </p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-start">
+              {/* Left Column - Content & Space for Background */}
+              <div className="flex flex-col items-start justify-start">
+                <div className="space-y-4">
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-orange-500" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>
+                    Funding Solutions
+                  </h2>
+                  <p className="max-w-[500px] text-gray-600 md:text-lg/relaxed lg:text-base/relaxed xl:text-lg/relaxed">
+                    We offer a variety of funding options to help your business grow and succeed.
+                  </p>
+                </div>
               </div>
-            </div>
-            <div className="mx-auto grid max-w-5xl grid-cols-1 gap-4 py-8 md:grid-cols-2 lg:grid-cols-3">
-              <Card className="bg-white border-gray-200">
-                <CardContent className="p-4">
+              
+              {/* Right Column - Cards Grid */}
+              <div className="grid grid-cols-1 gap-4">
+                <Card className="bg-white border-gray-200">
+                  <CardContent className="p-4">
                   <div className="flex items-center gap-4 mb-3">
                     <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
                       <svg
@@ -887,10 +805,9 @@ export default function Home() {
                 </CardContent>
               </Card>
             </div>
+            </div>
           </div>
         </section>
-
-        {/* Testimonials Section */}
         <section className="w-full py-8 md:py-16 lg:py-20 bg-[#F5F7FA]" id="testimonials">
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-3 text-center">
