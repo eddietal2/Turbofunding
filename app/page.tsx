@@ -316,7 +316,7 @@ export default function Home() {
                 <h1 
                   className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-widest leading-tight" 
                   style={{ 
-                    fontFamily: "'Space Grotesk', sans-serif",
+                    fontFamily: "var(--font-space-grotesk), sans-serif",
                     letterSpacing: "-0.02em"
                   }}
                 >
@@ -340,7 +340,7 @@ export default function Home() {
                       fontSize: "inherit",
                       lineHeight: "inherit",
                       textShadow: "0 0 30px rgba(249, 115, 22, 0.3)",
-                      fontFamily: "'Space Grotesk', sans-serif"
+                      fontFamily: "var(--font-space-grotesk), sans-serif"
                     }}
                   />
                 </h1>
@@ -349,7 +349,7 @@ export default function Home() {
                   style={{ 
                     color: "#E0E7FF", 
                     marginTop: "1em",
-                    fontFamily: "'Space Grotesk', sans-serif"
+                    fontFamily: "var(--font-space-grotesk), sans-serif"
                   }}
                 >
                   The place that helps businesses scale through <span style={{ color: "#F97316", fontWeight: "600" }}>secure</span>, <span style={{ color: "#2460e3", fontWeight: "600" }}>fast</span>, and <span style={{ color: "#10B981", fontWeight: "600" }}>transparent</span> funding.
@@ -362,7 +362,7 @@ export default function Home() {
                   style={{
                     background: "linear-gradient(135deg, #2460e3 0%, #1947b8 100%)",
                     border: "1px solid rgba(36, 96, 227, 0.5)",
-                    fontFamily: "'Space Grotesk', sans-serif"
+                    fontFamily: "var(--font-space-grotesk), sans-serif"
                   }}
                 >
                   <Link href="/apply">See Your Loan Options</Link>
@@ -374,7 +374,7 @@ export default function Home() {
                   color: "#94A3B8", 
                   textTransform: "uppercase", 
                   letterSpacing: "0.1em",
-                  fontFamily: "'Space Grotesk', sans-serif"
+                  fontFamily: "var(--font-space-grotesk), sans-serif"
                 }}
               >
                 ✓ Applying will not impact your credit score
