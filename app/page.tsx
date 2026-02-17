@@ -93,6 +93,17 @@ export const metadata: Metadata = {
   },
 }
 
+// Mapping of hero images to dynamic gradients for better text readability
+const heroImageGradients: Record<string, string> = {
+  '/images/hero-bg-01.jpg': 'linear-gradient(to right, rgba(10, 15, 30, 0.95), rgba(10, 15, 30, 0.7), transparent)',
+  '/images/hero-bg-02.jpg': 'linear-gradient(to right, rgba(10, 15, 30, 0.95), rgba(10, 15, 30, 0.7), transparent)',
+  '/images/hero-bg-03.jpg': 'linear-gradient(to right, rgba(20, 30, 50, 0.95), rgba(20, 30, 50, 0.7), transparent)',
+  '/images/hero-bg-04.jpg': 'linear-gradient(to right, rgba(15, 25, 45, 0.95), rgba(15, 25, 45, 0.7), transparent)',
+  '/images/hero-bg-05.jpg': 'linear-gradient(to right, rgba(10, 15, 30, 0.92), rgba(10, 15, 30, 0.65), transparent)',
+  '/images/hero-bg-06.jpg': 'linear-gradient(to right, rgba(10, 15, 30, 0.92), rgba(10, 15, 30, 0.65), transparent)',
+  '/images/hero-bg-07.jpg': 'linear-gradient(to right, rgba(8, 12, 28, 0.95), rgba(8, 12, 28, 0.7), transparent)',
+}
+
 // Weighted random selection for hero background images
 const getRandomHeroImage = () => {
   const topPhotos = [
@@ -119,6 +130,7 @@ const getRandomHeroImage = () => {
 export default function Home() {
   const productNames = ["Working Capital", "Merchant Cash Advance", "SBA Loans", "Business Lines of Credit"]
   const heroImage = getRandomHeroImage()
+  const heroGradient = heroImageGradients[heroImage]
 
   return (
     <>
@@ -228,8 +240,13 @@ export default function Home() {
           `}</style>
         </div>
 
-        {/* Dark Gradient Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0a0f1e]/40 via-[#0a0f1e]/20 to-transparent z-[1]" />
+        {/* Dynamic Gradient Overlay - Adapts to background image */}
+        <div 
+          className="absolute inset-0 z-[1] pointer-events-none"
+          style={{
+            background: heroGradient
+          }}
+        />
         
         {/* Subtle Animated Overlay Elements */}
         <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden">
