@@ -275,12 +275,24 @@ export default function Home() {
             {/* Left Column - Text Content */}
             <div className="space-y-6">
               <div className="space-y-4">
-                <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-tight">
-                  <span style={{ color: "#F97316", whiteSpace: "nowrap" }}>Turbo</span>
-                  <span style={{ color: "#2460e3" }}>Charge your</span>
-                  <br />
-                  <span style={{ color: "#2460e3" }}>Business with</span>
-                  <br />
+                <h1 
+                  className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-widest leading-tight" 
+                  style={{ 
+                    fontFamily: "'Space Grotesk', sans-serif",
+                    letterSpacing: "-0.02em"
+                  }}
+                >
+                  <span 
+                    style={{ 
+                      color: "#F97316", 
+                      whiteSpace: "nowrap",
+                      textShadow: "0 0 30px rgba(249, 115, 22, 0.3)"
+                    }}
+                  >
+                    Turbo
+                  </span>
+                  <span style={{ color: "#2460e3", display: "block", marginTop: "0.2em" }}>Charge your</span>
+                  <span style={{ color: "#2460e3", display: "block" }}>Business with</span>
                   <RotatingText
                     words={productNames}
                     className="font-bold"
@@ -289,19 +301,46 @@ export default function Home() {
                       display: "inline",
                       fontSize: "inherit",
                       lineHeight: "inherit",
+                      textShadow: "0 0 30px rgba(249, 115, 22, 0.3)",
+                      fontFamily: "'Space Grotesk', sans-serif"
                     }}
                   />
                 </h1>
-                <p className="text-lg md:text-xl font-normal" style={{ color: "#FFFFFF" }}>
-                  The place that helps businesses scale through secure, fast and transparent funding.
+                <p 
+                  className="text-base md:text-lg font-medium tracking-wide" 
+                  style={{ 
+                    color: "#E0E7FF", 
+                    marginTop: "1em",
+                    fontFamily: "'Space Grotesk', sans-serif"
+                  }}
+                >
+                  The place that helps businesses scale through <span style={{ color: "#F97316", fontWeight: "600" }}>secure</span>, <span style={{ color: "#2460e3", fontWeight: "600" }}>fast</span>, and <span style={{ color: "#10B981", fontWeight: "600" }}>transparent</span> funding.
                 </p>
               </div>
               <div className="flex flex-col gap-3 min-[400px]:flex-row pt-4">
-                <Button asChild className="bg-blue-600 text-white hover:bg-blue-700 text-lg px-8 py-6 w-fit">
+                <Button 
+                  asChild 
+                  className="text-base px-6 py-5 w-fit font-semibold tracking-wide transition-all duration-300 hover:shadow-lg hover:shadow-blue-500/50"
+                  style={{
+                    background: "linear-gradient(135deg, #2460e3 0%, #1947b8 100%)",
+                    border: "1px solid rgba(36, 96, 227, 0.5)",
+                    fontFamily: "'Space Grotesk', sans-serif"
+                  }}
+                >
                   <Link href="/apply">See Your Loan Options</Link>
                 </Button>
               </div>
-              <p className="text-sm text-gray-400">Applying will not impact your credit score</p>
+              <p 
+                className="text-xs md:text-sm font-medium tracking-wider" 
+                style={{ 
+                  color: "#94A3B8", 
+                  textTransform: "uppercase", 
+                  letterSpacing: "0.1em",
+                  fontFamily: "'Space Grotesk', sans-serif"
+                }}
+              >
+                ✓ Applying will not impact your credit score
+              </p>
             </div>
 
             {/* Right Column - iPhone Frame Illustration */}
