@@ -256,11 +256,18 @@ export default function Home() {
 
         {/* Dynamic Gradient Overlay - Adapts to background image */}
         <div 
-          className="absolute inset-0 z-[1] pointer-events-none"
+          className="absolute inset-0 z-[1] pointer-events-none hero-gradient-overlay"
           style={{
             background: heroGradient
           }}
         />
+        <style>{`
+          @media (max-width: 768px) {
+            .hero-gradient-overlay {
+              background: linear-gradient(to right, rgba(10, 15, 30, 0.98), rgba(10, 15, 30, 0.85), rgba(10, 15, 30, 0.5)) !important;
+            }
+          }
+        `}</style>
         
         {/* Subtle Animated Overlay Elements */}
         <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden">
