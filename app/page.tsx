@@ -210,17 +210,31 @@ export default function Home() {
         }}
       />
 
+      <style>{`
+        /* Swap image URLs based on viewport - mobile gets -xs version */
+        @media (max-width: 768px) {
+          .hero-bg-responsive {
+            background-image: var(--hero-image-mobile) !important;
+            background-attachment: scroll !important;
+            background-size: 120% auto !important;
+            background-position: center center !important;
+          }
+        }
+      `}</style>
+
       <div className="flex flex-col">
         {/* Hero Section */}
       <section 
-        className="relative w-full md:h-screen md:flex md:items-center overflow-hidden"
+        className="hero-bg-responsive relative w-full md:h-screen md:flex md:items-center overflow-hidden"
         style={{
           backgroundImage: `url('${heroImage}')`,
           backgroundAttachment: "fixed",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          backgroundRepeat: "no-repeat"
-        }}
+          backgroundRepeat: "no-repeat",
+          minHeight: "100vh",
+          "--hero-image-mobile": `url('${heroImage.replace("/images/hero-bg-", "/images/hero-bg-xs-").replace(".jpg", ".png")}')`,
+        } as any}
       >
         {/* Background Filter/Blur Overlay */}
         <div
