@@ -548,9 +548,9 @@ export default function Home() {
                       <span className="text-white font-bold text-xl">1</span>
                     </div>
                   </div>
-                  <h3 className="qualify-title text-xl font-bold mb-1" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>6+ Months in Business</h3>
+                  <h3 className="qualify-title text-lg font-bold mb-1" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>6+ Months in Business</h3>
                   {/* Changed card text from gray-300 to gray-600 */}
-                  <p className="text-gray-600 text-sm">
+                  <p className="text-gray-600 text-sm text-left">
                     Your business must be operational for at least 6 months with consistent activity.
                   </p>
                 </CardContent>
@@ -562,8 +562,8 @@ export default function Home() {
                       <span className="text-white font-bold text-xl">2</span>
                     </div>
                   </div>
-                  <h3 className="qualify-title text-xl font-bold mb-1" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>$10K+ Monthly Revenue</h3>
-                  <p className="text-gray-600 text-sm">
+                  <h3 className="qualify-title text-lg font-bold mb-1" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>$10K+ Monthly Revenue</h3>
+                  <p className="text-gray-600 text-sm text-left">
                     Demonstrate consistent monthly revenue of at least $10,000 to qualify for funding.
                   </p>
                 </CardContent>
@@ -575,8 +575,8 @@ export default function Home() {
                       <span className="text-white font-bold text-xl">3</span>
                     </div>
                   </div>
-                  <h3 className="qualify-title text-xl font-bold mb-1" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>550+ Credit Score</h3>
-                  <p className="text-gray-600 text-sm">
+                  <h3 className="qualify-title text-lg font-bold mb-1" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>550+ Credit Score</h3>
+                  <p className="text-gray-600 text-sm text-left">
                     Personal credit score of 550 or higher helps secure better funding terms.
                   </p>
                 </CardContent>
@@ -588,8 +588,8 @@ export default function Home() {
                       <span className="text-white font-bold text-xl">4</span>
                     </div>
                   </div>
-                  <h3 className="qualify-title text-xl font-bold mb-1" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>Basic Documentation</h3>
-                  <p className="text-gray-600 text-sm">
+                  <h3 className="qualify-title text-lg font-bold mb-1" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>Basic Documentation</h3>
+                  <p className="text-gray-600 text-sm text-left">
                     Bank statements, tax returns, and business registration documents required.
                   </p>
                 </CardContent>
