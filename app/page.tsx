@@ -474,11 +474,54 @@ export default function Home() {
               100% { transform: rotate(360deg); }
             }
             
+            @keyframes fadeUpIn {
+              from {
+                opacity: 0;
+                transform: translateY(30px);
+              }
+              to {
+                opacity: 1;
+                transform: translateY(0);
+              }
+            }
+            
+            @keyframes fadeLeftToRightIn {
+              from {
+                opacity: 0;
+                transform: translateX(-30px);
+              }
+              to {
+                opacity: 1;
+                transform: translateX(0);
+              }
+            }
+            
             .qualify-card {
               background: linear-gradient(135deg, #F5F7FA 0%, #FFFFFF 100%);
               border: 1px solid rgba(36, 96, 227, 0.15);
               transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
               backdrop-filter: blur(10px);
+              opacity: 0;
+            }
+            
+            .qualify-card.scroll-visible {
+              animation: fadeUpIn 0.6s ease-out forwards;
+            }
+            
+            .qualify-card:nth-child(1).scroll-visible {
+              animation-delay: 0s;
+            }
+            
+            .qualify-card:nth-child(2).scroll-visible {
+              animation-delay: 0.1s;
+            }
+            
+            .qualify-card:nth-child(3).scroll-visible {
+              animation-delay: 0.2s;
+            }
+            
+            .qualify-card:nth-child(4).scroll-visible {
+              animation-delay: 0.3s;
             }
             
             .qualify-card:hover {
@@ -513,6 +556,26 @@ export default function Home() {
             }
             
             @media (max-width: 768px) {
+              .qualify-card.scroll-visible {
+                animation: fadeLeftToRightIn 0.6s ease-out forwards;
+              }
+              
+              .qualify-card:nth-child(1).scroll-visible {
+                animation-delay: 0s;
+              }
+              
+              .qualify-card:nth-child(2).scroll-visible {
+                animation-delay: 0.1s;
+              }
+              
+              .qualify-card:nth-child(3).scroll-visible {
+                animation-delay: 0.2s;
+              }
+              
+              .qualify-card:nth-child(4).scroll-visible {
+                animation-delay: 0.3s;
+              }
+              
               .qualify-card:hover {
                 transform: none;
                 box-shadow: 0 4px 15px rgba(36, 96, 227, 0.1);
@@ -621,6 +684,43 @@ export default function Home() {
               </Button>
             </div>
           </div>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function() {
+                  const setupObserver = () => {
+                    const cards = document.querySelectorAll('.qualify-card');
+                    if (cards.length === 0) {
+                      setTimeout(setupObserver, 100);
+                      return;
+                    }
+                    
+                    const observer = new IntersectionObserver((entries) => {
+                      entries.forEach((entry) => {
+                        if (entry.isIntersecting) {
+                          entry.target.classList.add('scroll-visible');
+                          observer.unobserve(entry.target);
+                        }
+                      });
+                    }, {
+                      threshold: 0.1,
+                      rootMargin: '0px 0px -50px 0px'
+                    });
+                    
+                    cards.forEach((card) => {
+                      observer.observe(card);
+                    });
+                  };
+                  
+                  if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', setupObserver);
+                  } else {
+                    requestAnimationFrame(setupObserver);
+                  }
+                })();
+              `
+            }}
+          />
         </section>
 
         {/* Features Section */}
