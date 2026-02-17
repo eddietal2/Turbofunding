@@ -459,6 +459,59 @@ export default function Home() {
         {/* How To Qualify Section */}
         {/* Changed section background from gray-800 to bg-[#F5F7FA] with updated text colors */}
         <section className="w-full py-32 md:py-0 md:h-screen md:flex md:flex-col md:justify-center lg:py-0 bg-[#F5F7FA]" id="qualify">
+          <style>{`
+            @keyframes cardHoverGlow {
+              0%, 100% {
+                box-shadow: 0 4px 15px rgba(36, 96, 227, 0.1);
+              }
+              50% {
+                box-shadow: 0 8px 30px rgba(36, 96, 227, 0.25);
+              }
+            }
+            
+            @keyframes spinBadge {
+              0% { transform: rotate(0deg); }
+              100% { transform: rotate(360deg); }
+            }
+            
+            .qualify-card {
+              background: linear-gradient(135deg, #F5F7FA 0%, #FFFFFF 100%);
+              border: 1px solid rgba(36, 96, 227, 0.15);
+              transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+              backdrop-filter: blur(10px);
+            }
+            
+            .qualify-card:hover {
+              transform: translateY(-12px) scale(1.02);
+              box-shadow: 0 16px 40px rgba(36, 96, 227, 0.2);
+              border: 1px solid rgba(36, 96, 227, 0.3);
+              background: linear-gradient(135deg, #FFFFFF 0%, #F5F7FA 100%);
+            }
+            
+            .qualify-badge {
+              width: 56px;
+              height: 56px;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              transition: all 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+              box-shadow: 0 4px 15px rgba(36, 96, 227, 0.3);
+            }
+            
+            .qualify-card:hover .qualify-badge {
+              animation: spinBadge 0.8s ease-in-out forwards;
+              box-shadow: 0 8px 25px rgba(217, 119, 6, 0.5);
+              background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+            }
+            
+            .qualify-title {
+              transition: color 0.4s ease;
+            }
+            
+            .qualify-card:hover .qualify-title {
+              color: #2460e3;
+            }
+          `}</style>
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-3 text-center">
               <div className="mb-4">
@@ -487,55 +540,55 @@ export default function Home() {
               </div>
             </div>
             <div className="mx-auto grid max-w-5xl grid-cols-1 gap-4 py-8 md:grid-cols-2 lg:grid-cols-4">
-              {/* Changed cards from gray-900 to bg-[#F5F7FA] with light borders and dark text */}
-              <Card className="bg-[#F5F7FA] border-gray-200" style={{ color: "#0D1B2A" }}>
+              {/* Cool animated cards with hover effects */}
+              <Card className="qualify-card" style={{ color: "#0D1B2A" }}>
                 <CardContent className="p-4 text-center">
                   <div className="flex justify-center mb-3">
-                    <div className="rounded-full bg-blue-600 p-3 flex items-center justify-center" aria-hidden="true">
+                    <div className="qualify-badge rounded-full bg-blue-600" aria-hidden="true">
                       <span className="text-white font-bold text-xl">1</span>
                     </div>
                   </div>
-                  <h3 className="text-xl font-bold mb-1">6+ Months in Business</h3>
+                  <h3 className="qualify-title text-xl font-bold mb-1" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>6+ Months in Business</h3>
                   {/* Changed card text from gray-300 to gray-600 */}
                   <p className="text-gray-600 text-sm">
                     Your business must be operational for at least 6 months with consistent activity.
                   </p>
                 </CardContent>
               </Card>
-              <Card className="bg-[#F5F7FA] border-gray-200" style={{ color: "#0D1B2A" }}>
+              <Card className="qualify-card" style={{ color: "#0D1B2A" }}>
                 <CardContent className="p-4 text-center">
                   <div className="flex justify-center mb-3">
-                    <div className="rounded-full bg-blue-600 p-3 flex items-center justify-center" aria-hidden="true">
+                    <div className="qualify-badge rounded-full bg-blue-600" aria-hidden="true">
                       <span className="text-white font-bold text-xl">2</span>
                     </div>
                   </div>
-                  <h3 className="text-xl font-bold mb-1">$10K+ Monthly Revenue</h3>
+                  <h3 className="qualify-title text-xl font-bold mb-1" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>$10K+ Monthly Revenue</h3>
                   <p className="text-gray-600 text-sm">
                     Demonstrate consistent monthly revenue of at least $10,000 to qualify for funding.
                   </p>
                 </CardContent>
               </Card>
-              <Card className="bg-[#F5F7FA] border-gray-200" style={{ color: "#0D1B2A" }}>
+              <Card className="qualify-card" style={{ color: "#0D1B2A" }}>
                 <CardContent className="p-4 text-center">
                   <div className="flex justify-center mb-3">
-                    <div className="rounded-full bg-blue-600 p-3 flex items-center justify-center" aria-hidden="true">
+                    <div className="qualify-badge rounded-full bg-blue-600" aria-hidden="true">
                       <span className="text-white font-bold text-xl">3</span>
                     </div>
                   </div>
-                  <h3 className="text-xl font-bold mb-1">550+ Credit Score</h3>
+                  <h3 className="qualify-title text-xl font-bold mb-1" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>550+ Credit Score</h3>
                   <p className="text-gray-600 text-sm">
                     Personal credit score of 550 or higher helps secure better funding terms.
                   </p>
                 </CardContent>
               </Card>
-              <Card className="bg-[#F5F7FA] border-gray-200" style={{ color: "#0D1B2A" }}>
+              <Card className="qualify-card" style={{ color: "#0D1B2A" }}>
                 <CardContent className="p-4 text-center">
                   <div className="flex justify-center mb-3">
-                    <div className="rounded-full bg-blue-600 p-3 flex items-center justify-center" aria-hidden="true">
+                    <div className="qualify-badge rounded-full bg-blue-600" aria-hidden="true">
                       <span className="text-white font-bold text-xl">4</span>
                     </div>
                   </div>
-                  <h3 className="text-xl font-bold mb-1">Basic Documentation</h3>
+                  <h3 className="qualify-title text-xl font-bold mb-1" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>Basic Documentation</h3>
                   <p className="text-gray-600 text-sm">
                     Bank statements, tax returns, and business registration documents required.
                   </p>
