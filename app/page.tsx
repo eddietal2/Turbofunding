@@ -299,28 +299,16 @@ export default function Home() {
                     letterSpacing: "-0.02em"
                   }}
                 >
-                  <span 
-                    style={{ 
-                      color: "#D97706", 
-                      whiteSpace: "nowrap",
-                      textShadow: "none"
-                    }}
-                  >
-                    Turbo
-                  </span>
-                  <span style={{ color: "#1D4ED8", display: "block", marginTop: "0.2em" }}>Charge your</span>
-                  <span style={{ color: "#1D4ED8", display: "block" }}>Business with</span>
+                  <span style={{ fontSize: '0.8em', color: "#1D4ED8", display: "block", marginTop: "0.2em" }}>Turbo Charge your</span>
+                  <span style={{ fontSize: '0.8em', color: "#1D4ED8", display: "block" }}>Business with:</span>
                   <RotatingText
                     words={productNames}
                     className="font-bold"
                     style={{
                       color: "#D97706",
-                      background: "linear-gradient(135deg, #2460e3 0%, #1947b8 100%)",
                       display: "inline-block",
                       paddingTop: "0.4em",
                       paddingBottom: "0.4em",
-                      paddingLeft: "0.3em",
-                      paddingRight: "0.3em",
                       marginTop: "0.2em",
                       fontSize: "inherit",
                       lineHeight: "1.2",
@@ -338,7 +326,7 @@ export default function Home() {
                     fontFamily: "var(--font-space-grotesk), sans-serif"
                   }}
                 >
-                  The place that helps businesses scale through <span style={{ color: "#D97706", fontWeight: "600" }}>secure</span>, <span style={{ color: "#1D4ED8", fontWeight: "600" }}>fast</span>, and <span style={{ color: "#059669", fontWeight: "600" }}>transparent</span> funding.
+                  Fast, reliable business funding solutions to help your company grow at the speed of opportunity.
                 </p>
               </div>
               <div className="flex flex-col gap-3 min-[400px]:flex-row pt-4">
@@ -808,8 +796,8 @@ export default function Home() {
           />
           
           <div className="container px-4 md:px-6 relative z-10 max-w-6xl mx-auto">
-            <div className="flex flex-col items-start w-full">
-              {/* FS Header - Left Aligned Label */}
+            <div className="flex flex-col items-center w-full">
+              {/* FS Header - Centered Label */}
               <div className="mb-4 fs-header px-4 py-2 rounded-lg" style={{ backgroundColor: "rgba(255, 255, 255, 0.9)", backdropFilter: "blur(10px)" }}>
                 <div className="flex items-center gap-3">
                   <svg

@@ -225,13 +225,6 @@ export function LoanCalculator() {
                   </p>
                 </div>
               </div>
-
-              {/* Formula Reference - Minimal on Desktop */}
-              <div className="mt-2 pt-2 border-t border-gray-200 hidden md:block">
-                <p className="text-xs text-gray-500 font-mono leading-none">
-                  Formula: Max = Draw × 1.12 | Payment = Max ÷ N | Payoff = Draw × (1 + 0.01M) | Savings = Max − (Paid + Early)
-                </p>
-              </div>
             </CardContent>
           </Card>
 

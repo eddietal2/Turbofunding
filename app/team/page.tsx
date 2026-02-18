@@ -29,7 +29,7 @@ export default function TeamPage() {
                       help consolidate and optimize your financing strategy.
                     </p>
                     <p style={{ color: "#0D1B2A" }}>
-                      But TurboFunding is more than just financing. We're partners in growth. Whether you're starting a
+                      TurboFunding is more than just financing. We're partners in growth. Whether you're starting a
                       new venture, expanding to new locations, or weathering unexpected challenges, our team is here to
                       guide you every step of the way.
                     </p>
