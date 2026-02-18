@@ -807,69 +807,62 @@ export default function Home() {
           />
           
           <div className="container px-4 md:px-6 relative z-10 max-w-6xl mx-auto">
-            <div className="flex flex-col items-center">
-              {/* FS Header - Centered */}
-              <div className="w-full max-w-2xl mb-6">
-                <div className="flex flex-col items-center justify-center fs-header">
-                  <div className="space-y-4 p-4 rounded-lg text-center w-full" style={{ backgroundColor: "rgba(255, 255, 255, 0.85)", backdropFilter: "blur(10px)" }}>
-                    <div className="flex justify-center mb-2">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="48"
-                        height="48"
-                        viewBox="0 0 48 48"
-                        fill="none"
-                        stroke="#2460e3"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      >
-                        {/* Grand Pediment Roof */}
-                        <path d="M 8 20 L 24 4 L 40 20" fill="#D97706" stroke="#D97706" strokeWidth="1.5" />
-                        
-                        {/* Main building body */}
-                        <rect x="8" y="20" width="32" height="20" fill="none" stroke="#2460e3" strokeWidth="1.5" />
-                        
-                        {/* Left Entrance Column */}
-                        <rect x="12" y="20" width="3" height="20" fill="#2460e3" />
-                        {/* Right Entrance Column */}
-                        <rect x="33" y="20" width="3" height="20" fill="#2460e3" />
-                        
-                        {/* Central Door with surround */}
-                        <rect x="19" y="28" width="10" height="12" fill="none" stroke="#D97706" strokeWidth="1.5" />
-                        <line x1="24" y1="28" x2="24" y2="40" stroke="#D97706" strokeWidth="1" />
-                        {/* Door Handle */}
-                        <circle cx="28" cy="34" r="1" fill="#D97706" />
-                        
-                        {/* Upper facade trim */}
-                        <line x1="8" y1="20" x2="40" y2="20" stroke="#D97706" strokeWidth="2" />
-                        
-                        {/* Left section windows */}
-                        <rect x="10" y="24" width="2.5" height="2.5" fill="#D97706" />
-                        <rect x="10" y="30" width="2.5" height="2.5" fill="#D97706" />
-                        <rect x="10" y="36" width="2.5" height="2.5" fill="#D97706" />
-                        
-                        {/* Right section windows */}
-                        <rect x="37.5" y="24" width="2.5" height="2.5" fill="#D97706" />
-                        <rect x="37.5" y="30" width="2.5" height="2.5" fill="#D97706" />
-                        <rect x="37.5" y="36" width="2.5" height="2.5" fill="#D97706" />
-                        
-                        {/* Foundation/Base with steps */}
-                        <rect x="8" y="39.5" width="32" height="2.5" fill="#2460e3" />
-                        <line x1="12" y1="42" x2="36" y2="42" stroke="#D97706" strokeWidth="1" />
-                        <line x1="14" y1="44" x2="34" y2="44" stroke="#D97706" strokeWidth="1" />
-                        
-                        {/* Small roof detail/cornice */}
-                        <path d="M 8 20 Q 24 18 40 20" fill="none" stroke="#D97706" strokeWidth="1" />
-                      </svg>
-                    </div>
-                    <h2 className="text-3xl sm:text-4xl md:text-3xl font-bold tracking-tight text-orange-500" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>
-                      Funding Solutions
-                    </h2>
-                    <p className="max-w-[500px] mx-auto md:text-lg/relaxed lg:text-base/relaxed xl:text-lg/relaxed" style={{ color: "#000000", textShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" }}>
-                      We offer a variety of funding options to help your business grow and succeed.
-                    </p>
-                  </div>
+            <div className="flex flex-col items-start w-full">
+              {/* FS Header - Left Aligned Label */}
+              <div className="mb-4 fs-header px-4 py-2 rounded-lg" style={{ backgroundColor: "rgba(255, 255, 255, 0.9)", backdropFilter: "blur(10px)" }}>
+                <div className="flex items-center gap-3">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="32"
+                    height="32"
+                    viewBox="0 0 48 48"
+                    fill="none"
+                    stroke="#2460e3"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  >
+                    {/* Grand Pediment Roof */}
+                    <path d="M 8 20 L 24 4 L 40 20" fill="#D97706" stroke="#D97706" strokeWidth="1.5" />
+                    
+                    {/* Main building body */}
+                    <rect x="8" y="20" width="32" height="20" fill="none" stroke="#2460e3" strokeWidth="1.5" />
+                    
+                    {/* Left Entrance Column */}
+                    <rect x="12" y="20" width="3" height="20" fill="#2460e3" />
+                    {/* Right Entrance Column */}
+                    <rect x="33" y="20" width="3" height="20" fill="#2460e3" />
+                    
+                    {/* Central Door with surround */}
+                    <rect x="19" y="28" width="10" height="12" fill="none" stroke="#D97706" strokeWidth="1.5" />
+                    <line x1="24" y1="28" x2="24" y2="40" stroke="#D97706" strokeWidth="1" />
+                    {/* Door Handle */}
+                    <circle cx="28" cy="34" r="1" fill="#D97706" />
+                    
+                    {/* Upper facade trim */}
+                    <line x1="8" y1="20" x2="40" y2="20" stroke="#D97706" strokeWidth="2" />
+                    
+                    {/* Left section windows */}
+                    <rect x="10" y="24" width="2.5" height="2.5" fill="#D97706" />
+                    <rect x="10" y="30" width="2.5" height="2.5" fill="#D97706" />
+                    <rect x="10" y="36" width="2.5" height="2.5" fill="#D97706" />
+                    
+                    {/* Right section windows */}
+                    <rect x="37.5" y="24" width="2.5" height="2.5" fill="#D97706" />
+                    <rect x="37.5" y="30" width="2.5" height="2.5" fill="#D97706" />
+                    <rect x="37.5" y="36" width="2.5" height="2.5" fill="#D97706" />
+                    
+                    {/* Foundation/Base with steps */}
+                    <rect x="8" y="39.5" width="32" height="2.5" fill="#2460e3" />
+                    <line x1="12" y1="42" x2="36" y2="42" stroke="#D97706" strokeWidth="1" />
+                    <line x1="14" y1="44" x2="34" y2="44" stroke="#D97706" strokeWidth="1" />
+                    
+                    {/* Small roof detail/cornice */}
+                    <path d="M 8 20 Q 24 18 40 20" fill="none" stroke="#D97706" strokeWidth="1" />
+                  </svg>
+                  <h2 className="text-2xl font-bold tracking-tight text-orange-500" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>
+                    Funding Solutions
+                  </h2>
                 </div>
               </div>
 
