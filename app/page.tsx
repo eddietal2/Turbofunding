@@ -670,16 +670,14 @@ export default function Home() {
         <section className="w-full py-16 md:py-24 lg:py-32 relative min-h-screen fs-section" id="features" style={{
           backgroundImage: "url('/images/fs-image-01.jpg')",
           backgroundSize: "cover",
-          backgroundPosition: "20% center",
+          backgroundPosition: "80% center",
           backgroundRepeat: "no-repeat",
-          backgroundAttachment: "fixed",
-          transform: "scaleX(-1)"
+          backgroundAttachment: "fixed"
         }}>
           <style dangerouslySetInnerHTML={{__html: `
             @media (max-width: 768px) {
               .fs-section {
                 background-image: none !important;
-                background-attachment: scroll !important;
                 background-size: cover !important;
                 background-position: center center !important;
                 padding: 2em 0em;
@@ -764,256 +762,259 @@ export default function Home() {
           <div 
             className="absolute inset-0 pointer-events-none" 
             style={{
-              background: "linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0.6) 100%)"
+              background: "linear-gradient(to right, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.1) 100%)"
             }}
           />
           
-          <div className="container px-4 md:px-6 relative z-10" style={{ transform: "scaleX(-1)" }}>
+          <div className="container px-4 md:px-6 relative z-10">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-start">
-              {/* Left Column - Content & Space for Background */}
-              <div className="flex flex-col items-start justify-start fs-header">
-                <div className="space-y-4 p-6 rounded-lg text-center" style={{ backgroundColor: "rgba(255, 255, 255, 0.85)", backdropFilter: "blur(10px)" }}>
-                  <div className="flex justify-center mb-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="48"
-                      height="48"
-                      viewBox="0 0 48 48"
-                      fill="none"
-                      stroke="#2460e3"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    >
-                      {/* Grand Pediment Roof */}
-                      <path d="M 8 20 L 24 4 L 40 20" fill="#D97706" stroke="#D97706" strokeWidth="1.5" />
-                      
-                      {/* Main building body */}
-                      <rect x="8" y="20" width="32" height="20" fill="none" stroke="#2460e3" strokeWidth="1.5" />
-                      
-                      {/* Left Entrance Column */}
-                      <rect x="12" y="20" width="3" height="20" fill="#2460e3" />
-                      {/* Right Entrance Column */}
-                      <rect x="33" y="20" width="3" height="20" fill="#2460e3" />
-                      
-                      {/* Central Door with surround */}
-                      <rect x="19" y="28" width="10" height="12" fill="none" stroke="#D97706" strokeWidth="1.5" />
-                      <line x1="24" y1="28" x2="24" y2="40" stroke="#D97706" strokeWidth="1" />
-                      {/* Door Handle */}
-                      <circle cx="28" cy="34" r="1" fill="#D97706" />
-                      
-                      {/* Upper facade trim */}
-                      <line x1="8" y1="20" x2="40" y2="20" stroke="#D97706" strokeWidth="2" />
-                      
-                      {/* Left section windows */}
-                      <rect x="10" y="24" width="2.5" height="2.5" fill="#D97706" />
-                      <rect x="10" y="30" width="2.5" height="2.5" fill="#D97706" />
-                      <rect x="10" y="36" width="2.5" height="2.5" fill="#D97706" />
-                      
-                      {/* Right section windows */}
-                      <rect x="37.5" y="24" width="2.5" height="2.5" fill="#D97706" />
-                      <rect x="37.5" y="30" width="2.5" height="2.5" fill="#D97706" />
-                      <rect x="37.5" y="36" width="2.5" height="2.5" fill="#D97706" />
-                      
-                      {/* Foundation/Base with steps */}
-                      <rect x="8" y="39.5" width="32" height="2.5" fill="#2460e3" />
-                      <line x1="12" y1="42" x2="36" y2="42" stroke="#D97706" strokeWidth="1" />
-                      <line x1="14" y1="44" x2="34" y2="44" stroke="#D97706" strokeWidth="1" />
-                      
-                      {/* Small roof detail/cornice */}
-                      <path d="M 8 20 Q 24 18 40 20" fill="none" stroke="#D97706" strokeWidth="1" />
-                    </svg>
+              {/* Left Column - Header and Cards */}
+              <div className="space-y-6">
+                {/* FS Header */}
+                <div className="flex flex-col items-start justify-start fs-header">
+                  <div className="space-y-4 p-6 rounded-lg text-center w-full" style={{ backgroundColor: "rgba(255, 255, 255, 0.85)", backdropFilter: "blur(10px)" }}>
+                    <div className="flex justify-center mb-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="48"
+                        height="48"
+                        viewBox="0 0 48 48"
+                        fill="none"
+                        stroke="#2460e3"
+                        strokeWidth="1.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        {/* Grand Pediment Roof */}
+                        <path d="M 8 20 L 24 4 L 40 20" fill="#D97706" stroke="#D97706" strokeWidth="1.5" />
+                        
+                        {/* Main building body */}
+                        <rect x="8" y="20" width="32" height="20" fill="none" stroke="#2460e3" strokeWidth="1.5" />
+                        
+                        {/* Left Entrance Column */}
+                        <rect x="12" y="20" width="3" height="20" fill="#2460e3" />
+                        {/* Right Entrance Column */}
+                        <rect x="33" y="20" width="3" height="20" fill="#2460e3" />
+                        
+                        {/* Central Door with surround */}
+                        <rect x="19" y="28" width="10" height="12" fill="none" stroke="#D97706" strokeWidth="1.5" />
+                        <line x1="24" y1="28" x2="24" y2="40" stroke="#D97706" strokeWidth="1" />
+                        {/* Door Handle */}
+                        <circle cx="28" cy="34" r="1" fill="#D97706" />
+                        
+                        {/* Upper facade trim */}
+                        <line x1="8" y1="20" x2="40" y2="20" stroke="#D97706" strokeWidth="2" />
+                        
+                        {/* Left section windows */}
+                        <rect x="10" y="24" width="2.5" height="2.5" fill="#D97706" />
+                        <rect x="10" y="30" width="2.5" height="2.5" fill="#D97706" />
+                        <rect x="10" y="36" width="2.5" height="2.5" fill="#D97706" />
+                        
+                        {/* Right section windows */}
+                        <rect x="37.5" y="24" width="2.5" height="2.5" fill="#D97706" />
+                        <rect x="37.5" y="30" width="2.5" height="2.5" fill="#D97706" />
+                        <rect x="37.5" y="36" width="2.5" height="2.5" fill="#D97706" />
+                        
+                        {/* Foundation/Base with steps */}
+                        <rect x="8" y="39.5" width="32" height="2.5" fill="#2460e3" />
+                        <line x1="12" y1="42" x2="36" y2="42" stroke="#D97706" strokeWidth="1" />
+                        <line x1="14" y1="44" x2="34" y2="44" stroke="#D97706" strokeWidth="1" />
+                        
+                        {/* Small roof detail/cornice */}
+                        <path d="M 8 20 Q 24 18 40 20" fill="none" stroke="#D97706" strokeWidth="1" />
+                      </svg>
+                    </div>
+                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-orange-500" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>
+                      Funding Solutions
+                    </h2>
+                    <p className="max-w-[500px] md:text-lg/relaxed lg:text-base/relaxed xl:text-lg/relaxed" style={{ color: "#000000", textShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" }}>
+                      We offer a variety of funding options to help your business grow and succeed.
+                    </p>
                   </div>
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-orange-500" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>
-                    Funding Solutions
-                  </h2>
-                  <p className="max-w-[500px] md:text-lg/relaxed lg:text-base/relaxed xl:text-lg/relaxed" style={{ color: "#000000", textShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" }}>
-                    We offer a variety of funding options to help your business grow and succeed.
-                  </p>
+                </div>
+
+                {/* Cards Grid */}
+                <div className="grid grid-cols-1 gap-4">
+                  <Card className="bg-white border-gray-200 fs-card">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-4 mb-3">
+                        <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="h-6 w-6 text-blue-600"
+                          >
+                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                          </svg>
+                        </div>
+                        <h3 className="text-xl font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
+                          Working Capital
+                        </h3>
+                      </div>
+                      <p className="mt-1 text-gray-600">
+                        Access the working capital your business needs to manage cash flow and day-to-day operations.
+                      </p>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-white border-gray-200 fs-card">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-4 mb-3">
+                        <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="h-6 w-6 text-blue-600"
+                          >
+                            <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4" />
+                            <path d="M3 5v14a2 2 0 0 0 2 2h16v-5" />
+                            <path d="M18 12a2 2 0 0 0 0 4h4v-4Z" />
+                          </svg>
+                        </div>
+                        <h3 className="text-xl font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
+                          Bridge Loan
+                        </h3>
+                      </div>
+                      <p className="mt-1 text-gray-600">
+                        Get quick access to capital with flexible repayment based on your future sales and daily revenue.
+                      </p>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-white border-gray-200 fs-card">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-4 mb-3">
+                        <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="h-6 w-6 text-blue-600"
+                          >
+                            <rect width="20" height="14" x="2" y="5" rx="2" />
+                            <line x1="2" x2="22" y1="10" y2="10" />
+                          </svg>
+                        </div>
+                        <h3 className="text-xl font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
+                          Business Line of Credit
+                        </h3>
+                      </div>
+                      <p className="mt-1 text-gray-600">
+                        Flexible funding that allows you to draw funds as needed and only pay interest on what you use.
+                      </p>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-white border-gray-200 fs-card">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-4 mb-3">
+                        <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="h-6 w-6 text-blue-600"
+                          >
+                            <path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z" />
+                            <path d="M2 9v1c0 1.1.9 2 2 2h1" />
+                            <path d="M16 11h0" />
+                          </svg>
+                        </div>
+                        <h3 className="text-xl font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
+                          SBA 7a Loans
+                        </h3>
+                      </div>
+                      <p className="mt-1 text-gray-600">
+                        Government-backed loans with favorable terms for small businesses that meet SBA eligibility
+                        requirements.
+                      </p>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-white border-gray-200 fs-card">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-4 mb-3">
+                        <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="h-6 w-6 text-blue-600"
+                          >
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                            <polyline points="9 22 9 12 15 12 15 22" />
+                          </svg>
+                        </div>
+                        <h3 className="text-xl font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
+                          SBA 504
+                        </h3>
+                      </div>
+                      <p className="mt-1 text-gray-600">
+                        Long-term, fixed-rate financing for major assets like real estate and equipment to help your
+                        business expand.
+                      </p>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-white border-gray-200 fs-card">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-4 mb-3">
+                        <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="h-6 w-6 text-blue-600"
+                          >
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                            <polyline points="9 22 9 12 15 12 15 22" />
+                          </svg>
+                        </div>
+                        <h3 className="text-xl font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
+                          Equipment Financing
+                        </h3>
+                      </div>
+                      <p className="mt-1 text-gray-600">
+                        Financing specifically for purchasing or leasing equipment, with flexible terms based on the
+                        value of the equipment being financed.
+                      </p>
+                    </CardContent>
+                  </Card>
                 </div>
               </div>
-              
-              {/* Right Column - Cards Grid */}
-              <div className="grid grid-cols-1 gap-4">
-                <Card className="bg-white border-gray-200 fs-card">
-                  <CardContent className="p-4">
-                  <div className="flex items-center gap-4 mb-3">
-                    <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="h-6 w-6 text-blue-600"
-                      >
-                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                      </svg>
-                    </div>
-                    <h3 className="text-xl font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
-                      Working Capital
-                    </h3>
-                  </div>
-                  <p className="mt-1 text-gray-600">
-                    Access the working capital your business needs to manage cash flow and day-to-day operations.
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="bg-white border-gray-200 fs-card">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-4 mb-3">
-                    <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="h-6 w-6 text-blue-600"
-                      >
-                        <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4" />
-                        <path d="M3 5v14a2 2 0 0 0 2 2h16v-5" />
-                        <path d="M18 12a2 2 0 0 0 0 4h4v-4Z" />
-                      </svg>
-                    </div>
-                    <h3 className="text-xl font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
-                      Bridge Loan
-                    </h3>
-                  </div>
-                  <p className="mt-1 text-gray-600">
-                    Get quick access to capital with flexible repayment based on your future sales and daily revenue.
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="bg-white border-gray-200 fs-card">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-4 mb-3">
-                    <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="h-6 w-6 text-blue-600"
-                      >
-                        <rect width="20" height="14" x="2" y="5" rx="2" />
-                        <line x1="2" x2="22" y1="10" y2="10" />
-                      </svg>
-                    </div>
-                    <h3 className="text-xl font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
-                      Business Line of Credit
-                    </h3>
-                  </div>
-                  <p className="mt-1 text-gray-600">
-                    Flexible funding that allows you to draw funds as needed and only pay interest on what you use.
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="bg-white border-gray-200 fs-card">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-4 mb-3">
-                    <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="h-6 w-6 text-blue-600"
-                      >
-                        <path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z" />
-                        <path d="M2 9v1c0 1.1.9 2 2 2h1" />
-                        <path d="M16 11h0" />
-                      </svg>
-                    </div>
-                    <h3 className="text-xl font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
-                      SBA 7a Loans
-                    </h3>
-                  </div>
-                  <p className="mt-1 text-gray-600">
-                    Government-backed loans with favorable terms for small businesses that meet SBA eligibility
-                    requirements.
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="bg-white border-gray-200 fs-card">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-4 mb-3">
-                    <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="h-6 w-6 text-blue-600"
-                      >
-                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                        <polyline points="9 22 9 12 15 12 15 22" />
-                      </svg>
-                    </div>
-                    <h3 className="text-xl font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
-                      SBA 504
-                    </h3>
-                  </div>
-                  <p className="mt-1 text-gray-600">
-                    Long-term, fixed-rate financing for major assets like real estate and equipment to help your
-                    business expand.
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="bg-white border-gray-200 fs-card">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-4 mb-3">
-                    <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="h-6 w-6 text-blue-600"
-                      >
-                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                        <polyline points="9 22 9 12 15 12 15 22" />
-                      </svg>
-                    </div>
-                    <h3 className="text-xl font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
-                      Equipment Financing
-                    </h3>
-                  </div>
-                  <p className="mt-1 text-gray-600">
-                    Financing specifically for purchasing or leasing equipment, with flexible terms based on the
-                    value of the equipment being financed.
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
             </div>
           </div>
         </section>
