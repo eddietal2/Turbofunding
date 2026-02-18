@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { RotatingText } from "@/components/rotating-text"
 import { LoanCalculator } from "@/components/loan-calculator"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 // Mapping of hero images to dynamic light gradients for better text readability
 const heroImageGradients: Record<string, string> = {
@@ -44,14 +44,42 @@ const getRandomHeroImage = () => {
 
 export default function Home() {
   const productNames = ["Working Capital", "Merchant Cash Advance", "SBA Loans", "Business Lines of Credit"]
-  const heroImage = getRandomHeroImage()
+  const [heroImage, setHeroImage] = useState('/images/hero-bg-07.jpg')
+  
+  useEffect(() => {
+    const topPhotos = [
+      '/images/hero-bg-07.jpg',
+      '/images/hero-bg-06.jpg',
+      '/images/hero-bg-05.jpg',
+    ]
+    const otherPhotos = [
+      '/images/hero-bg-01.jpg',
+      '/images/hero-bg-02.jpg',
+      '/images/hero-bg-03.jpg',
+      '/images/hero-bg-04.jpg',
+    ]
+
+    const random = Math.random()
+    // 60% probability for top 3 performing images
+    if (random < 0.6) {
+      setHeroImage(topPhotos[Math.floor(Math.random() * topPhotos.length)])
+    } else {
+      setHeroImage(otherPhotos[Math.floor(Math.random() * otherPhotos.length)])
+    }
+  }, [])
+  
   const heroGradient = heroImageGradients[heroImage]
 
   // Setup Intersection Observer for scroll animations
   useEffect(() => {
     const setupObserver = () => {
-      const cards = document.querySelectorAll('.qualify-card');
-      if (cards.length === 0) {
+      const qualifyCards = document.querySelectorAll('.qualify-card');
+      const fsCards = document.querySelectorAll('.fs-card');
+      const fsHeader = document.querySelectorAll('.fs-header');
+      
+      const allCards = [...Array.from(qualifyCards), ...Array.from(fsCards), ...Array.from(fsHeader)];
+      
+      if (allCards.length === 0) {
         // Retry if cards not found yet
         setTimeout(setupObserver, 100);
         return;
@@ -69,7 +97,7 @@ export default function Home() {
         rootMargin: '0px 0px -50px 0px'
       });
       
-      cards.forEach((card) => {
+      allCards.forEach((card) => {
         observer.observe(card);
       });
     };
@@ -639,7 +667,7 @@ export default function Home() {
 
         {/* Features Section */}
         {/* CHANGE> Changed Funding Solutions section from dark gray (bg-gray-900) to white background with #0D1B2A text */}
-        <section className="w-full py-16 md:py-24 lg:py-32 relative min-h-screen" id="features" style={{
+        <section className="w-full py-16 md:py-24 lg:py-32 relative min-h-screen fs-section" id="features" style={{
           backgroundImage: "url('/images/fs-image-01.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "20% center",
@@ -647,10 +675,50 @@ export default function Home() {
           backgroundAttachment: "fixed",
           transform: "scaleX(-1)"
         }}>
+          <style dangerouslySetInnerHTML={{__html: `
+            @media (max-width: 768px) {
+              .fs-section {
+                background-image: none !important;
+                background-attachment: scroll !important;
+                background-size: cover !important;
+                background-position: center center !important;
+                padding: 2em 0em;
+              }
+            }
+          `}} />
           <style>{`
             .fs-card {
               transition: all 0.3s ease;
               cursor: pointer;
+              opacity: 0;
+            }
+            
+            .fs-card.scroll-visible {
+              animation: fadeUpIn 0.6s ease-out forwards;
+            }
+            
+            .fs-card:nth-child(1).scroll-visible {
+              animation-delay: 0s;
+            }
+            
+            .fs-card:nth-child(2).scroll-visible {
+              animation-delay: 0.1s;
+            }
+            
+            .fs-card:nth-child(3).scroll-visible {
+              animation-delay: 0.2s;
+            }
+            
+            .fs-card:nth-child(4).scroll-visible {
+              animation-delay: 0.3s;
+            }
+            
+            .fs-card:nth-child(5).scroll-visible {
+              animation-delay: 0.4s;
+            }
+            
+            .fs-card:nth-child(6).scroll-visible {
+              animation-delay: 0.5s;
             }
             
             .fs-card:hover {
@@ -660,6 +728,36 @@ export default function Home() {
             
             .fs-card:hover h3 {
               color: #2460e3 !important;
+            }
+            
+            @media (max-width: 768px) {
+              .fs-card:hover {
+                transform: none;
+                box-shadow: none;
+              }
+              
+              .fs-card:hover h3 {
+                color: #0D1B2A !important;
+              }
+            }
+            
+            .fs-header {
+              opacity: 0;
+            }
+            
+            .fs-header.scroll-visible {
+              animation: fadeUpIn 0.8s ease-out forwards;
+            }
+            
+            @keyframes fadeUpIn {
+              from {
+                opacity: 0;
+                transform: translateY(30px);
+              }
+              to {
+                opacity: 1;
+                transform: translateY(0);
+              }
             }
           `}</style>
           {/* Light gradient overlay for visual polish */}
@@ -673,7 +771,7 @@ export default function Home() {
           <div className="container px-4 md:px-6 relative z-10" style={{ transform: "scaleX(-1)" }}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-start">
               {/* Left Column - Content & Space for Background */}
-              <div className="flex flex-col items-start justify-start">
+              <div className="flex flex-col items-start justify-start fs-header">
                 <div className="space-y-4 p-6 rounded-lg" style={{ backgroundColor: "rgba(255, 255, 255, 0.85)", backdropFilter: "blur(10px)" }}>
                   <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-orange-500" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>
                     Funding Solutions
