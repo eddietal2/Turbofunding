@@ -762,17 +762,16 @@ export default function Home() {
           <div 
             className="absolute inset-0 pointer-events-none" 
             style={{
-              background: "linear-gradient(to right, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.1) 100%)"
+              background: "linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.25) 50%, rgba(0, 0, 0, 0.4) 100%)"
             }}
           />
           
-          <div className="container px-4 md:px-6 relative z-10">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-start">
-              {/* Left Column - Header and Cards */}
-              <div className="space-y-6">
-                {/* FS Header */}
-                <div className="flex flex-col items-start justify-start fs-header">
-                  <div className="space-y-4 p-6 rounded-lg text-center w-full" style={{ backgroundColor: "rgba(255, 255, 255, 0.85)", backdropFilter: "blur(10px)" }}>
+          <div className="container px-4 md:px-6 relative z-10 max-w-6xl mx-auto">
+            <div className="flex flex-col items-center">
+              {/* FS Header - Centered */}
+              <div className="w-full max-w-2xl mb-6">
+                <div className="flex flex-col items-center justify-center fs-header">
+                  <div className="space-y-4 p-4 rounded-lg text-center w-full" style={{ backgroundColor: "rgba(255, 255, 255, 0.85)", backdropFilter: "blur(10px)" }}>
                     <div className="flex justify-center mb-2">
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -824,19 +823,20 @@ export default function Home() {
                         <path d="M 8 20 Q 24 18 40 20" fill="none" stroke="#D97706" strokeWidth="1" />
                       </svg>
                     </div>
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-orange-500" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>
+                    <h2 className="text-3xl sm:text-4xl md:text-3xl font-bold tracking-tight text-orange-500" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>
                       Funding Solutions
                     </h2>
-                    <p className="max-w-[500px] md:text-lg/relaxed lg:text-base/relaxed xl:text-lg/relaxed" style={{ color: "#000000", textShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" }}>
+                    <p className="max-w-[500px] mx-auto md:text-lg/relaxed lg:text-base/relaxed xl:text-lg/relaxed" style={{ color: "#000000", textShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" }}>
                       We offer a variety of funding options to help your business grow and succeed.
                     </p>
                   </div>
                 </div>
+              </div>
 
-                {/* Cards Grid */}
-                <div className="grid grid-cols-1 gap-4">
+              {/* Cards Grid - Centered 2x3 on desktop */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 w-full">
                   <Card className="bg-white border-gray-200 fs-card">
-                    <CardContent className="p-4">
+                    <CardContent className="p-3">
                       <div className="flex items-center gap-4 mb-3">
                         <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
                           <svg
@@ -864,7 +864,7 @@ export default function Home() {
                     </CardContent>
                   </Card>
                   <Card className="bg-white border-gray-200 fs-card">
-                    <CardContent className="p-4">
+                    <CardContent className="p-3">
                       <div className="flex items-center gap-4 mb-3">
                         <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
                           <svg
@@ -894,7 +894,7 @@ export default function Home() {
                     </CardContent>
                   </Card>
                   <Card className="bg-white border-gray-200 fs-card">
-                    <CardContent className="p-4">
+                    <CardContent className="p-3">
                       <div className="flex items-center gap-4 mb-3">
                         <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
                           <svg
@@ -923,7 +923,7 @@ export default function Home() {
                     </CardContent>
                   </Card>
                   <Card className="bg-white border-gray-200 fs-card">
-                    <CardContent className="p-4">
+                    <CardContent className="p-3">
                       <div className="flex items-center gap-4 mb-3">
                         <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
                           <svg
@@ -954,7 +954,7 @@ export default function Home() {
                     </CardContent>
                   </Card>
                   <Card className="bg-white border-gray-200 fs-card">
-                    <CardContent className="p-4">
+                    <CardContent className="p-3">
                       <div className="flex items-center gap-4 mb-3">
                         <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
                           <svg
@@ -984,7 +984,7 @@ export default function Home() {
                     </CardContent>
                   </Card>
                   <Card className="bg-white border-gray-200 fs-card">
-                    <CardContent className="p-4">
+                    <CardContent className="p-3">
                       <div className="flex items-center gap-4 mb-3">
                         <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
                           <svg
@@ -1013,7 +1013,6 @@ export default function Home() {
                       </p>
                     </CardContent>
                   </Card>
-                </div>
               </div>
             </div>
           </div>
