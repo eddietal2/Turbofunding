@@ -639,7 +639,7 @@ export default function Home() {
 
         {/* Features Section */}
         {/* CHANGE> Changed Funding Solutions section from dark gray (bg-gray-900) to white background with #0D1B2A text */}
-        <section className="w-full py-16 md:py-24 lg:py-32 relative" id="features" style={{
+        <section className="w-full py-16 md:py-24 lg:py-32 relative min-h-screen" id="features" style={{
           backgroundImage: "url('/images/fs-image-01.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "20% center",
@@ -647,18 +647,38 @@ export default function Home() {
           backgroundAttachment: "fixed",
           transform: "scaleX(-1)"
         }}>
-          {/* Dark overlay for text readability */}
-          <div className="absolute inset-0 bg-black/40" />
+          <style>{`
+            .fs-card {
+              transition: all 0.3s ease;
+              cursor: pointer;
+            }
+            
+            .fs-card:hover {
+              transform: translateY(-8px) scale(1.02);
+              box-shadow: 0 20px 40px rgba(36, 96, 227, 0.3);
+            }
+            
+            .fs-card:hover h3 {
+              color: #2460e3 !important;
+            }
+          `}</style>
+          {/* Light gradient overlay for visual polish */}
+          <div 
+            className="absolute inset-0 pointer-events-none" 
+            style={{
+              background: "linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0.6) 100%)"
+            }}
+          />
           
           <div className="container px-4 md:px-6 relative z-10" style={{ transform: "scaleX(-1)" }}>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-16 items-start">
               {/* Left Column - Content & Space for Background */}
               <div className="flex flex-col items-start justify-start">
-                <div className="space-y-4">
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-white" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>
+                <div className="space-y-4 p-6 rounded-lg" style={{ backgroundColor: "rgba(255, 255, 255, 0.85)", backdropFilter: "blur(10px)" }}>
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-orange-500" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>
                     Funding Solutions
                   </h2>
-                  <p className="max-w-[500px] text-gray-100 md:text-lg/relaxed lg:text-base/relaxed xl:text-lg/relaxed">
+                  <p className="max-w-[500px] md:text-lg/relaxed lg:text-base/relaxed xl:text-lg/relaxed" style={{ color: "#000000", textShadow: "0 2px 4px rgba(0, 0, 0, 0.1)" }}>
                     We offer a variety of funding options to help your business grow and succeed.
                   </p>
                 </div>
@@ -666,7 +686,7 @@ export default function Home() {
               
               {/* Right Column - Cards Grid */}
               <div className="grid grid-cols-1 gap-4">
-                <Card className="bg-white border-gray-200">
+                <Card className="bg-white border-gray-200 fs-card">
                   <CardContent className="p-4">
                   <div className="flex items-center gap-4 mb-3">
                     <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
@@ -685,7 +705,7 @@ export default function Home() {
                         <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                       </svg>
                     </div>
-                    <h3 className="text-xl font-bold" style={{ color: "#0D1B2A" }}>
+                    <h3 className="text-xl font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
                       Working Capital
                     </h3>
                   </div>
@@ -694,7 +714,7 @@ export default function Home() {
                   </p>
                 </CardContent>
               </Card>
-              <Card className="bg-white border-gray-200">
+              <Card className="bg-white border-gray-200 fs-card">
                 <CardContent className="p-4">
                   <div className="flex items-center gap-4 mb-3">
                     <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
@@ -715,7 +735,7 @@ export default function Home() {
                         <path d="M18 12a2 2 0 0 0 0 4h4v-4Z" />
                       </svg>
                     </div>
-                    <h3 className="text-xl font-bold" style={{ color: "#0D1B2A" }}>
+                    <h3 className="text-xl font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
                       Merchant Cash Advance
                     </h3>
                   </div>
@@ -724,7 +744,7 @@ export default function Home() {
                   </p>
                 </CardContent>
               </Card>
-              <Card className="bg-white border-gray-200">
+              <Card className="bg-white border-gray-200 fs-card">
                 <CardContent className="p-4">
                   <div className="flex items-center gap-4 mb-3">
                     <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
@@ -744,7 +764,7 @@ export default function Home() {
                         <line x1="2" x2="22" y1="10" y2="10" />
                       </svg>
                     </div>
-                    <h3 className="text-xl font-bold" style={{ color: "#0D1B2A" }}>
+                    <h3 className="text-xl font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
                       Business Line of Credit
                     </h3>
                   </div>
@@ -753,7 +773,7 @@ export default function Home() {
                   </p>
                 </CardContent>
               </Card>
-              <Card className="bg-white border-gray-200">
+              <Card className="bg-white border-gray-200 fs-card">
                 <CardContent className="p-4">
                   <div className="flex items-center gap-4 mb-3">
                     <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
@@ -774,7 +794,7 @@ export default function Home() {
                         <path d="M16 11h0" />
                       </svg>
                     </div>
-                    <h3 className="text-xl font-bold" style={{ color: "#0D1B2A" }}>
+                    <h3 className="text-xl font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
                       SBA 7a Loans
                     </h3>
                   </div>
@@ -784,7 +804,7 @@ export default function Home() {
                   </p>
                 </CardContent>
               </Card>
-              <Card className="bg-white border-gray-200">
+              <Card className="bg-white border-gray-200 fs-card">
                 <CardContent className="p-4">
                   <div className="flex items-center gap-4 mb-3">
                     <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
@@ -804,7 +824,7 @@ export default function Home() {
                         <polyline points="9 22 9 12 15 12 15 22" />
                       </svg>
                     </div>
-                    <h3 className="text-xl font-bold" style={{ color: "#0D1B2A" }}>
+                    <h3 className="text-xl font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
                       SBA 504
                     </h3>
                   </div>
