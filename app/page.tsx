@@ -475,6 +475,17 @@ export default function Home() {
               }
             }
             
+            @keyframes floatPulse {
+              0%, 100% {
+                transform: translateY(0px);
+                opacity: 1;
+              }
+              50% {
+                transform: translateY(-8px);
+                opacity: 0.85;
+              }
+            }
+            
             .qualify-card {
               background: linear-gradient(135deg, #F5F7FA 0%, #FFFFFF 100%);
               border: 1px solid rgba(36, 96, 227, 0.15);
@@ -583,11 +594,12 @@ export default function Home() {
                   height="48"
                   viewBox="0 0 24 24"
                   fill="none"
-                  stroke="#2460e3"
+                  stroke="#10b981"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   className="mx-auto"
+                  style={{ animation: "floatPulse 3s ease-in-out infinite" }}
                 >
                   <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                 </svg>
