@@ -43,7 +43,7 @@ const getRandomHeroImage = () => {
 }
 
 export default function Home() {
-  const productNames = ["Working Capital", "Merchant Cash Advance", "SBA Loans", "Business Lines of Credit"]
+  const productNames = ["Working Capital", "Bridge Loans", "SBA Loans", "Business Lines of Credit", "Equipment Financing"]
   const [heroImage, setHeroImage] = useState('/images/hero-bg-07.jpg')
   
   useEffect(() => {
@@ -325,6 +325,7 @@ export default function Home() {
                       fontSize: "inherit",
                       lineHeight: "1.2",
                       textShadow: "none",
+                      borderRadius: "0.5em",
                       fontFamily: "var(--font-space-grotesk), sans-serif"
                     }}
                   />
