@@ -486,6 +486,21 @@ export default function Home() {
               }
             }
             
+            @keyframes gridGlow {
+              0% {
+                opacity: 0.12;
+                filter: drop-shadow(0 0 8px rgba(36, 96, 227, 0.6));
+              }
+              50% {
+                opacity: 0.25;
+                filter: drop-shadow(0 0 16px rgba(217, 119, 6, 0.8));
+              }
+              100% {
+                opacity: 0.12;
+                filter: drop-shadow(0 0 8px rgba(36, 96, 227, 0.6));
+              }
+            }
+            
             .qualify-card {
               background: linear-gradient(135deg, #F5F7FA 0%, #FFFFFF 100%);
               border: 1px solid rgba(36, 96, 227, 0.15);
@@ -589,11 +604,11 @@ export default function Home() {
           <svg 
             className="absolute inset-0 w-full h-full pointer-events-none" 
             xmlns="http://www.w3.org/2000/svg"
-            style={{ opacity: 0.08 }}
+            style={{ animation: "gridGlow 5s ease-in-out infinite" }}
           >
             <defs>
               <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#2460e3" strokeWidth="1"/>
+                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#2460e3" strokeWidth="2"/>
               </pattern>
             </defs>
             <rect width="100%" height="100%" fill="url(#grid)" />
