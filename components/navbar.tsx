@@ -40,11 +40,11 @@ export function Navbar() {
           aria-label="TurboFunding.com Home"
         >
           <Image
-            src="/images/turbofunding-logo.png"
+            src="/images/TF-text-logo.png"
             alt="TurboFunding Logo"
             width={48}
             height={48}
-            className="h-12 w-auto bg-transparent"
+            className="h-5 w-auto bg-transparent"
           />
         </Link>
 
@@ -113,7 +113,7 @@ export function Navbar() {
           <div className="flex items-center justify-between p-4 border-b border-gray-800">
             <Link href="/" onClick={closeMenu} className="flex items-center gap-2">
               <Image
-                src="/images/turbofunding-logo.png"
+                src="/images/TF-text-logo.png"
                 alt="TurboFunding Logo"
                 width={36}
                 height={36}

@@ -787,7 +787,7 @@ export default function ApplyPage() {
     !isNaN(Number(formData.amountRequested)) &&
     Number(formData.amountRequested) > 0 &&
     Number(formData.amountRequested) >= MIN_FUNDING_AMOUNT &&
-    formData.useOfFunds.trim().length >= 10
+    formData.useOfFunds.trim().length >= 1
 
   // Email validation helper
   const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
