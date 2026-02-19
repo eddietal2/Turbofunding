@@ -6,69 +6,12 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { RotatingText } from "@/components/rotating-text"
 import { LoanCalculator } from "@/components/loan-calculator"
-import { useEffect, useState } from "react"
-
-// Mapping of hero images to dynamic light gradients for better text readability
-const heroImageGradients: Record<string, string> = {
-  '/images/hero-bg-01.jpg': 'linear-gradient(to right, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.3))',
-  '/images/hero-bg-02.jpg': 'linear-gradient(to right, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.3))',
-  '/images/hero-bg-03.jpg': 'linear-gradient(to right, rgba(255, 255, 255, 0.90), rgba(255, 255, 255, 0.70), rgba(255, 255, 255, 0.3))',
-  '/images/hero-bg-04.jpg': 'linear-gradient(to right, rgba(255, 255, 255, 0.90), rgba(255, 255, 255, 0.70), rgba(255, 255, 255, 0.3))',
-  '/images/hero-bg-05.jpg': 'linear-gradient(to right, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.3))',
-  '/images/hero-bg-06.jpg': 'linear-gradient(to right, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.3))',
-  '/images/hero-bg-07.jpg': 'linear-gradient(to right, rgba(255, 255, 255, 0.92), rgba(255, 255, 255, 0.70), rgba(255, 255, 255, 0.3))',
-}
-
-// Weighted random selection for hero background images
-const getRandomHeroImage = () => {
-  const topPhotos = [
-    '/images/hero-bg-07.jpg',
-    '/images/hero-bg-06.jpg',
-    '/images/hero-bg-05.jpg',
-  ]
-  const otherPhotos = [
-    '/images/hero-bg-01.jpg',
-    '/images/hero-bg-02.jpg',
-    '/images/hero-bg-03.jpg',
-    '/images/hero-bg-04.jpg',
-  ]
-
-  const random = Math.random()
-  // 60% probability for top 3 performing images
-  if (random < 0.6) {
-    return topPhotos[Math.floor(Math.random() * topPhotos.length)]
-  } else {
-    return otherPhotos[Math.floor(Math.random() * otherPhotos.length)]
-  }
-}
+import { useEffect } from "react"
 
 export default function Home() {
   const productNames = ["Working Capital", "Bridge Loans", "SBA Loans", "Business Lines of Credit", "Equipment Financing"]
-  const [heroImage, setHeroImage] = useState('/images/hero-bg-07.jpg')
-  
-  useEffect(() => {
-    const topPhotos = [
-      '/images/hero-bg-07.jpg',
-      '/images/hero-bg-06.jpg',
-      '/images/hero-bg-05.jpg',
-    ]
-    const otherPhotos = [
-      '/images/hero-bg-01.jpg',
-      '/images/hero-bg-02.jpg',
-      '/images/hero-bg-03.jpg',
-      '/images/hero-bg-04.jpg',
-    ]
-
-    const random = Math.random()
-    // 60% probability for top 3 performing images
-    if (random < 0.6) {
-      setHeroImage(topPhotos[Math.floor(Math.random() * topPhotos.length)])
-    } else {
-      setHeroImage(otherPhotos[Math.floor(Math.random() * otherPhotos.length)])
-    }
-  }, [])
-  
-  const heroGradient = heroImageGradients[heroImage]
+  const heroImage = '/images/hero-bg-05.jpg'
+  const heroGradient = 'linear-gradient(to right, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.3))'
 
   // Setup Intersection Observer for scroll animations
   useEffect(() => {
