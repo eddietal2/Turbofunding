@@ -754,7 +754,7 @@ export default function Home() {
           <div className="container px-4 md:px-6 relative z-10 max-w-6xl mx-auto">
             <div className="flex flex-col items-center w-full">
               {/* FS Header - Centered Label */}
-              <div className="mb-4 fs-header px-4 py-2 rounded-lg border-2" style={{ backgroundColor: "#D97706", borderColor: "#D97706" }}>
+              <div className="mb-4 fs-header px-4 py-2 rounded-lg border-2" style={{ background: "linear-gradient(135deg, rgba(36, 96, 227, 0.3) 0%, rgba(25, 71, 184, 0.3) 100%)", borderColor: "#2460e3" }}>
                 <div className="flex items-center gap-3">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -763,32 +763,26 @@ export default function Home() {
                     viewBox="0 0 48 48"
                     fill="none"
                   >
-                    {/* Bank Building Icon - Orange */}
-                    {/* Main building structure */}
-                    <rect x="6" y="16" width="36" height="28" fill="none" stroke="#FFFFFF" strokeWidth="2" />
+                    {/* Loan/Contract Document Icon */}
+                    {/* Document outline */}
+                    <rect x="8" y="6" width="22" height="28" rx="2" fill="none" stroke="#FFFFFF" strokeWidth="2" />
                     
-                    {/* Roof */}
-                    <path d="M 6 16 L 24 4 L 42 16" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinejoin="round" />
+                    {/* Fold corner */}
+                    <path d="M 30 6 L 30 14 L 38 14" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinejoin="round" />
                     
-                    {/* Door - center bottom */}
-                    <rect x="20" y="32" width="8" height="12" fill="none" stroke="#FFFFFF" strokeWidth="1.5" />
-                    <circle cx="27" cy="38" r="1.5" fill="#FFFFFF" />
+                    {/* Document lines */}
+                    <line x1="12" y1="12" x2="26" y2="12" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="12" y1="18" x2="26" y2="18" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" />
+                    <line x1="12" y1="24" x2="22" y2="24" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" />
                     
-                    {/* Left window column */}
-                    <rect x="10" y="20" width="4" height="4" fill="none" stroke="#FFFFFF" strokeWidth="1.5" />
-                    <rect x="10" y="28" width="4" height="4" fill="none" stroke="#FFFFFF" strokeWidth="1.5" />
+                    {/* Dollar sign - large and prominent */}
+                    <circle cx="28" cy="28" r="8" fill="none" stroke="#FFFFFF" strokeWidth="1.5" />
+                    <path d="M 28 24 L 28 32 M 24.5 26 Q 28 25 31.5 26 M 24.5 30 Q 28 31 31.5 30" 
+                          fill="none" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                     
-                    {/* Right window column */}
-                    <rect x="34" y="20" width="4" height="4" fill="none" stroke="#FFFFFF" strokeWidth="1.5" />
-                    <rect x="34" y="28" width="4" height="4" fill="none" stroke="#FFFFFF" strokeWidth="1.5" />
-                    
-                    {/* Center windows */}
-                    <rect x="18" y="20" width="3.5" height="3.5" fill="none" stroke="#FFFFFF" strokeWidth="1.5" />
-                    <rect x="26.5" y="20" width="3.5" height="3.5" fill="none" stroke="#FFFFFF" strokeWidth="1.5" />
-                    
-                    {/* Secure vault/safe element - small box in top center */}
-                    <rect x="20" y="10" width="8" height="6" fill="none" stroke="#FFFFFF" strokeWidth="1.5" rx="1" />
-                    <circle cx="24" cy="13" r="1" fill="#FFFFFF" />
+                    {/* Arrow pointing up-right - representing growth/approval */}
+                    <path d="M 36 20 L 42 14 M 42 14 L 42 20 L 36 20" 
+                          fill="none" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                   <h2 className="text-2xl font-bold tracking-tight text-white" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>
                     Funding Solutions
