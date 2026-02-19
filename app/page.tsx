@@ -429,15 +429,15 @@ export default function Home() {
             
             @keyframes gridGlow {
               0% {
-                opacity: 0.25;
+                opacity: 0.05;
                 filter: drop-shadow(0 0 8px rgba(36, 96, 227, 0.6));
               }
               50% {
-                opacity: 0.25;
+                opacity: 0.05;
                 filter: drop-shadow(0 0 16px rgba(217, 119, 6, 0.8));
               }
               100% {
-                opacity: 0.25;
+                opacity: 0.05;
                 filter: drop-shadow(0 0 8px rgba(36, 96, 227, 0.6));
               }
             }
