@@ -43,6 +43,25 @@ export default function Home() {
       allCards.forEach((card) => {
         observer.observe(card);
       });
+      
+      // Setup carousel scroll behavior
+      const carouselContainer = document.querySelector('.carousel-container');
+      if (carouselContainer) {
+        let scrollTimeout: NodeJS.Timeout;
+        
+        carouselContainer.addEventListener('scroll', () => {
+          // Show scrollbar and pause animation when scrolling
+          carouselContainer.classList.add('scrolling');
+          
+          // Clear existing timeout
+          clearTimeout(scrollTimeout);
+          
+          // Hide scrollbar after user stops scrolling (300ms of no scroll events)
+          scrollTimeout = setTimeout(() => {
+            carouselContainer.classList.remove('scrolling');
+          }, 300);
+        });
+      }
     };
     
     // Wait for DOM to be ready
@@ -665,7 +684,7 @@ export default function Home() {
               }
             }
           `}} />
-          <style>{`
+          <style dangerouslySetInnerHTML={{__html: `
             .fs-card {
               transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
               cursor: pointer;
@@ -797,7 +816,7 @@ export default function Home() {
                 transform: translateY(0);
               }
             }
-          `}</style>
+          `}} />
           {/* Light gradient overlay for visual polish */}
           <div 
             className="absolute inset-0 pointer-events-none" 
@@ -1062,10 +1081,18 @@ export default function Home() {
           </div>
         </section>
         <section className="w-full py-8 md:py-16 lg:py-20 bg-[#F5F7FA]" id="testimonials">
+          <style>{`
+            @media (max-width: 768px) {
+              #testimonials {
+                padding-top: 3rem;
+                padding-bottom: 3rem;
+              }
+            }
+          `}</style>
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-3 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl" style={{ color: "#0D1B2A" }}>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
                   Trusted by Businesses Nationwide
                 </h2>
                 <p className="max-w-[900px] text-gray-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
@@ -1073,106 +1100,301 @@ export default function Home() {
                 </p>
               </div>
             </div>
-            <div className="mx-auto grid max-w-5xl grid-cols-1 gap-4 py-8 md:grid-cols-2 lg:grid-cols-3">
-              <Card className="bg-[#F5F7FA] border-gray-200">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-4 mb-3">
-                    <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="h-6 w-6 text-blue-600"
-                      >
-                        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
-                        <path d="m9 12 2 2 4-4" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold" style={{ color: "#0D1B2A" }}>
-                        John Anderson
-                      </h3>
-                      <p className="text-gray-600">CEO, Tech Innovations</p>
-                    </div>
-                  </div>
-                  <p style={{ color: "#0D1B2A" }}>
-                    &quot;TurboFunding.com made it incredibly easy to get the capital we needed to expand our
-                    operations. Highly recommended!&quot;
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="bg-[#F5F7FA] border-gray-200">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-4 mb-3">
-                    <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="h-6 w-6 text-blue-600"
-                      >
-                        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
-                        <path d="m9 12 2 2 4-4" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold" style={{ color: "#0D1B2A" }}>
-                        Sarah Johnson
-                      </h3>
-                      <p className="text-gray-600">Owner, Boutique Retail</p>
-                    </div>
-                  </div>
-                  <p style={{ color: "#0D1B2A" }}>
-                    &quot;Fast, simple, and transparent. I got approved within 24 hours and had funds in my account
-                    shortly after.&quot;
-                  </p>
-                </CardContent>
-              </Card>
-              <Card className="bg-[#F5F7FA] border-gray-200">
-                <CardContent className="p-4">
-                  <div className="flex items-center gap-4 mb-3">
-                    <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="h-6 w-6 text-blue-600"
-                      >
-                        <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
-                        <path d="m9 12 2 2 4-4" />
-                      </svg>
-                    </div>
-                    <div>
-                      <h3 className="text-xl font-bold" style={{ color: "#0D1B2A" }}>
-                        Mike Davis
-                      </h3>
-                      <p className="text-gray-600">Construction</p>
-                    </div>
-                  </div>
-                  <p style={{ color: "#0D1B2A" }}>
-                    &quot;The team at TurboFunding.com was professional and helpful throughout the entire process. Great
-                    experience!&quot;
-                  </p>
-                </CardContent>
-              </Card>
+            <style>{`
+              @keyframes carouselScroll {
+                0% {
+                  transform: translateX(0);
+                }
+                100% {
+                  transform: translateX(-50%);
+                }
+              }
+              
+              .carousel-container {
+                overflow-x: auto;
+                overflow-y: hidden;
+                width: 100vw;
+                position: relative;
+                left: 50%;
+                right: 50%;
+                margin-left: -50vw;
+                margin-right: -50vw;
+                scroll-behavior: smooth;
+                scrollbar-width: none;
+              }
+              
+              .carousel-container::-webkit-scrollbar {
+                display: none;
+              }
+              
+              .carousel-container.scrolling::-webkit-scrollbar {
+                display: block;
+                height: 8px;
+              }
+              
+              .carousel-container.scrolling::-webkit-scrollbar-track {
+                background: transparent;
+              }
+              
+              .carousel-container.scrolling::-webkit-scrollbar-thumb {
+                background: rgba(36, 96, 227, 0.5);
+                border-radius: 4px;
+              }
+              
+              .carousel-container.scrolling::-webkit-scrollbar-thumb:hover {
+                background: rgba(36, 96, 227, 0.7);
+              }
+              
+              .carousel-track {
+                display: flex;
+                gap: 1rem;
+                animation: carouselScroll 30s linear infinite;
+                width: fit-content;
+              }
+              
+              .carousel-track:hover {
+                animation-play-state: paused;
+              }
+              
+              .carousel-container.scrolling .carousel-track {
+                animation-play-state: paused;
+              }
+              
+              .carousel-card {
+                flex: 0 0 28%;
+                min-width: 200px;
+              }
+              
+              @media (min-width: 768px) {
+                .carousel-card {
+                  flex: 0 0 40%;
+                  min-width: 320px;
+                }
+              }
+              
+              @media (min-width: 1024px) {
+                .carousel-card {
+                  flex: 0 0 28%;
+                  min-width: 320px;
+                }
+              }
+            `}</style>
+            <div className="py-8 carousel-container">
+              <div className="carousel-track">
+                {/* Original set of cards */}
+                <div className="carousel-card">
+                  <Card className="bg-[#F5F7FA] border-gray-200 h-full">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-4 mb-3">
+                        <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="h-6 w-6 text-blue-600"
+                          >
+                            <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+                            <path d="m9 12 2 2 4-4" />
+                          </svg>
+                        </div>
+                        <div>
+                          <h3 className="text-xl font-bold" style={{ color: "#0D1B2A" }}>
+                            John Anderson
+                          </h3>
+                          <p className="text-gray-600">CEO, Tech Innovations</p>
+                        </div>
+                      </div>
+                      <p style={{ color: "#0D1B2A" }}>
+                        &quot;TurboFunding.com made it incredibly easy to get the capital we needed to expand our
+                        operations. Highly recommended!&quot;
+                      </p>
+                    </CardContent>
+                  </Card>
+                </div>
+                <div className="carousel-card">
+                  <Card className="bg-[#F5F7FA] border-gray-200 h-full">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-4 mb-3">
+                        <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="h-6 w-6 text-blue-600"
+                          >
+                            <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+                            <path d="m9 12 2 2 4-4" />
+                          </svg>
+                        </div>
+                        <div>
+                          <h3 className="text-xl font-bold" style={{ color: "#0D1B2A" }}>
+                            Sarah Johnson
+                          </h3>
+                          <p className="text-gray-600">Owner, Boutique Retail</p>
+                        </div>
+                      </div>
+                      <p style={{ color: "#0D1B2A" }}>
+                        &quot;Fast, simple, and transparent. I got approved within 24 hours and had funds in my account
+                        shortly after.&quot;
+                      </p>
+                    </CardContent>
+                  </Card>
+                </div>
+                <div className="carousel-card">
+                  <Card className="bg-[#F5F7FA] border-gray-200 h-full">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-4 mb-3">
+                        <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="h-6 w-6 text-blue-600"
+                          >
+                            <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+                            <path d="m9 12 2 2 4-4" />
+                          </svg>
+                        </div>
+                        <div>
+                          <h3 className="text-xl font-bold" style={{ color: "#0D1B2A" }}>
+                            Mike Davis
+                          </h3>
+                          <p className="text-gray-600">Construction</p>
+                        </div>
+                      </div>
+                      <p style={{ color: "#0D1B2A" }}>
+                        &quot;The team at TurboFunding.com was professional and helpful throughout the entire process. Great
+                        experience!&quot;
+                      </p>
+                    </CardContent>
+                  </Card>
+                </div>
+                
+                {/* Duplicated set for seamless loop */}
+                <div className="carousel-card">
+                  <Card className="bg-[#F5F7FA] border-gray-200 h-full">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-4 mb-3">
+                        <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="h-6 w-6 text-blue-600"
+                          >
+                            <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+                            <path d="m9 12 2 2 4-4" />
+                          </svg>
+                        </div>
+                        <div>
+                          <h3 className="text-xl font-bold" style={{ color: "#0D1B2A" }}>
+                            John Anderson
+                          </h3>
+                          <p className="text-gray-600">CEO, Tech Innovations</p>
+                        </div>
+                      </div>
+                      <p style={{ color: "#0D1B2A" }}>
+                        &quot;TurboFunding.com made it incredibly easy to get the capital we needed to expand our
+                        operations. Highly recommended!&quot;
+                      </p>
+                    </CardContent>
+                  </Card>
+                </div>
+                <div className="carousel-card">
+                  <Card className="bg-[#F5F7FA] border-gray-200 h-full">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-4 mb-3">
+                        <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="h-6 w-6 text-blue-600"
+                          >
+                            <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+                            <path d="m9 12 2 2 4-4" />
+                          </svg>
+                        </div>
+                        <div>
+                          <h3 className="text-xl font-bold" style={{ color: "#0D1B2A" }}>
+                            Sarah Johnson
+                          </h3>
+                          <p className="text-gray-600">Owner, Boutique Retail</p>
+                        </div>
+                      </div>
+                      <p style={{ color: "#0D1B2A" }}>
+                        &quot;Fast, simple, and transparent. I got approved within 24 hours and had funds in my account
+                        shortly after.&quot;
+                      </p>
+                    </CardContent>
+                  </Card>
+                </div>
+                <div className="carousel-card">
+                  <Card className="bg-[#F5F7FA] border-gray-200 h-full">
+                    <CardContent className="p-4">
+                      <div className="flex items-center gap-4 mb-3">
+                        <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="h-6 w-6 text-blue-600"
+                          >
+                            <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+                            <path d="m9 12 2 2 4-4" />
+                          </svg>
+                        </div>
+                        <div>
+                          <h3 className="text-xl font-bold" style={{ color: "#0D1B2A" }}>
+                            Mike Davis
+                          </h3>
+                          <p className="text-gray-600">Construction</p>
+                        </div>
+                      </div>
+                      <p style={{ color: "#0D1B2A" }}>
+                        &quot;The team at TurboFunding.com was professional and helpful throughout the entire process. Great
+                        experience!&quot;
+                      </p>
+                    </CardContent>
+                  </Card>
+                </div>
+              </div>
             </div>
           </div>
         </section>
