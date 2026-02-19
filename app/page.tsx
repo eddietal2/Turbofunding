@@ -62,6 +62,42 @@ export default function Home() {
           }, 300);
         });
       }
+      
+      // Mobile parallax: translate the background image on scroll
+      const parallaxBg = document.querySelector('.hero-parallax-bg') as HTMLElement;
+      if (parallaxBg) {
+        let ticking = false;
+        
+        const updateParallax = () => {
+          const scrollY = window.scrollY;
+          const heroSection = parallaxBg.parentElement;
+          if (!heroSection) return;
+          
+          const heroHeight = heroSection.offsetHeight;
+          
+          // Only run parallax while hero is in viewport
+          if (scrollY < heroHeight * 1.5) {
+            // Move at 40% of scroll speed for a clear parallax effect
+            const offset = -(scrollY * 0.4);
+            parallaxBg.style.transform = `translate3d(0, ${offset}px, 0)`;
+          }
+          ticking = false;
+        };
+        
+        const onScroll = () => {
+          if (!ticking) {
+            requestAnimationFrame(updateParallax);
+            ticking = true;
+          }
+        };
+        
+        window.addEventListener('scroll', onScroll, { passive: true });
+        
+        // Cleanup
+        return () => {
+          window.removeEventListener('scroll', onScroll);
+        };
+      }
     };
     
     // Wait for DOM to be ready
@@ -155,11 +191,25 @@ export default function Home() {
         /* Swap image URLs based on viewport - mobile gets -xs version */
         @media (max-width: 768px) {
           .hero-bg-responsive {
-            background-image: var(--hero-image-mobile) !important;
+            background-image: none !important;
             background-attachment: scroll !important;
-            background-size: 120% auto !important;
-            background-position: center center !important;
           }
+          .hero-parallax-bg {
+            display: block !important;
+          }
+        }
+        .hero-parallax-bg {
+          display: none;
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 130%;
+          object-fit: cover;
+          object-position: center;
+          will-change: transform;
+          z-index: 0;
+          pointer-events: none;
         }
       `}</style>
 
@@ -177,6 +227,13 @@ export default function Home() {
           "--hero-image-mobile": "url('/images/hero-bg-xs-05.png')",
         } as any}
       >
+        {/* Mobile Parallax Background Image */}
+        <img
+          src="/images/hero-bg-xs-05.png"
+          alt=""
+          className="hero-parallax-bg"
+          aria-hidden="true"
+        />
         {/* Background Filter/Blur Overlay */}
         <div
           className="absolute inset-0 w-full h-full"
