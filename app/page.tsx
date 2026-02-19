@@ -1106,8 +1106,8 @@ export default function Home() {
                     className="mx-auto"
                   >
                     <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                    <circle cx="9" cy="10" r="1" fill="#2460e3" />
-                    <circle cx="15" cy="10" r="1" fill="#2460e3" />
+                    <circle cx="9" cy="10" r="1" fill="#2460e3" style={{ animation: "dotsAnimation 1.5s ease-in-out 0s infinite" }} />
+                    <circle cx="15" cy="10" r="1" fill="#2460e3" style={{ animation: "dotsAnimation 1.5s ease-in-out 0.3s infinite" }} />
                   </svg>
                 </div>
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
@@ -1119,6 +1119,15 @@ export default function Home() {
               </div>
             </div>
             <style>{`
+              @keyframes dotsAnimation {
+                0%, 100% {
+                  opacity: 0.3;
+                }
+                50% {
+                  opacity: 1;
+                }
+              }
+              
               @keyframes carouselScroll {
                 0% {
                   transform: translateX(0);
