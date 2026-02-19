@@ -1137,7 +1137,7 @@ export default function Home() {
             </div>
           </div>
         </section>
-        <section className="w-full py-8 md:py-16 lg:py-20 bg-[#F5F7FA]" id="testimonials">
+        <section className="w-full py-8 md:py-24 lg:py-32 bg-[#F5F7FA]" id="testimonials">
           <style>{`
             @media (max-width: 768px) {
               #testimonials {
