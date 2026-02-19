@@ -1053,6 +1053,11 @@ export default function Home() {
                     </CardContent>
                   </Card>
               </div>
+              <div className="flex justify-center mt-8">
+                <Button asChild className="btn-blue-elite text-white">
+                  <Link href="/products">Explore All Products</Link>
+                </Button>
+              </div>
             </div>
           </div>
         </section>
