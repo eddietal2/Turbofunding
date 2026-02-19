@@ -155,7 +155,7 @@ export default function Home() {
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
           minHeight: "auto",
-          "--hero-image-mobile": `url('${heroImage.replace("/images/hero-bg-", "/images/hero-bg-xs-").replace(".jpg", ".png")}')`,
+          "--hero-image-mobile": "url('/images/hero-bg-xs-05.png')",
         } as any}
       >
         {/* Background Filter/Blur Overlay */}
@@ -667,9 +667,12 @@ export default function Home() {
           `}} />
           <style>{`
             .fs-card {
-              transition: all 0.3s ease;
+              transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
               cursor: pointer;
               opacity: 0;
+              box-shadow: 0 4px 20px rgba(36, 96, 227, 0.08);
+              background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(245, 247, 250, 0.35) 100%);
+              border: 1px solid rgba(36, 96, 227, 0.08);
             }
             
             .fs-card.scroll-visible {
@@ -705,22 +708,74 @@ export default function Home() {
             }
             
             .fs-card:hover {
-              transform: translateY(-8px) scale(1.02);
-              box-shadow: 0 20px 40px rgba(36, 96, 227, 0.3);
+              transform: translateY(-12px);
+              box-shadow: 0 24px 48px rgba(36, 96, 227, 0.18), 0 8px 24px rgba(36, 96, 227, 0.12);
+              background: linear-gradient(135deg, #FFFFFF 0%, #F0F4FF 100%);
+              border-color: rgba(36, 96, 227, 0.15);
             }
             
             .fs-card:hover h3 {
               color: #2460e3 !important;
             }
             
+            .fs-card .fs-card-icon {
+              transition: all 0.3s ease;
+            }
+            
+            .fs-card:hover .fs-card-icon {
+              background: linear-gradient(135deg, #2460e3 0%, #1947b8 100%) !important;
+              transform: scale(1.1);
+              color: white !important;
+            }
+            
+            .fs-card:hover .fs-card-icon svg {
+              stroke: white !important;
+              color: white !important;
+            }
+            
             @media (max-width: 768px) {
+              .fs-card {
+                background: linear-gradient(135deg, #FFFFFF 0%, #F0F4FF 100%);
+                border-color: rgba(36, 96, 227, 0.15);
+              }
+              
+              .fs-card h3 {
+                color: #2460e3 !important;
+              }
+              
+              .fs-card .fs-card-icon {
+                background: #2460e3 !important;
+                color: white !important;
+              }
+              
+              .fs-card .fs-card-icon svg {
+                stroke: white !important;
+                color: white !important;
+              }
+              
               .fs-card:hover {
                 transform: none;
-                box-shadow: none;
+                box-shadow: 0 4px 20px rgba(36, 96, 227, 0.08);
+                background: linear-gradient(135deg, #FFFFFF 0%, #F0F4FF 100%);
               }
               
               .fs-card:hover h3 {
-                color: #0D1B2A !important;
+                color: #2460e3 !important;
+              }
+              
+              .fs-card:hover .fs-card-icon {
+                background: #2460e3 !important;
+                transform: none;
+              }
+            }
+            
+            .fs-card > div {
+              padding: 1.5rem;
+            }
+            
+            @media (max-width: 768px) {
+              .fs-card > div {
+                padding: 1rem;
               }
             }
             
@@ -791,11 +846,11 @@ export default function Home() {
               </div>
 
               {/* Cards Grid - Centered 2x3 on desktop */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 w-full">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3 w-full">
                   <Card className="bg-white border-gray-200 fs-card">
-                    <CardContent className="p-3">
-                      <div className="flex items-center gap-4 mb-3">
-                        <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className="fs-card-icon rounded-lg bg-blue-100 p-3 flex items-center justify-center" aria-hidden="true">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
@@ -811,19 +866,19 @@ export default function Home() {
                             <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                           </svg>
                         </div>
-                        <h3 className="text-xl font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
+                        <h3 className="text-lg font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
                           Working Capital
                         </h3>
                       </div>
-                      <p className="mt-1 text-gray-600">
+                      <p className="text-gray-600 text-sm leading-relaxed">
                         Access the working capital your business needs to manage cash flow and day-to-day operations.
                       </p>
                     </CardContent>
                   </Card>
                   <Card className="bg-white border-gray-200 fs-card">
-                    <CardContent className="p-3">
-                      <div className="flex items-center gap-4 mb-3">
-                        <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className="fs-card-icon rounded-lg bg-blue-100 p-3 flex items-center justify-center" aria-hidden="true">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
@@ -841,19 +896,19 @@ export default function Home() {
                             <path d="M18 12a2 2 0 0 0 0 4h4v-4Z" />
                           </svg>
                         </div>
-                        <h3 className="text-xl font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
+                        <h3 className="text-lg font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
                           Bridge Loan
                         </h3>
                       </div>
-                      <p className="mt-1 text-gray-600">
+                      <p className="text-gray-600 text-sm leading-relaxed">
                         Get quick access to capital with flexible repayment based on your future sales and daily revenue.
                       </p>
                     </CardContent>
                   </Card>
                   <Card className="bg-white border-gray-200 fs-card">
-                    <CardContent className="p-3">
-                      <div className="flex items-center gap-4 mb-3">
-                        <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className="fs-card-icon rounded-lg bg-blue-100 p-3 flex items-center justify-center" aria-hidden="true">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
@@ -870,19 +925,19 @@ export default function Home() {
                             <line x1="2" x2="22" y1="10" y2="10" />
                           </svg>
                         </div>
-                        <h3 className="text-xl font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
+                        <h3 className="text-lg font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
                           Business Line of Credit
                         </h3>
                       </div>
-                      <p className="mt-1 text-gray-600">
+                      <p className="text-gray-600 text-sm leading-relaxed">
                         Flexible funding that allows you to draw funds as needed and only pay interest on what you use.
                       </p>
                     </CardContent>
                   </Card>
                   <Card className="bg-white border-gray-200 fs-card">
-                    <CardContent className="p-3">
-                      <div className="flex items-center gap-4 mb-3">
-                        <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className="fs-card-icon rounded-lg bg-blue-100 p-3 flex items-center justify-center" aria-hidden="true">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
@@ -900,20 +955,19 @@ export default function Home() {
                             <path d="M16 11h0" />
                           </svg>
                         </div>
-                        <h3 className="text-xl font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
+                        <h3 className="text-lg font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
                           SBA 7a Loans
                         </h3>
                       </div>
-                      <p className="mt-1 text-gray-600">
-                        Government-backed loans with favorable terms for small businesses that meet SBA eligibility
-                        requirements.
+                      <p className="text-gray-600 text-sm leading-relaxed">
+                        Government-backed loans with favorable terms for small businesses that meet SBA eligibility requirements.
                       </p>
                     </CardContent>
                   </Card>
                   <Card className="bg-white border-gray-200 fs-card">
-                    <CardContent className="p-3">
-                      <div className="flex items-center gap-4 mb-3">
-                        <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className="fs-card-icon rounded-lg bg-blue-100 p-3 flex items-center justify-center" aria-hidden="true">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
@@ -931,20 +985,19 @@ export default function Home() {
                             <path d="M6 16h.01M10 16h.01" />
                           </svg>
                         </div>
-                        <h3 className="text-xl font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
+                        <h3 className="text-lg font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
                           Merchant Cash Advance
                         </h3>
                       </div>
-                      <p className="mt-1 text-gray-600">
-                        Quick access to capital by selling a portion of your future daily credit card sales with
-                        transparent, simple repayment terms.
+                      <p className="text-gray-600 text-sm leading-relaxed">
+                        Quick access to capital by selling a portion of your future daily credit card sales with transparent, simple repayment terms.
                       </p>
                     </CardContent>
                   </Card>
                   <Card className="bg-white border-gray-200 fs-card">
-                    <CardContent className="p-3">
-                      <div className="flex items-center gap-4 mb-3">
-                        <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className="fs-card-icon rounded-lg bg-blue-100 p-3 flex items-center justify-center" aria-hidden="true">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
@@ -961,20 +1014,19 @@ export default function Home() {
                             <polyline points="9 22 9 12 15 12 15 22" />
                           </svg>
                         </div>
-                        <h3 className="text-xl font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
+                        <h3 className="text-lg font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
                           SBA 504
                         </h3>
                       </div>
-                      <p className="mt-1 text-gray-600">
-                        Long-term, fixed-rate financing for major assets like real estate and equipment to help your
-                        business expand.
+                      <p className="text-gray-600 text-sm leading-relaxed">
+                        Long-term, fixed-rate financing for major assets like real estate and equipment to help your business expand.
                       </p>
                     </CardContent>
                   </Card>
                   <Card className="bg-white border-gray-200 fs-card">
-                    <CardContent className="p-3">
-                      <div className="flex items-center gap-4 mb-3">
-                        <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className="fs-card-icon rounded-lg bg-blue-100 p-3 flex items-center justify-center" aria-hidden="true">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
                             width="24"
@@ -991,13 +1043,12 @@ export default function Home() {
                             <polyline points="9 22 9 12 15 12 15 22" />
                           </svg>
                         </div>
-                        <h3 className="text-xl font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
+                        <h3 className="text-lg font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
                           Equipment Financing
                         </h3>
                       </div>
-                      <p className="mt-1 text-gray-600">
-                        Financing specifically for purchasing or leasing equipment, with flexible terms based on the
-                        value of the equipment being financed.
+                      <p className="text-gray-600 text-sm leading-relaxed">
+                        Financing specifically for purchasing or leasing equipment, with flexible terms based on the value of the equipment being financed.
                       </p>
                     </CardContent>
                   </Card>
