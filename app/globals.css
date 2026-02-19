@@ -259,3 +259,56 @@ select:focus,
   scrollbar-width: thin;
   scrollbar-color: #3b82f6 #1e293b;
 }
+
+/* Subtle Calculator Button Animation */
+@keyframes button-press-1 {
+  0%, 100% {
+    fill: white;
+  }
+  50% {
+    fill: #dbeafe;
+  }
+}
+
+@keyframes button-press-2 {
+  0%, 33% {
+    fill: white;
+  }
+  50%, 100% {
+    fill: #dbeafe;
+  }
+}
+
+@keyframes button-press-3 {
+  0%, 66% {
+    fill: white;
+  }
+  83%, 100% {
+    fill: #dbeafe;
+  }
+}
+
+@keyframes button-highlight {
+  0%, 100% {
+    fill: #E8F0FE;
+  }
+  50% {
+    fill: #BFDBFE;
+  }
+}
+
+.calc-btn-1 {
+  animation: button-press-1 4s ease-in-out infinite;
+}
+
+.calc-btn-2 {
+  animation: button-press-2 4s ease-in-out infinite;
+}
+
+.calc-btn-3 {
+  animation: button-press-3 4s ease-in-out infinite;
+}
+
+.calc-btn-equals {
+  animation: button-highlight 2.5s ease-in-out infinite;
+}

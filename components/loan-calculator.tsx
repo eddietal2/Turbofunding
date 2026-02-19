@@ -61,12 +61,53 @@ export function LoanCalculator() {
   const paymentProgress = (paymentsMade / N) * 100
 
   return (
-    <section className="w-full py-2 md:py-3 bg-gradient-to-b from-blue-50 via-white to-gray-50">
+    <section className="w-full py-8 md:py-16 lg:py-20 bg-gradient-to-b from-blue-50 via-white to-gray-50">
       <div className="container px-4 md:px-6 mx-auto">
         <div className="max-w-full md:max-w-lg mx-auto">
+          {/* Calculator Icon */}
+          <div className="flex justify-center mb-4">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="56"
+              height="56"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#2460e3"
+              strokeWidth="1.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="text-blue-600"
+            >
+              {/* Calculator body */}
+              <rect x="3" y="1" width="18" height="22" rx="2" ry="2" fill="#E8F0FE" stroke="#2460e3" strokeWidth="1.2" />
+              {/* Display screen */}
+              <rect x="5" y="3" width="14" height="4" rx="1" ry="1" fill="white" stroke="#2460e3" strokeWidth="1" />
+              {/* Number buttons grid */}
+              <g>
+                {/* Row 1 */}
+                <rect className="calc-btn-1" x="6" y="8" width="2.8" height="2.5" rx="0.3" fill="white" stroke="#2460e3" strokeWidth="0.8" />
+                <rect className="calc-btn-2" x="9.2" y="8" width="2.8" height="2.5" rx="0.3" fill="white" stroke="#2460e3" strokeWidth="0.8" />
+                <rect className="calc-btn-3" x="12.4" y="8" width="2.8" height="2.5" rx="0.3" fill="white" stroke="#2460e3" strokeWidth="0.8" />
+                <rect className="calc-btn-equals" x="15.6" y="8" width="2.8" height="2.5" rx="0.3" fill="#E8F0FE" stroke="#2460e3" strokeWidth="0.8" />
+                {/* Row 2 */}
+                <rect className="calc-btn-1" x="6" y="11" width="2.8" height="2.5" rx="0.3" fill="white" stroke="#2460e3" strokeWidth="0.8" />
+                <rect className="calc-btn-2" x="9.2" y="11" width="2.8" height="2.5" rx="0.3" fill="white" stroke="#2460e3" strokeWidth="0.8" />
+                <rect className="calc-btn-3" x="12.4" y="11" width="2.8" height="2.5" rx="0.3" fill="white" stroke="#2460e3" strokeWidth="0.8" />
+                <rect className="calc-btn-equals" x="15.6" y="11" width="2.8" height="2.5" rx="0.3" fill="#E8F0FE" stroke="#2460e3" strokeWidth="0.8" />
+                {/* Row 3 */}
+                <rect className="calc-btn-1" x="6" y="14" width="2.8" height="2.5" rx="0.3" fill="white" stroke="#2460e3" strokeWidth="0.8" />
+                <rect className="calc-btn-2" x="9.2" y="14" width="2.8" height="2.5" rx="0.3" fill="white" stroke="#2460e3" strokeWidth="0.8" />
+                <rect className="calc-btn-3" x="12.4" y="14" width="2.8" height="2.5" rx="0.3" fill="white" stroke="#2460e3" strokeWidth="0.8" />
+                <rect className="calc-btn-equals" x="15.6" y="14" width="2.8" height="2.5" rx="0.3" fill="#E8F0FE" stroke="#2460e3" strokeWidth="0.8" />
+                {/* Row 4 */}
+                <rect x="6" y="17" width="12.4" height="2.5" rx="0.3" fill="white" stroke="#2460e3" strokeWidth="0.8" />
+                <rect className="calc-btn-equals" x="15.6" y="17" width="2.8" height="2.5" rx="0.3" fill="#2460e3" stroke="#2460e3" strokeWidth="0.8" />
+              </g>
+            </svg>
+          </div>
           {/* Header */}
           <div className="text-center mb-2 md:mb-2.5">
-            <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-0.5" style={{ fontFamily: 'var(--font-space-grotesk)' }}>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-0.5" style={{ fontFamily: 'var(--font-space-grotesk)' }}>
               TurboFunding Platinum Calculator
             </h2>
             <p className="text-gray-600 text-xs md:text-sm">
@@ -230,7 +271,7 @@ export function LoanCalculator() {
 
           {/* CTA */}
           <div className="text-center mt-2.5">
-            <Button asChild size="sm" className="bg-orange-500 text-white hover:bg-orange-600 text-xs md:text-sm px-4 md:px-6 py-1.5 md:py-2">
+            <Button asChild size="sm" className="btn-blue-elite text-white text-xs md:text-sm px-6 md:px-10 py-2.5 md:py-3 font-bold tracking-wide uppercase">
               <a href="/apply">Get Funded</a>
             </Button>
           </div>
