@@ -311,6 +311,15 @@ export default function Home() {
                 }
               `}</style>
               <div className="relative" style={{ width: "280px", height: "560px" }}>
+                {/* Phone Shadow */}
+                <div className="absolute inset-0 rounded-3xl" style={{
+                  background: "radial-gradient(ellipse 180% 100% at 50% 100%, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.15) 40%, transparent 70%)",
+                  borderRadius: "40px",
+                  transform: "translateY(30px)",
+                  filter: "blur(20px)",
+                  zIndex: -1
+                }} />
+                
                 {/* iPhone Body */}
                 <div className="absolute inset-0 bg-gradient-to-b from-gray-800 to-gray-900 rounded-3xl shadow-2xl" style={{ borderRadius: "40px" }} />
                 
