@@ -758,48 +758,35 @@ export default function Home() {
                     height="32"
                     viewBox="0 0 48 48"
                     fill="none"
-                    stroke="#2460e3"
-                    strokeWidth="1.5"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
                   >
-                    {/* Grand Pediment Roof */}
-                    <path d="M 8 20 L 24 4 L 40 20" fill="#D97706" stroke="#D97706" strokeWidth="1.5" />
+                    {/* Modern Fintech Logo - Currency symbol with growth */}
+                    {/* Background circle */}
+                    <circle cx="24" cy="24" r="22" fill="#2460e3" opacity="0.1" />
                     
-                    {/* Main building body */}
-                    <rect x="8" y="20" width="32" height="20" fill="none" stroke="#2460e3" strokeWidth="1.5" />
+                    {/* Main dollar sign with modern style */}
+                    <g>
+                      {/* First vertical line */}
+                      <line x1="24" y1="8" x2="24" y2="40" stroke="#2460e3" strokeWidth="2.5" strokeLinecap="round" />
+                      
+                      {/* Top curve - S shape for dollar sign */}
+                      <path d="M 16 13 Q 16 8 24 8 Q 32 8 32 13 Q 32 16 28 18 Q 24 20 24 24 Q 24 28 28 30 Q 32 32 32 35 Q 32 40 24 40 Q 16 40 16 35" 
+                            fill="none" stroke="#2460e3" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                      
+                      {/* Top horizontal accent line */}
+                      <line x1="14" y1="13" x2="34" y2="13" stroke="#D97706" strokeWidth="2" strokeLinecap="round" />
+                      
+                      {/* Bottom horizontal accent line */}
+                      <line x1="14" y1="35" x2="34" y2="35" stroke="#D97706" strokeWidth="2" strokeLinecap="round" />
+                    </g>
                     
-                    {/* Left Entrance Column */}
-                    <rect x="12" y="20" width="3" height="20" fill="#2460e3" />
-                    {/* Right Entrance Column */}
-                    <rect x="33" y="20" width="3" height="20" fill="#2460e3" />
-                    
-                    {/* Central Door with surround */}
-                    <rect x="19" y="28" width="10" height="12" fill="none" stroke="#D97706" strokeWidth="1.5" />
-                    <line x1="24" y1="28" x2="24" y2="40" stroke="#D97706" strokeWidth="1" />
-                    {/* Door Handle */}
-                    <circle cx="28" cy="34" r="1" fill="#D97706" />
-                    
-                    {/* Upper facade trim */}
-                    <line x1="8" y1="20" x2="40" y2="20" stroke="#D97706" strokeWidth="2" />
-                    
-                    {/* Left section windows */}
-                    <rect x="10" y="24" width="2.5" height="2.5" fill="#D97706" />
-                    <rect x="10" y="30" width="2.5" height="2.5" fill="#D97706" />
-                    <rect x="10" y="36" width="2.5" height="2.5" fill="#D97706" />
-                    
-                    {/* Right section windows */}
-                    <rect x="37.5" y="24" width="2.5" height="2.5" fill="#D97706" />
-                    <rect x="37.5" y="30" width="2.5" height="2.5" fill="#D97706" />
-                    <rect x="37.5" y="36" width="2.5" height="2.5" fill="#D97706" />
-                    
-                    {/* Foundation/Base with steps */}
-                    <rect x="8" y="39.5" width="32" height="2.5" fill="#2460e3" />
-                    <line x1="12" y1="42" x2="36" y2="42" stroke="#D97706" strokeWidth="1" />
-                    <line x1="14" y1="44" x2="34" y2="44" stroke="#D97706" strokeWidth="1" />
-                    
-                    {/* Small roof detail/cornice */}
-                    <path d="M 8 20 Q 24 18 40 20" fill="none" stroke="#D97706" strokeWidth="1" />
+                    {/* Growth indicator - upward arrow */}
+                    <g>
+                      {/* Arrow shaft */}
+                      <line x1="38" y1="30" x2="38" y2="15" stroke="#10b981" strokeWidth="2" strokeLinecap="round" />
+                      
+                      {/* Arrow head */}
+                      <path d="M 38 15 L 34.5 19 M 38 15 L 41.5 19" stroke="#10b981" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                    </g>
                   </svg>
                   <h2 className="text-2xl font-bold tracking-tight text-orange-500" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>
                     Funding Solutions
@@ -924,6 +911,37 @@ export default function Home() {
                       <p className="mt-1 text-gray-600">
                         Government-backed loans with favorable terms for small businesses that meet SBA eligibility
                         requirements.
+                      </p>
+                    </CardContent>
+                  </Card>
+                  <Card className="bg-white border-gray-200 fs-card">
+                    <CardContent className="p-3">
+                      <div className="flex items-center gap-4 mb-3">
+                        <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="h-6 w-6 text-blue-600"
+                          >
+                            <rect width="20" height="14" x="2" y="5" rx="2" />
+                            <line x1="2" x2="22" y1="10" y2="10" />
+                            <path d="M6 16h.01M10 16h.01" />
+                          </svg>
+                        </div>
+                        <h3 className="text-xl font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
+                          Merchant Cash Advance
+                        </h3>
+                      </div>
+                      <p className="mt-1 text-gray-600">
+                        Quick access to capital by selling a portion of your future daily credit card sales with
+                        transparent, simple repayment terms.
                       </p>
                     </CardContent>
                   </Card>
