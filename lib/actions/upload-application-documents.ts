@@ -53,6 +53,7 @@ function formatFileSize(bytes: number): string {
 
 /**
  * Generate a unique folder path for an application
+ * Format: applications/{businessName}/{YYYY-MM-DD_HH-MM-SS-AM/PM}/ (Local Time)
  */
 function generateFolderPath(businessName: string): string {
   const sanitizedBusinessName = (businessName || "Unknown_Business")
@@ -60,7 +61,23 @@ function generateFolderPath(businessName: string): string {
     .replace(/_+/g, "_")
     .substring(0, 50)
   
-  const timestamp = new Date().toISOString().replace(/[:.]/g, "-")
+  // Format: YYYY-MM-DD_HH-MM-SS-AM/PM (local time, 12-hour format)
+  const now = new Date()
+  const year = now.getFullYear()
+  const month = String(now.getMonth() + 1).padStart(2, "0")
+  const day = String(now.getDate()).padStart(2, "0")
+  
+  let hours = now.getHours()
+  const minutes = String(now.getMinutes()).padStart(2, "0")
+  const seconds = String(now.getSeconds()).padStart(2, "0")
+  const ampm = hours >= 12 ? "PM" : "AM"
+  
+  // Convert to 12-hour format
+  hours = hours % 12
+  if (hours === 0) hours = 12
+  const hoursStr = String(hours).padStart(2, "0")
+  
+  const timestamp = `${year}-${month}-${day}_${hoursStr}-${minutes}-${seconds}-${ampm}`
   
   return `applications/${sanitizedBusinessName}/${timestamp}`
 }
