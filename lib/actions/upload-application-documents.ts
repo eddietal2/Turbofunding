@@ -1,8 +1,16 @@
 "use server"
 
 import { put } from "@vercel/blob"
+import { createCipheriv, randomBytes } from "crypto"
 
 const MAX_FILE_SIZE = 15 * 1024 * 1024 // 15 MB
+const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY
+
+// Validate encryption key on startup
+if (!ENCRYPTION_KEY || !/^[a-f0-9]{64}$/i.test(ENCRYPTION_KEY)) {
+  console.warn("[UploadDocs] ⚠️  WARNING: ENCRYPTION_KEY missing or invalid in .env")
+  console.warn("[UploadDocs]    Files will NOT be encrypted before upload")
+}
 
 export interface ApplicationFolder {
   folderPath: string
@@ -55,6 +63,36 @@ function generateFolderPath(businessName: string): string {
   const timestamp = new Date().toISOString().replace(/[:.]/g, "-")
   
   return `applications/${sanitizedBusinessName}/${timestamp}`
+}
+
+/**
+ * Encrypt file using AES-256-GCM
+ * Returns: IV (16 bytes) + Ciphertext + AuthTag (16 bytes)
+ */
+function encryptFile(fileData: Buffer): Buffer {
+  if (!ENCRYPTION_KEY) {
+    console.warn("[UploadDocs] ⚠️  ENCRYPTION_KEY not set, returning unencrypted")
+    return fileData
+  }
+
+  try {
+    const keyBuffer = Buffer.from(ENCRYPTION_KEY, "hex")
+    const iv = randomBytes(16) // Generate random IV
+    
+    const cipher = createCipheriv("aes-256-gcm", keyBuffer, iv)
+    let encrypted = cipher.update(fileData)
+    encrypted = Buffer.concat([encrypted, cipher.final()])
+    
+    const authTag = cipher.getAuthTag()
+    
+    // Return: IV + Ciphertext + AuthTag
+    const encryptedData = Buffer.concat([iv, encrypted, authTag])
+    
+    return encryptedData
+  } catch (error) {
+    console.error("[UploadDocs] Error encrypting file:", error)
+    throw new Error(`Encryption failed: ${error instanceof Error ? error.message : "Unknown error"}`)
+  }
 }
 
 /**
@@ -157,7 +195,12 @@ export async function uploadApplicationDocuments(
       const pdfBuffer = Buffer.from(pdfBytes)
       const pdfPath = `${folderPath}/application`
       
-      const pdfBlob = await put(pdfPath, pdfBuffer, {
+      // Encrypt before upload
+      console.log("[UploadDocs] Encrypting application PDF...")
+      const encryptedPdfBuffer = encryptFile(pdfBuffer)
+      console.log("[UploadDocs] Encryption complete, encrypted size:", formatFileSize(encryptedPdfBuffer.length))
+      
+      const pdfBlob = await put(pdfPath, encryptedPdfBuffer, {
         access: "public",
         contentType: "application/octet-stream",
         addRandomSuffix: false,
@@ -178,11 +221,16 @@ export async function uploadApplicationDocuments(
       const bankStatementsBuffer = Buffer.from(bankStatementsBase64, "base64")
       console.log("[UploadDocs] Bank statements buffer size:", bankStatementsBuffer.length)
       
+      // Encrypt before upload
+      console.log("[UploadDocs] Encrypting bank statements...")
+      const encryptedBankStatementsBuffer = encryptFile(bankStatementsBuffer)
+      console.log("[UploadDocs] Encryption complete, encrypted size:", formatFileSize(encryptedBankStatementsBuffer.length))
+      
       // Use generic binary content type for security
       const contentType = "application/octet-stream"
       console.log("[UploadDocs] Bank statements content type:", contentType)
       
-      const bankBlob = await put(bankStatementsPath, bankStatementsBuffer, {
+      const bankBlob = await put(bankStatementsPath, encryptedBankStatementsBuffer, {
         access: "public",
         contentType,
         addRandomSuffix: false,
@@ -205,11 +253,16 @@ export async function uploadApplicationDocuments(
       const otherDocumentsBuffer = Buffer.from(otherDocumentsBase64, "base64")
       console.log("[UploadDocs] Other documents buffer size:", otherDocumentsBuffer.length)
       
+      // Encrypt before upload
+      console.log("[UploadDocs] Encrypting other documents...")
+      const encryptedOtherDocumentsBuffer = encryptFile(otherDocumentsBuffer)
+      console.log("[UploadDocs] Encryption complete, encrypted size:", formatFileSize(encryptedOtherDocumentsBuffer.length))
+      
       // Use generic binary content type for security
       const contentType = "application/octet-stream"
       console.log("[UploadDocs] Other documents content type:", contentType)
       
-      const otherBlob = await put(otherDocumentsPath, otherDocumentsBuffer, {
+      const otherBlob = await put(otherDocumentsPath, encryptedOtherDocumentsBuffer, {
         access: "public",
         contentType,
         addRandomSuffix: false,

@@ -19,6 +19,14 @@ yarn-error.log*
 # env files
 .env*
 
+# Decryption utility and output files (keep keys secure!)
+# decoder/decrypt-application.js is ignored to prevent accidental commits of decryption code
+# But the decoder/ directory itself is tracked for decrypted PDFs
+decoder/decrypt-application.js
+decoder/*.encrypted
+decoder/brick-*
+decoder/*-brick
+
 # vercel
 .vercel
 
