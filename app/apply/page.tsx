@@ -3394,6 +3394,67 @@ export default function ApplyPage() {
                       </div>
                     </div>
 
+                    {/* Signature Required Section - Prominent CTA */}
+                    <div className="bg-gradient-to-r from-green-50 to-emerald-50 border border-green-300 rounded-xl p-4 md:p-6 mb-6 shadow-sm">
+                      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+                        <div className="flex items-start gap-3 flex-1">
+                          <svg className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                          </svg>
+                          <div>
+                            <h3 className="font-semibold text-green-900 mb-1">Signature Required</h3>
+                            <p className="text-sm text-green-800">
+                              {showSecondOwner && formData.secondOwnerFirstName 
+                                ? `${!formData.signatureImage ? 'Primary owner' : ''}${!formData.signatureImage && !secondOwnerSignatureImage ? ' and ' : ''}${!secondOwnerSignatureImage ? 'Second owner' : ''} signature required to submit.`
+                                : 'Owner signature required to proceed with submission.'
+                              }
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex gap-2 w-full md:w-auto md:flex-col">
+                          {/* Primary Owner Sign Button */}
+                          {!formData.signatureImage ? (
+                            <Button
+                              type="button"
+                              onClick={() => openSignatureModalForOwner(0)}
+                              className="flex-1 md:flex-none btn-green-elite text-white font-medium px-6 py-2.5"
+                            >
+                              <svg className="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                              </svg>
+                              Primary Owner
+                            </Button>
+                          ) : (
+                            <div className="flex-1 md:flex-none bg-green-100 text-green-700 font-medium px-6 py-2.5 rounded-lg flex items-center justify-center gap-2">
+                              <CheckCircleIcon className="h-4 w-4" />
+                              Signed
+                            </div>
+                          )}
+                          
+                          {/* Secondary Owner Sign Button */}
+                          {showSecondOwner && formData.secondOwnerFirstName && (
+                            !secondOwnerSignatureImage ? (
+                              <Button
+                                type="button"
+                                onClick={() => openSignatureModalForOwner(1)}
+                                className="flex-1 md:flex-none btn-blue-elite text-white font-medium px-6 py-2.5"
+                              >
+                                <svg className="w-4 h-4 mr-2 inline" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                                </svg>
+                                Second Owner
+                              </Button>
+                            ) : (
+                              <div className="flex-1 md:flex-none bg-blue-100 text-blue-700 font-medium px-6 py-2.5 rounded-lg flex items-center justify-center gap-2">
+                                <CheckCircleIcon className="h-4 w-4" />
+                                Signed
+                              </div>
+                            )
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
                     {/* Funding Information Section */}
                     <div className="bg-white rounded-xl border border-gray-200 shadow-sm mb-4 overflow-hidden">
                       <div 
@@ -3760,6 +3821,31 @@ export default function ApplyPage() {
                       </div>
                     )}
 
+                    {/* GLBA Compliance Acknowledgment */}
+                    <div className="bg-amber-50 border border-amber-300 rounded-xl p-4 md:p-6 mb-6">
+                      <h3 className="font-semibold text-amber-900 mb-3 flex items-center gap-2">
+                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M13.816 4.477a.5.5 0 00-.596.04L7.5 9.338V7a.5.5 0 00-1 0v5a.5.5 0 00.5.5h5a.5.5 0 000-1H8.338l4.821-5.72a.5.5 0 00-.343-.803z" clipRule="evenodd" />
+                        </svg>
+                        Legal Acknowledgment
+                      </h3>
+                      <div className="text-sm text-amber-900 space-y-3">
+                        <p>
+                          By signing and submitting this application, you acknowledge and certify that:
+                        </p>
+                        <ul className="list-disc list-inside space-y-2 text-amber-800">
+                          <li>All information provided in this application is true, accurate, and complete to the best of your knowledge.</li>
+                          <li>You authorize TurboFunding to verify any information contained herein and retrieve your consumer credit report(s).</li>
+                          <li>You understand that your personal financial information is protected under the Gramm-Leach-Bliley Act (GLBA) and will be kept confidential.</li>
+                          <li>You have read our <Link href="/privacy" className="text-amber-700 hover:text-amber-800 underline font-medium">Privacy Policy</Link> and understand how your data is collected, used, and protected.</li>
+                          <li>You consent to the electronic storage and processing of your sensitive financial documents using industry-standard encryption.</li>
+                        </ul>
+                        <p className="text-xs text-amber-700 mt-3">
+                          <strong>Important:</strong> Providing false information on a loan application is a federal crime punishable by fine and imprisonment.
+                        </p>
+                      </div>
+                    </div>
+
                     {/* Action Buttons */}
                     <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-4 md:p-6">
                       <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
@@ -3862,6 +3948,21 @@ export default function ApplyPage() {
                         <p className="text-sm text-gray-600">
                           A confirmation email has been sent to <span className="font-semibold text-gray-800">{formData.email}</span> with your application details.
                         </p>
+                      </div>
+
+                      {/* GLBA Data Protection Notice */}
+                      <div className="bg-green-50 rounded-xl p-4 border border-green-200 mt-4">
+                        <div className="flex items-start gap-3">
+                          <svg className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                          </svg>
+                          <div>
+                            <p className="font-medium text-green-900 text-sm mb-1">Your Data is Protected</p>
+                            <p className="text-sm text-green-800">
+                              All your personal and financial information is encrypted using AES-256 encryption and protected under the Gramm-Leach-Bliley Act (GLBA). Your information will never be shared without your explicit consent.
+                            </p>
+                          </div>
+                        </div>
                       </div>
                     </div>
 
@@ -4018,6 +4119,24 @@ export default function ApplyPage() {
                       <p>Bank Statements: {formData.bankStatements ? `${formData.bankStatements.name} (${formData.bankStatements.size} bytes)` : "null"}</p>
                       <p>Other Docs: {formData.otherDocuments ? `${formData.otherDocuments.name} (${formData.otherDocuments.size} bytes)` : "null"}</p>
                     </div> */}
+
+                    {/* GLBA Encryption Notice */}
+                    <div className="bg-gradient-to-r from-green-50 to-blue-50 rounded-xl border border-green-200 p-4 md:p-6 mb-6">
+                      <div className="flex items-start gap-4">
+                        <svg className="w-6 h-6 text-green-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                        </svg>
+                        <div className="flex-1">
+                          <h3 className="font-semibold text-green-900 mb-2">Secure Document Upload</h3>
+                          <p className="text-sm text-green-800 mb-2">
+                            All documents you upload are protected by <span className="font-medium">AES-256 military-grade encryption</span> and comply with the <span className="font-medium">Gramm-Leach-Bliley Act (GLBA)</span>.
+                          </p>
+                          <p className="text-xs text-green-700">
+                            Your files are encrypted immediately upon upload and stored securely. Only authorized TurboFunding personnel can access them via secure decryption.
+                          </p>
+                        </div>
+                      </div>
+                    </div>
 
                     {/* Bank Statements Upload */}
                     <div className="bg-white rounded-xl border border-gray-200 shadow-sm mb-4 overflow-hidden">
@@ -4280,6 +4399,22 @@ export default function ApplyPage() {
                     </div>
                   </>
                 )}
+                {/* Privacy & Data Security Notice - Footer */}
+                <div className="mt-8 pt-6 border-t border-gray-200">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 md:p-4">
+                    <div className="flex gap-3">
+                      <svg className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
+                      </svg>
+                      <div className="flex-1">
+                        <p className="text-xs md:text-sm text-blue-900 font-medium mb-1">Privacy & Data Security (GLBA Compliant)</p>
+                        <p className="text-xs text-blue-800 leading-relaxed">
+                          All information is encrypted with AES-256 encryption and protected under the Gramm-Leach-Bliley Act. We maintain strict confidentiality and safeguards. See our <Link href="/privacy" className="text-blue-600 hover:text-blue-700 underline">Privacy Policy</Link> for details.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </section>
