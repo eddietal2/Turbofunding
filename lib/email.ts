@@ -415,7 +415,9 @@ export async function sendAdminNotificationEmail(formData: Record<string, unknow
 
     const mailOptions: any = {
       from: `"TurboFunding.com" <${process.env.NODEMAILER_EMAIL}>`,
-      to: process.env.NODEMAILER_EMAIL,
+      to: process.env.NODE_ENV === "production"
+        ? "Matt@turbofunding.com,Vivek@turbofunding.com,eddie@finalbossxr.com"
+        : process.env.NODEMAILER_EMAIL,
       subject: `🆕 New Application: ${formData.businessName || formData.legalBusinessName} - $${Number(formData.amountRequested || 0).toLocaleString()}`,
       html: htmlContent,
     }
