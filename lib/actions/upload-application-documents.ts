@@ -155,11 +155,11 @@ export async function uploadApplicationDocuments(
     if (pdfBytes && pdfBytes.length > 0) {
       console.log("[UploadDocs] Uploading application PDF...")
       const pdfBuffer = Buffer.from(pdfBytes)
-      const pdfPath = `${folderPath}/application.pdf`
+      const pdfPath = `${folderPath}/application`
       
       const pdfBlob = await put(pdfPath, pdfBuffer, {
         access: "public",
-        contentType: "application/pdf",
+        contentType: "application/octet-stream",
         addRandomSuffix: false,
       })
       
@@ -171,16 +171,15 @@ export async function uploadApplicationDocuments(
     if (bankStatementsBase64 && bankStatementsFilename) {
       console.log("[UploadDocs] Uploading bank statements...")
       console.log("[UploadDocs] Bank statements base64 length:", bankStatementsBase64.length)
-      const extension = bankStatementsFilename.split(".").pop() || "pdf"
-      const bankStatementsPath = `${folderPath}/bank-statements.${extension}`
+      const bankStatementsPath = `${folderPath}/bank-statements`
       console.log("[UploadDocs] Bank statements path:", bankStatementsPath)
       
       // Decode base64 to buffer
       const bankStatementsBuffer = Buffer.from(bankStatementsBase64, "base64")
       console.log("[UploadDocs] Bank statements buffer size:", bankStatementsBuffer.length)
       
-      // Determine content type
-      const contentType = getContentType(extension)
+      // Use generic binary content type for security
+      const contentType = "application/octet-stream"
       console.log("[UploadDocs] Bank statements content type:", contentType)
       
       const bankBlob = await put(bankStatementsPath, bankStatementsBuffer, {
@@ -199,16 +198,15 @@ export async function uploadApplicationDocuments(
     if (otherDocumentsBase64 && otherDocumentsFilename) {
       console.log("[UploadDocs] Uploading other documents...")
       console.log("[UploadDocs] Other documents base64 length:", otherDocumentsBase64.length)
-      const extension = otherDocumentsFilename.split(".").pop() || "pdf"
-      const otherDocumentsPath = `${folderPath}/other-documents.${extension}`
+      const otherDocumentsPath = `${folderPath}/other-documents`
       console.log("[UploadDocs] Other documents path:", otherDocumentsPath)
       
       // Decode base64 to buffer
       const otherDocumentsBuffer = Buffer.from(otherDocumentsBase64, "base64")
       console.log("[UploadDocs] Other documents buffer size:", otherDocumentsBuffer.length)
       
-      // Determine content type
-      const contentType = getContentType(extension)
+      // Use generic binary content type for security
+      const contentType = "application/octet-stream"
       console.log("[UploadDocs] Other documents content type:", contentType)
       
       const otherBlob = await put(otherDocumentsPath, otherDocumentsBuffer, {
@@ -238,26 +236,4 @@ export async function uploadApplicationDocuments(
       error: errorMessage,
     }
   }
-}
-
-/**
- * Get content type based on file extension
- */
-function getContentType(extension: string): string {
-  const contentTypes: Record<string, string> = {
-    pdf: "application/pdf",
-    png: "image/png",
-    jpg: "image/jpeg",
-    jpeg: "image/jpeg",
-    gif: "image/gif",
-    webp: "image/webp",
-    doc: "application/msword",
-    docx: "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-    xls: "application/vnd.ms-excel",
-    xlsx: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    csv: "text/csv",
-    txt: "text/plain",
-  }
-  
-  return contentTypes[extension.toLowerCase()] || "application/octet-stream"
 }
