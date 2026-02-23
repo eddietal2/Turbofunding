@@ -3,8 +3,9 @@
 import { Button } from "@/components/ui/button"
 import { useSearchParams } from "next/navigation"
 import { AlertTriangle, RefreshCw } from "lucide-react"
+import { Suspense } from "react"
 
-export default function TestErrorPage() {
+function TestErrorContent() {
   const searchParams = useSearchParams()
   const showError = searchParams.get("error") === "true"
 
@@ -93,5 +94,13 @@ export default function TestErrorPage() {
         <p className="text-sm text-gray-500 mt-8">This page will be deleted after testing</p>
       </div>
     </div>
+  )
+}
+
+export default function TestErrorPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <TestErrorContent />
+    </Suspense>
   )
 }

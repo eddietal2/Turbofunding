@@ -52,7 +52,9 @@ export default function IndustriesPage() {
                         <span>E-commerce integration</span>
                       </li>
                     </ul>
-                    <Button className="w-full bg-white text-blue-600 hover:bg-gray-100">Learn More</Button>
+                    <Button asChild className="w-full bg-white text-blue-600 hover:bg-gray-100">
+                      <Link href="/apply">Learn More</Link>
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -90,7 +92,9 @@ export default function IndustriesPage() {
                         <span>Working capital for materials</span>
                       </li>
                     </ul>
-                    <Button className="w-full bg-white text-blue-600 hover:bg-gray-100">Learn More</Button>
+                    <Button asChild className="w-full bg-white text-blue-600 hover:bg-gray-100">
+                      <Link href="/apply">Learn More</Link>
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -128,7 +132,9 @@ export default function IndustriesPage() {
                         <span>Fuel & maintenance funding</span>
                       </li>
                     </ul>
-                    <Button className="w-full bg-white text-blue-600 hover:bg-gray-100">Learn More</Button>
+                    <Button asChild className="w-full bg-white text-blue-600 hover:bg-gray-100">
+                      <Link href="/apply">Learn More</Link>
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -166,7 +172,9 @@ export default function IndustriesPage() {
                         <span>Working capital for staffing</span>
                       </li>
                     </ul>
-                    <Button className="w-full bg-white text-blue-600 hover:bg-gray-100">Learn More</Button>
+                    <Button asChild className="w-full bg-white text-blue-600 hover:bg-gray-100">
+                      <Link href="/apply">Learn More</Link>
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -204,7 +212,9 @@ export default function IndustriesPage() {
                         <span>Seasonal working capital</span>
                       </li>
                     </ul>
-                    <Button className="w-full bg-white text-blue-600 hover:bg-gray-100">Learn More</Button>
+                    <Button asChild className="w-full bg-white text-blue-600 hover:bg-gray-100">
+                      <Link href="/apply">Learn More</Link>
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -242,7 +252,9 @@ export default function IndustriesPage() {
                         <span>Contractor lines of credit</span>
                       </li>
                     </ul>
-                    <Button className="w-full bg-white text-blue-600 hover:bg-gray-100">Learn More</Button>
+                    <Button asChild className="w-full bg-white text-blue-600 hover:bg-gray-100">
+                      <Link href="/apply">Learn More</Link>
+                    </Button>
                   </div>
                 </CardContent>
               </Card>
@@ -278,7 +290,7 @@ export default function IndustriesPage() {
                 </p>
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row justify-center">
-                <Button className="bg-orange-500 hover:bg-orange-600 text-white">
+                <Button asChild className="bg-orange-500 hover:bg-orange-600 text-white">
                   <Link href="/apply">Apply Now</Link>
                 </Button>
               </div>
