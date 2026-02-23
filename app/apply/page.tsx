@@ -1361,17 +1361,20 @@ export default function ApplyPage() {
       
       try {
         const pdfResult = await downloadApplicationPDF(updatedFormData)
-        if (pdfResult.success && pdfResult.pdfBase64) {
-          // Convert base64 back to bytes
-          const binaryString = atob(pdfResult.pdfBase64)
-          pdfBytes = Array.from(binaryString).map(char => char.charCodeAt(0))
+        if (!pdfResult) {
+          throw new Error("PDF generation returned no result")
+        }
+        if (pdfResult.success && pdfResult.pdfBytes) {
+          // PDF bytes are already in array format
+          pdfBytes = pdfResult.pdfBytes
           console.log("[Submit] PDF generated successfully, size:", pdfBytes.length, "bytes")
         } else {
-          console.error("[Submit] PDF generation failed:", pdfResult.error)
+          const errorMsg = pdfResult?.error || 'Unknown error'
+          console.error("[Submit] PDF generation failed:", errorMsg)
           setIsSubmitting(false)
           setErrors((prev) => ({
             ...prev,
-            submit: `PDF generation failed: ${pdfResult.error || 'Unknown error'}. Please try again or contact support.`
+            submit: `PDF generation failed: ${errorMsg}. Please try again or contact support.`
           }))
           return
         }
@@ -1624,17 +1627,20 @@ export default function ApplyPage() {
       
       try {
         const pdfResult = await downloadApplicationPDF(updatedFormData)
-        if (pdfResult.success && pdfResult.pdfBase64) {
-          // Convert base64 back to bytes
-          const binaryString = atob(pdfResult.pdfBase64)
-          pdfBytes = Array.from(binaryString).map(char => char.charCodeAt(0))
+        if (!pdfResult) {
+          throw new Error("PDF generation returned no result")
+        }
+        if (pdfResult.success && pdfResult.pdfBytes) {
+          // PDF bytes are already in array format
+          pdfBytes = pdfResult.pdfBytes
           console.log("[Submit] PDF generated successfully, size:", pdfBytes.length, "bytes")
         } else {
-          console.error("[Submit] PDF generation failed:", pdfResult.error)
+          const errorMsg = pdfResult?.error || 'Unknown error'
+          console.error("[Submit] PDF generation failed:", errorMsg)
           setIsSubmitting(false)
           setErrors((prev) => ({
             ...prev,
-            submit: `PDF generation failed: ${pdfResult.error || 'Unknown error'}. Please try again or contact support.`
+            submit: `PDF generation failed: ${errorMsg}. Please try again or contact support.`
           }))
           return
         }
@@ -2004,18 +2010,18 @@ export default function ApplyPage() {
 
       if (result.success && result.pdfBytes) {
         try {
+          // Convert array to Uint8Array
+          const pdfData = new Uint8Array(result.pdfBytes)
+          
           // Validate PDF bytes
-          if (!Array.isArray(result.pdfBytes) || result.pdfBytes.length === 0) {
+          if (pdfData.length === 0) {
             throw new Error("PDF generation returned empty data")
           }
 
-          console.log("[PDF Download] PDF generated successfully, size:", result.pdfBytes.length, "bytes")
-          
-          // Convert array back to Uint8Array
-          const pdfBytes = new Uint8Array(result.pdfBytes)
+          console.log("[PDF Download] PDF generated successfully, size:", pdfData.length, "bytes")
 
-          // Validate blob creation
-          const blob = new Blob([pdfBytes], { type: "application/pdf" })
+          // Create blob from buffer
+          const blob = new Blob([pdfData.buffer], { type: "application/pdf" })
           if (blob.size === 0) {
             throw new Error("Failed to create PDF blob - blob is empty")
           }
