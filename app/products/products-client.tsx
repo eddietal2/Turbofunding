@@ -3,16 +3,25 @@
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { CheckIcon, DollarSignIcon, ClockIcon, PercentIcon } from "lucide-react"
 import { useState, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
+
+const products = [
+  { id: "working-capital", name: "Working Capital" },
+  { id: "merchant-cash", name: "Merchant Cash Advances" },
+  { id: "line-of-credit", name: "Business Line of Credit" },
+  { id: "sba-7a", name: "SBA 7a Loans" },
+  { id: "sba-504", name: "SBA 504" },
+  { id: "bridge-loan", name: "Bridge Loan" },
+  { id: "equipment-financing", name: "Equipment Financing" },
+]
 
 export default function ProductsClient() {
   const searchParams = useSearchParams()
   const [selectedProduct, setSelectedProduct] = useState("working-capital")
 
-  // Map navbar product slugs to component tab values
+  // Map navbar product slugs to component product IDs
   const productSlugMap: { [key: string]: string } = {
     "working-capital": "working-capital",
     "merchant-cash-advance": "merchant-cash",
@@ -32,82 +41,51 @@ export default function ProductsClient() {
 
   return (
     <div className="flex min-h-screen flex-col bg-[#F5F7FA]">
-      <main className="flex-1">
-        {/* Products Section */}
-        <section className="w-full py-2 md:py-4 bg-[#F5F7FA]">
-          <div className="container px-4 md:px-6">
-            <Tabs value={selectedProduct} onValueChange={setSelectedProduct} className="w-full">
-              {/* Mobile Dropdown - visible only on small screens */}
-              <div className="flex justify-center mb-6">
-                <div className="md:hidden w-full max-w-md">
-                  <select
-                    value={selectedProduct}
-                    onChange={(e) => setSelectedProduct(e.target.value)}
-                    className="w-full bg-[#F5F7FA] border border-gray-300 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-600"
-                    style={{ color: "#0D1B2A" }}
-                  >
-                    <option value="working-capital">Working Capital</option>
-                    <option value="merchant-cash">Merchant Cash Advances</option>
-                    <option value="line-of-credit">Business Line of Credit</option>
-                    <option value="sba-7a">SBA 7a Loans</option>
-                    <option value="sba-504">SBA 504</option>
-                    <option value="bridge-loan">Bridge Loan</option>
-                    <option value="equipment-financing">Equipment Financing</option>
-                  </select>
-                </div>
-
-                {/* Desktop Tabs - hidden on small screens */}
-                <TabsList
-                  className="hidden md:flex bg-gray-100 p-1 overflow-x-auto max-w-full flex-wrap justify-center"
-                  role="tablist"
+      <main className="flex-1 flex">
+        {/* Left Sidebar Navigation */}
+        <aside className="hidden lg:flex lg:w-64 flex-col border-r border-gray-300 bg-white sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto">
+          <nav className="flex-1 px-6 py-8">
+            <div className="space-y-1">
+              {products.map((product) => (
+                <button
+                  key={product.id}
+                  onClick={() => setSelectedProduct(product.id)}
+                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors text-sm font-medium ${
+                    selectedProduct === product.id
+                      ? "bg-blue-600 text-white"
+                      : "text-gray-700 hover:bg-gray-100"
+                  }`}
                 >
-                  <TabsTrigger
-                    value="working-capital"
-                    className="data-[state=active]:bg-blue-600 data-[state=active]:text-white"
-                  >
-                    Working Capital
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="merchant-cash"
-                    className="data-[state=active]:bg-blue-600 data-[state=active]:text-white"
-                  >
-                    Merchant Cash Advances
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="line-of-credit"
-                    className="data-[state=active]:bg-blue-600 data-[state=active]:text-white"
-                  >
-                    Business Line of Credit
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="sba-7a"
-                    className="data-[state=active]:bg-blue-600 data-[state=active]:text-white"
-                  >
-                    SBA 7a Loans
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="sba-504"
-                    className="data-[state=active]:bg-blue-600 data-[state=active]:text-white"
-                  >
-                    SBA 504
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="bridge-loan"
-                    className="data-[state=active]:bg-blue-600 data-[state=active]:text-white"
-                  >
-                    Bridge Loan
-                  </TabsTrigger>
-                  <TabsTrigger
-                    value="equipment-financing"
-                    className="data-[state=active]:bg-blue-600 data-[state=active]:text-white"
-                  >
-                    Equipment Financing
-                  </TabsTrigger>
-                </TabsList>
-              </div>
+                  {product.name}
+                </button>
+              ))}
+            </div>
+          </nav>
+        </aside>
 
-              {/* Working Capital Loans */}
-              <TabsContent value="working-capital" className="mt-0">
+        {/* Mobile Dropdown */}
+        <div className="lg:hidden w-full bg-white border-b border-gray-300">
+          <div className="container px-4 md:px-6 py-4">
+            <select
+              value={selectedProduct}
+              onChange={(e) => setSelectedProduct(e.target.value)}
+              className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-600"
+              style={{ color: "#0D1B2A" }}
+            >
+              {products.map((product) => (
+                <option key={product.id} value={product.id}>
+                  {product.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+
+        {/* Main Content Area */}
+        <div className="flex-1">
+          {selectedProduct === "working-capital" && (
+            <section className="w-full py-8 md:py-12 bg-[#F5F7FA]">
+              <div className="container px-4 md:px-6">
                 <div className="grid gap-6 lg:grid-cols-2">
                   <div className="space-y-3">
                     <h3 className="text-2xl font-bold text-orange-500">Working Capital Loans</h3>
@@ -169,10 +147,7 @@ export default function ProductsClient() {
                       <h3 className="text-xl font-semibold text-orange-500">Eligibility Requirements</h3>
                       <ul className="space-y-1" role="list">
                         <li className="flex items-start">
-                          <DollarSignIcon
-                            className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5"
-                            aria-hidden="true"
-                          />
+                          <DollarSignIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <div>
                             <span className="font-medium text-white">Minimum Revenue:</span>
                             <p className="text-gray-300">$100,000+ annual revenue</p>
@@ -186,10 +161,7 @@ export default function ProductsClient() {
                           </div>
                         </li>
                         <li className="flex items-start">
-                          <PercentIcon
-                            className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5"
-                            aria-hidden="true"
-                          />
+                          <PercentIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <div>
                             <span className="font-medium text-white">Credit Score:</span>
                             <p className="text-gray-300">550+ for owners</p>
@@ -208,17 +180,19 @@ export default function ProductsClient() {
                     </div>
                   </div>
                 </div>
-              </TabsContent>
+              </div>
+            </section>
+          )}
 
-              {/* Merchant Cash Advances */}
-              <TabsContent value="merchant-cash" className="mt-0">
+          {selectedProduct === "merchant-cash" && (
+            <section className="w-full py-8 md:py-12 bg-[#F5F7FA]">
+              <div className="container px-4 md:px-6">
                 <div className="grid gap-6 lg:grid-cols-2">
                   <div className="space-y-3">
                     <h3 className="text-2xl font-bold text-orange-500">Merchant Cash Advances</h3>
                     <p style={{ color: "#0D1B2A" }}>
                       Merchant Cash Advances provide immediate funding in exchange for a percentage of your future
-                      credit card sales. This flexible solution is perfect for businesses with consistent card
-                      transactions who need quick access to capital.
+                      credit card sales. Perfect for businesses with consistent card transactions.
                     </p>
                     <div className="space-y-2">
                       <h3 className="text-xl font-semibold text-orange-500">Key Benefits</h3>
@@ -243,13 +217,13 @@ export default function ProductsClient() {
                     </div>
                     <div className="pt-3">
                       <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
-                        <Link href="/apply">Apply for Merchant Cash Advance</Link>
+                        <Link href="/apply">Apply for MCA</Link>
                       </Button>
                     </div>
                   </div>
                   <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-4">
                     <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-orange-500">Merchant Cash Advance Details</h3>
+                      <h3 className="text-xl font-semibold text-orange-500">MCA Details</h3>
                       <div className="grid grid-cols-2 gap-3">
                         <div className="space-y-2">
                           <div className="text-sm text-gray-400">Amount</div>
@@ -264,22 +238,19 @@ export default function ProductsClient() {
                           <div className="text-lg font-medium text-white">24-48 hours</div>
                         </div>
                         <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Interest Rate</div>
+                          <div className="text-sm text-gray-400">Factor Rate</div>
                           <div className="text-lg font-medium text-white">1.1 - 1.5</div>
                         </div>
                       </div>
                     </div>
                     <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-orange-500">Eligibility Requirements</h3>
+                      <h3 className="text-xl font-semibold text-orange-500">Eligibility</h3>
                       <ul className="space-y-1" role="list">
                         <li className="flex items-start">
-                          <DollarSignIcon
-                            className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5"
-                            aria-hidden="true"
-                          />
+                          <DollarSignIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <div>
                             <span className="font-medium text-white">Monthly Card Sales:</span>
-                            <p className="text-gray-300">$10,000+ in monthly credit card processing</p>
+                            <p className="text-gray-300">$10,000+ monthly</p>
                           </div>
                         </li>
                         <li className="flex items-start">
@@ -290,13 +261,10 @@ export default function ProductsClient() {
                           </div>
                         </li>
                         <li className="flex items-start">
-                          <PercentIcon
-                            className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5"
-                            aria-hidden="true"
-                          />
+                          <PercentIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <div>
                             <span className="font-medium text-white">Credit Score:</span>
-                            <p className="text-gray-300">500+ for owners</p>
+                            <p className="text-gray-300">500+</p>
                           </div>
                         </li>
                       </ul>
@@ -304,25 +272,26 @@ export default function ProductsClient() {
                     <div className="bg-gray-900 border border-gray-700 rounded-lg p-4">
                       <h4 className="font-medium text-orange-500 mb-2">Best For:</h4>
                       <ul className="space-y-1 text-gray-300">
-                        <li>Retail and restaurant businesses with high card volume</li>
-                        <li>Businesses needing immediate funding</li>
-                        <li>Companies with fluctuating seasonal sales</li>
+                        <li>Retail and restaurant businesses</li>
+                        <li>High card volume businesses</li>
+                        <li>Seasonal fluctuations</li>
                         <li>Fast-growing businesses</li>
                       </ul>
                     </div>
                   </div>
                 </div>
-              </TabsContent>
+              </div>
+            </section>
+          )}
 
-              {/* Business Line of Credit */}
-              <TabsContent value="line-of-credit" className="mt-0">
+          {selectedProduct === "line-of-credit" && (
+            <section className="w-full py-8 md:py-12 bg-[#F5F7FA]">
+              <div className="container px-4 md:px-6">
                 <div className="grid gap-6 lg:grid-cols-2">
                   <div className="space-y-3">
                     <h3 className="text-2xl font-bold text-orange-500">Business Line of Credit</h3>
                     <p style={{ color: "#0D1B2A" }}>
-                      A Business Line of Credit provides you with a revolving credit facility that you can draw from as
-                      needed. Only pay interest on what you use, making it perfect for managing cash flow fluctuations
-                      and unexpected expenses.
+                      Revolving credit facility perfect for managing cash flow fluctuations and unexpected expenses.
                     </p>
                     <div className="space-y-2">
                       <h3 className="text-xl font-semibold text-orange-500">Key Benefits</h3>
@@ -337,27 +306,27 @@ export default function ProductsClient() {
                         </li>
                         <li className="flex items-start">
                           <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Revolving credit - repay and reuse your credit line</span>
+                          <span>Revolving credit - repay and reuse</span>
                         </li>
                         <li className="flex items-start">
                           <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Perfect for seasonal businesses and cash flow management</span>
+                          <span>Perfect for seasonal businesses</span>
                         </li>
                       </ul>
                     </div>
                     <div className="pt-3">
                       <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
-                        <Link href="/apply">Apply for Line of Credit</Link>
+                        <Link href="/apply">Apply for LOC</Link>
                       </Button>
                     </div>
                   </div>
                   <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-4">
                     <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-orange-500">Line of Credit Details</h3>
+                      <h3 className="text-xl font-semibold text-orange-500">LOC Details</h3>
                       <div className="grid grid-cols-2 gap-3">
                         <div className="space-y-2">
                           <div className="text-sm text-gray-400">Credit Limit</div>
-                          <div className="text-lg font-medium text-white">$10,000 - $250,000</div>
+                          <div className="text-lg font-medium text-white">$10K - $250K</div>
                         </div>
                         <div className="space-y-2">
                           <div className="text-sm text-gray-400">Draw Period</div>
@@ -374,16 +343,13 @@ export default function ProductsClient() {
                       </div>
                     </div>
                     <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-orange-500">Eligibility Requirements</h3>
+                      <h3 className="text-xl font-semibold text-orange-500">Eligibility</h3>
                       <ul className="space-y-1" role="list">
                         <li className="flex items-start">
-                          <DollarSignIcon
-                            className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5"
-                            aria-hidden="true"
-                          />
+                          <DollarSignIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <div>
                             <span className="font-medium text-white">Annual Revenue:</span>
-                            <p className="text-gray-300">$150,000+ annual revenue</p>
+                            <p className="text-gray-300">$150K+</p>
                           </div>
                         </li>
                         <li className="flex items-start">
@@ -394,13 +360,10 @@ export default function ProductsClient() {
                           </div>
                         </li>
                         <li className="flex items-start">
-                          <PercentIcon
-                            className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5"
-                            aria-hidden="true"
-                          />
+                          <PercentIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <div>
                             <span className="font-medium text-white">Credit Score:</span>
-                            <p className="text-gray-300">650+ for owners</p>
+                            <p className="text-gray-300">650+</p>
                           </div>
                         </li>
                       </ul>
@@ -408,25 +371,26 @@ export default function ProductsClient() {
                     <div className="bg-gray-900 border border-gray-700 rounded-lg p-4">
                       <h4 className="font-medium text-orange-500 mb-2">Best For:</h4>
                       <ul className="space-y-1 text-gray-300">
-                        <li>Managing seasonal cash flow fluctuations</li>
-                        <li>Covering short-term working capital needs</li>
-                        <li>Taking advantage of unexpected opportunities</li>
-                        <li>Bridging gaps between receivables and payables</li>
+                        <li>Seasonal cash flow management</li>
+                        <li>Short-term working capital</li>
+                        <li>Unexpected opportunities</li>
+                        <li>Receivables/payables gaps</li>
                       </ul>
                     </div>
                   </div>
                 </div>
-              </TabsContent>
+              </div>
+            </section>
+          )}
 
-              {/* SBA 7a Loans */}
-              <TabsContent value="sba-7a" className="mt-0">
+          {selectedProduct === "sba-7a" && (
+            <section className="w-full py-8 md:py-12 bg-[#F5F7FA]">
+              <div className="container px-4 md:px-6">
                 <div className="grid gap-6 lg:grid-cols-2">
                   <div className="space-y-3">
                     <h3 className="text-2xl font-bold text-orange-500">SBA 7a Loans</h3>
                     <p style={{ color: "#0D1B2A" }}>
-                      SBA 7a loans are the most popular SBA loan program, offering long-term financing with competitive
-                      rates and flexible terms. These government-backed loans are ideal for working capital, equipment
-                      purchases, real estate, and business acquisitions.
+                      Most popular SBA program for long-term financing with competitive rates and flexible terms.
                     </p>
                     <div className="space-y-2">
                       <h3 className="text-xl font-semibold text-orange-500">Key Benefits</h3>
@@ -437,34 +401,34 @@ export default function ProductsClient() {
                         </li>
                         <li className="flex items-start">
                           <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Competitive interest rates backed by SBA guarantee</span>
+                          <span>Competitive rates backed by SBA</span>
                         </li>
                         <li className="flex items-start">
                           <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Longer repayment terms up to 25 years</span>
+                          <span>Terms up to 25 years</span>
                         </li>
                         <li className="flex items-start">
                           <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Can be used for multiple business purposes</span>
+                          <span>Multiple business uses</span>
                         </li>
                       </ul>
                     </div>
                     <div className="pt-3">
                       <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
-                        <Link href="/apply">Apply for SBA 7a Loan</Link>
+                        <Link href="/apply">Apply for SBA 7a</Link>
                       </Button>
                     </div>
                   </div>
                   <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-4">
                     <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-orange-500">SBA 7a Loan Details</h3>
+                      <h3 className="text-xl font-semibold text-orange-500">SBA 7a Details</h3>
                       <div className="grid grid-cols-2 gap-3">
                         <div className="space-y-2">
                           <div className="text-sm text-gray-400">Loan Amount</div>
-                          <div className="text-lg font-medium text-white">Up to $5,000,000</div>
+                          <div className="text-lg font-medium text-white">Up to $5M</div>
                         </div>
                         <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Repayment Terms</div>
+                          <div className="text-sm text-gray-400">Terms</div>
                           <div className="text-lg font-medium text-white">Up to 25 years</div>
                         </div>
                         <div className="space-y-2">
@@ -478,33 +442,27 @@ export default function ProductsClient() {
                       </div>
                     </div>
                     <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-orange-500">Eligibility Requirements</h3>
+                      <h3 className="text-xl font-semibold text-orange-500">Eligibility</h3>
                       <ul className="space-y-1" role="list">
                         <li className="flex items-start">
-                          <DollarSignIcon
-                            className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5"
-                            aria-hidden="true"
-                          />
+                          <DollarSignIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <div>
                             <span className="font-medium text-white">Business Size:</span>
-                            <p className="text-gray-300">Must meet SBA size standards</p>
+                            <p className="text-gray-300">Meet SBA standards</p>
                           </div>
                         </li>
                         <li className="flex items-start">
                           <ClockIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <div>
                             <span className="font-medium text-white">Time in Business:</span>
-                            <p className="text-gray-300">2+ years preferred</p>
+                            <p className="text-gray-300">2+ years</p>
                           </div>
                         </li>
                         <li className="flex items-start">
-                          <PercentIcon
-                            className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5"
-                            aria-hidden="true"
-                          />
+                          <PercentIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <div>
                             <span className="font-medium text-white">Credit Score:</span>
-                            <p className="text-gray-300">680+ for owners</p>
+                            <p className="text-gray-300">680+</p>
                           </div>
                         </li>
                       </ul>
@@ -512,32 +470,33 @@ export default function ProductsClient() {
                     <div className="bg-gray-900 border border-gray-700 rounded-lg p-4">
                       <h4 className="font-medium text-orange-500 mb-2">Best For:</h4>
                       <ul className="space-y-1 text-gray-300">
-                        <li>Business acquisitions and expansions</li>
-                        <li>Real estate purchases for business use</li>
-                        <li>Long-term working capital needs</li>
-                        <li>Equipment and machinery purchases</li>
+                        <li>Business acquisitions</li>
+                        <li>Real estate purchases</li>
+                        <li>Long-term working capital</li>
+                        <li>Equipment purchases</li>
                       </ul>
                     </div>
                   </div>
                 </div>
-              </TabsContent>
+              </div>
+            </section>
+          )}
 
-              {/* SBA 504 */}
-              <TabsContent value="sba-504" className="mt-0">
+          {selectedProduct === "sba-504" && (
+            <section className="w-full py-8 md:py-12 bg-[#F5F7FA]">
+              <div className="container px-4 md:px-6">
                 <div className="grid gap-6 lg:grid-cols-2">
                   <div className="space-y-3">
                     <h3 className="text-2xl font-bold text-orange-500">SBA 504 Loans</h3>
                     <p style={{ color: "#0D1B2A" }}>
-                      SBA 504 loans provide long-term, fixed-rate financing for major fixed assets like real estate and
-                      heavy equipment. This program promotes business growth and job creation with attractive terms and
-                      low down payments.
+                      Long-term, fixed-rate financing for major fixed assets like real estate and heavy equipment.
                     </p>
                     <div className="space-y-2">
                       <h3 className="text-xl font-semibold text-orange-500">Key Benefits</h3>
                       <ul className="space-y-1" style={{ color: "#0D1B2A" }} role="list">
                         <li className="flex items-start">
                           <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Fixed interest rates for the life of the loan</span>
+                          <span>Fixed rates for life of loan</span>
                         </li>
                         <li className="flex items-start">
                           <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
@@ -545,31 +504,31 @@ export default function ProductsClient() {
                         </li>
                         <li className="flex items-start">
                           <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Long repayment terms up to 20-25 years</span>
+                          <span>Terms up to 25 years</span>
                         </li>
                         <li className="flex items-start">
                           <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Below-market interest rates</span>
+                          <span>Below-market rates</span>
                         </li>
                       </ul>
                     </div>
                     <div className="pt-3">
                       <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
-                        <Link href="/apply">Apply for SBA 504 Loan</Link>
+                        <Link href="/apply">Apply for SBA 504</Link>
                       </Button>
                     </div>
                   </div>
                   <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-4">
                     <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-orange-500">SBA 504 Loan Details</h3>
+                      <h3 className="text-xl font-semibold text-orange-500">SBA 504 Details</h3>
                       <div className="grid grid-cols-2 gap-3">
                         <div className="space-y-2">
                           <div className="text-sm text-gray-400">Loan Amount</div>
-                          <div className="text-lg font-medium text-white">Up to $5,500,000</div>
+                          <div className="text-lg font-medium text-white">Up to $5.5M</div>
                         </div>
                         <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Repayment Terms</div>
-                          <div className="text-lg font-medium text-white">10, 20, or 25 years</div>
+                          <div className="text-sm text-gray-400">Terms</div>
+                          <div className="text-lg font-medium text-white">10, 20, 25 years</div>
                         </div>
                         <div className="space-y-2">
                           <div className="text-sm text-gray-400">Processing Time</div>
@@ -577,38 +536,32 @@ export default function ProductsClient() {
                         </div>
                         <div className="space-y-2">
                           <div className="text-sm text-gray-400">Interest Rate</div>
-                          <div className="text-lg font-medium text-white">Fixed rates below market</div>
+                          <div className="text-lg font-medium text-white">Fixed below market</div>
                         </div>
                       </div>
                     </div>
                     <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-orange-500">Eligibility Requirements</h3>
+                      <h3 className="text-xl font-semibold text-orange-500">Eligibility</h3>
                       <ul className="space-y-1" role="list">
                         <li className="flex items-start">
-                          <DollarSignIcon
-                            className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5"
-                            aria-hidden="true"
-                          />
+                          <DollarSignIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <div>
                             <span className="font-medium text-white">Use of Funds:</span>
-                            <p className="text-gray-300">Real estate, equipment, or improvements</p>
+                            <p className="text-gray-300">Real estate, equipment</p>
                           </div>
                         </li>
                         <li className="flex items-start">
                           <ClockIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <div>
                             <span className="font-medium text-white">Job Creation:</span>
-                            <p className="text-gray-300">Must create or retain jobs</p>
+                            <p className="text-gray-300">Must create/retain jobs</p>
                           </div>
                         </li>
                         <li className="flex items-start">
-                          <PercentIcon
-                            className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5"
-                            aria-hidden="true"
-                          />
+                          <PercentIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <div>
                             <span className="font-medium text-white">Owner Occupancy:</span>
-                            <p className="text-gray-300">51% owner-occupied requirement</p>
+                            <p className="text-gray-300">51% requirement</p>
                           </div>
                         </li>
                       </ul>
@@ -616,38 +569,41 @@ export default function ProductsClient() {
                     <div className="bg-gray-900 border border-gray-700 rounded-lg p-4">
                       <h4 className="font-medium text-orange-500 mb-2">Best For:</h4>
                       <ul className="space-y-1 text-gray-300">
-                        <li>Purchasing commercial real estate</li>
-                        <li>Building new facilities or renovating existing ones</li>
-                        <li>Acquiring heavy machinery or equipment</li>
-                        <li>Long-term capital investments</li>
+                        <li>Commercial real estate</li>
+                        <li>Facility building/renovation</li>
+                        <li>Heavy machinery</li>
+                        <li>Long-term investments</li>
                       </ul>
                     </div>
                   </div>
                 </div>
-              </TabsContent>
+              </div>
+            </section>
+          )}
 
-              {/* Bridge Loan */}
-              <TabsContent value="bridge-loan" className="mt-0">
+          {selectedProduct === "bridge-loan" && (
+            <section className="w-full py-8 md:py-12 bg-[#F5F7FA]">
+              <div className="container px-4 md:px-6">
                 <div className="grid gap-6 lg:grid-cols-2">
                   <div className="space-y-3">
                     <h3 className="text-2xl font-bold text-orange-500">Bridge Loans</h3>
                     <p style={{ color: "#0D1B2A" }}>
-                      Bridge loans provide short-term financing to bridge the gap between purchasing a new property or business and securing long-term funding. Ideal for real estate deals, acquisitions, or situations where timing is critical.
+                      Short-term financing to bridge gaps between purchasing new property and securing permanent funding.
                     </p>
                     <div className="space-y-2">
                       <h3 className="text-xl font-semibold text-orange-500">Key Benefits</h3>
                       <ul className="space-y-1" style={{ color: "#0D1B2A" }} role="list">
                         <li className="flex items-start">
                           <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Quick funding to close deals before financing falls through</span>
+                          <span>Quick funding to close deals</span>
                         </li>
                         <li className="flex items-start">
                           <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Immediate capital for time-sensitive opportunities</span>
+                          <span>Immediate capital available</span>
                         </li>
                         <li className="flex items-start">
                           <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Simple qualification process with asset-based lending</span>
+                          <span>Simple qualification process</span>
                         </li>
                         <li className="flex items-start">
                           <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
@@ -667,7 +623,7 @@ export default function ProductsClient() {
                       <div className="grid grid-cols-2 gap-3">
                         <div className="space-y-2">
                           <div className="text-sm text-gray-400">Loan Amount</div>
-                          <div className="text-lg font-medium text-white">$50,000 - $5,000,000</div>
+                          <div className="text-lg font-medium text-white">$50K - $5M</div>
                         </div>
                         <div className="space-y-2">
                           <div className="text-sm text-gray-400">Term Length</div>
@@ -684,33 +640,27 @@ export default function ProductsClient() {
                       </div>
                     </div>
                     <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-orange-500">Eligibility Requirements</h3>
+                      <h3 className="text-xl font-semibold text-orange-500">Eligibility</h3>
                       <ul className="space-y-1" role="list">
                         <li className="flex items-start">
-                          <DollarSignIcon
-                            className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5"
-                            aria-hidden="true"
-                          />
+                          <DollarSignIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <div>
                             <span className="font-medium text-white">Asset Value:</span>
-                            <p className="text-gray-300">Sufficient collateral (property/assets)</p>
+                            <p className="text-gray-300">Sufficient collateral</p>
                           </div>
                         </li>
                         <li className="flex items-start">
                           <ClockIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <div>
                             <span className="font-medium text-white">Exit Strategy:</span>
-                            <p className="text-gray-300">Clear plan to repay/refinance</p>
+                            <p className="text-gray-300">Clear repayment plan</p>
                           </div>
                         </li>
                         <li className="flex items-start">
-                          <PercentIcon
-                            className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5"
-                            aria-hidden="true"
-                          />
+                          <PercentIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <div>
                             <span className="font-medium text-white">Credit Score:</span>
-                            <p className="text-gray-300">600+ for owners</p>
+                            <p className="text-gray-300">600+</p>
                           </div>
                         </li>
                       </ul>
@@ -718,48 +668,51 @@ export default function ProductsClient() {
                     <div className="bg-gray-900 border border-gray-700 rounded-lg p-4">
                       <h4 className="font-medium text-orange-500 mb-2">Best For:</h4>
                       <ul className="space-y-1 text-gray-300">
-                        <li>Real estate purchases and flips</li>
+                        <li>Real estate deals</li>
                         <li>Business acquisitions</li>
-                        <li>Time-sensitive opportunities</li>
-                        <li>Bridging gaps in permanent financing</li>
+                        <li>Time-sensitive deals</li>
+                        <li>Financing gaps</li>
                       </ul>
                     </div>
                   </div>
                 </div>
-              </TabsContent>
+              </div>
+            </section>
+          )}
 
-              {/* Equipment Financing */}
-              <TabsContent value="equipment-financing" className="mt-0">
+          {selectedProduct === "equipment-financing" && (
+            <section className="w-full py-8 md:py-12 bg-[#F5F7FA]">
+              <div className="container px-4 md:px-6">
                 <div className="grid gap-6 lg:grid-cols-2">
                   <div className="space-y-3">
                     <h3 className="text-2xl font-bold text-orange-500">Equipment Financing</h3>
                     <p style={{ color: "#0D1B2A" }}>
-                      Equipment financing provides capital specifically for purchasing or leasing machinery, vehicles, technology, and other business equipment. The equipment itself secures the loan, making qualification easier and rates more competitive.
+                      Capital for purchasing or leasing machinery, vehicles, technology, and business equipment.
                     </p>
                     <div className="space-y-2">
                       <h3 className="text-xl font-semibold text-orange-500">Key Benefits</h3>
                       <ul className="space-y-1" style={{ color: "#0D1B2A" }} role="list">
                         <li className="flex items-start">
                           <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Lower rates because equipment serves as collateral</span>
+                          <span>Lower rates - equipment is collateral</span>
                         </li>
                         <li className="flex items-start">
                           <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Flexible terms aligned with equipment lifespan</span>
+                          <span>Flexible terms aligned with lifespan</span>
                         </li>
                         <li className="flex items-start">
                           <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Finance 100% of equipment costs with minimal down payment</span>
+                          <span>Finance 100% with minimal down</span>
                         </li>
                         <li className="flex items-start">
                           <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Preserve working capital and cash flow</span>
+                          <span>Preserve working capital</span>
                         </li>
                       </ul>
                     </div>
                     <div className="pt-3">
                       <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
-                        <Link href="/apply">Apply for Equipment Financing</Link>
+                        <Link href="/apply">Apply for Equipment</Link>
                       </Button>
                     </div>
                   </div>
@@ -768,8 +721,8 @@ export default function ProductsClient() {
                       <h3 className="text-xl font-semibold text-orange-500">Equipment Financing Details</h3>
                       <div className="grid grid-cols-2 gap-3">
                         <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Financing Amount</div>
-                          <div className="text-lg font-medium text-white">$2,500 - $2,000,000</div>
+                          <div className="text-sm text-gray-400">Amount</div>
+                          <div className="text-lg font-medium text-white">$2.5K - $2M</div>
                         </div>
                         <div className="space-y-2">
                           <div className="text-sm text-gray-400">Loan Term</div>
@@ -786,33 +739,27 @@ export default function ProductsClient() {
                       </div>
                     </div>
                     <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-orange-500">Eligibility Requirements</h3>
+                      <h3 className="text-xl font-semibold text-orange-500">Eligibility</h3>
                       <ul className="space-y-1" role="list">
                         <li className="flex items-start">
-                          <DollarSignIcon
-                            className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5"
-                            aria-hidden="true"
-                          />
+                          <DollarSignIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <div>
-                            <span className="font-medium text-white">Equipment Type:</span>
-                            <p className="text-gray-300">Most commercial/industrial equipment eligible</p>
+                            <span className="font-medium text-white">Equipment:</span>
+                            <p className="text-gray-300">Commercial/industrial</p>
                           </div>
                         </li>
                         <li className="flex items-start">
                           <ClockIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <div>
                             <span className="font-medium text-white">Time in Business:</span>
-                            <p className="text-gray-300">6+ months in operation</p>
+                            <p className="text-gray-300">6+ months</p>
                           </div>
                         </li>
                         <li className="flex items-start">
-                          <PercentIcon
-                            className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5"
-                            aria-hidden="true"
-                          />
+                          <PercentIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <div>
                             <span className="font-medium text-white">Credit Score:</span>
-                            <p className="text-gray-300">550+ for owners</p>
+                            <p className="text-gray-300">550+</p>
                           </div>
                         </li>
                       </ul>
@@ -820,18 +767,18 @@ export default function ProductsClient() {
                     <div className="bg-gray-900 border border-gray-700 rounded-lg p-4">
                       <h4 className="font-medium text-orange-500 mb-2">Best For:</h4>
                       <ul className="space-y-1 text-gray-300">
-                        <li>Purchasing machinery and industrial equipment</li>
-                        <li>Fleet vehicle acquisition</li>
-                        <li>Technology and IT infrastructure</li>
-                        <li>Construction equipment and tools</li>
+                        <li>Machinery & industrial equipment</li>
+                        <li>Fleet vehicles</li>
+                        <li>IT infrastructure</li>
+                        <li>Construction equipment</li>
                       </ul>
                     </div>
                   </div>
                 </div>
-              </TabsContent>
-            </Tabs>
-          </div>
-        </section>
+              </div>
+            </section>
+          )}
+        </div>
       </main>
     </div>
   )
