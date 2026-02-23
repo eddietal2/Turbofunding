@@ -19,6 +19,8 @@ export default function ProductsClient() {
     "business-line-of-credit": "line-of-credit",
     "sba-7a-loans": "sba-7a",
     "sba-504": "sba-504",
+    "bridge-loan": "bridge-loan",
+    "equipment-financing": "equipment-financing",
   }
 
   useEffect(() => {
@@ -49,6 +51,8 @@ export default function ProductsClient() {
                     <option value="line-of-credit">Business Line of Credit</option>
                     <option value="sba-7a">SBA 7a Loans</option>
                     <option value="sba-504">SBA 504</option>
+                    <option value="bridge-loan">Bridge Loan</option>
+                    <option value="equipment-financing">Equipment Financing</option>
                   </select>
                 </div>
 
@@ -86,6 +90,18 @@ export default function ProductsClient() {
                     className="data-[state=active]:bg-blue-600 data-[state=active]:text-white"
                   >
                     SBA 504
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="bridge-loan"
+                    className="data-[state=active]:bg-blue-600 data-[state=active]:text-white"
+                  >
+                    Bridge Loan
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="equipment-financing"
+                    className="data-[state=active]:bg-blue-600 data-[state=active]:text-white"
+                  >
+                    Equipment Financing
                   </TabsTrigger>
                 </TabsList>
               </div>
@@ -604,6 +620,210 @@ export default function ProductsClient() {
                         <li>Building new facilities or renovating existing ones</li>
                         <li>Acquiring heavy machinery or equipment</li>
                         <li>Long-term capital investments</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
+
+              {/* Bridge Loan */}
+              <TabsContent value="bridge-loan" className="mt-0">
+                <div className="grid gap-6 lg:grid-cols-2">
+                  <div className="space-y-3">
+                    <h3 className="text-2xl font-bold text-orange-500">Bridge Loans</h3>
+                    <p style={{ color: "#0D1B2A" }}>
+                      Bridge loans provide short-term financing to bridge the gap between purchasing a new property or business and securing long-term funding. Ideal for real estate deals, acquisitions, or situations where timing is critical.
+                    </p>
+                    <div className="space-y-2">
+                      <h3 className="text-xl font-semibold text-orange-500">Key Benefits</h3>
+                      <ul className="space-y-1" style={{ color: "#0D1B2A" }} role="list">
+                        <li className="flex items-start">
+                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                          <span>Quick funding to close deals before financing falls through</span>
+                        </li>
+                        <li className="flex items-start">
+                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                          <span>Immediate capital for time-sensitive opportunities</span>
+                        </li>
+                        <li className="flex items-start">
+                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                          <span>Simple qualification process with asset-based lending</span>
+                        </li>
+                        <li className="flex items-start">
+                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                          <span>No prepayment penalties</span>
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="pt-3">
+                      <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
+                        <Link href="/apply">Apply for Bridge Loan</Link>
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-4">
+                    <div className="space-y-3">
+                      <h3 className="text-xl font-semibold text-orange-500">Bridge Loan Details</h3>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="space-y-2">
+                          <div className="text-sm text-gray-400">Loan Amount</div>
+                          <div className="text-lg font-medium text-white">$50,000 - $5,000,000</div>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="text-sm text-gray-400">Term Length</div>
+                          <div className="text-lg font-medium text-white">3 - 12 months</div>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="text-sm text-gray-400">Funding Speed</div>
+                          <div className="text-lg font-medium text-white">5-10 business days</div>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="text-sm text-gray-400">Interest Rate</div>
+                          <div className="text-lg font-medium text-white">7% - 12%</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="space-y-3">
+                      <h3 className="text-xl font-semibold text-orange-500">Eligibility Requirements</h3>
+                      <ul className="space-y-1" role="list">
+                        <li className="flex items-start">
+                          <DollarSignIcon
+                            className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5"
+                            aria-hidden="true"
+                          />
+                          <div>
+                            <span className="font-medium text-white">Asset Value:</span>
+                            <p className="text-gray-300">Sufficient collateral (property/assets)</p>
+                          </div>
+                        </li>
+                        <li className="flex items-start">
+                          <ClockIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                          <div>
+                            <span className="font-medium text-white">Exit Strategy:</span>
+                            <p className="text-gray-300">Clear plan to repay/refinance</p>
+                          </div>
+                        </li>
+                        <li className="flex items-start">
+                          <PercentIcon
+                            className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5"
+                            aria-hidden="true"
+                          />
+                          <div>
+                            <span className="font-medium text-white">Credit Score:</span>
+                            <p className="text-gray-300">600+ for owners</p>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="bg-gray-900 border border-gray-700 rounded-lg p-4">
+                      <h4 className="font-medium text-orange-500 mb-2">Best For:</h4>
+                      <ul className="space-y-1 text-gray-300">
+                        <li>Real estate purchases and flips</li>
+                        <li>Business acquisitions</li>
+                        <li>Time-sensitive opportunities</li>
+                        <li>Bridging gaps in permanent financing</li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </TabsContent>
+
+              {/* Equipment Financing */}
+              <TabsContent value="equipment-financing" className="mt-0">
+                <div className="grid gap-6 lg:grid-cols-2">
+                  <div className="space-y-3">
+                    <h3 className="text-2xl font-bold text-orange-500">Equipment Financing</h3>
+                    <p style={{ color: "#0D1B2A" }}>
+                      Equipment financing provides capital specifically for purchasing or leasing machinery, vehicles, technology, and other business equipment. The equipment itself secures the loan, making qualification easier and rates more competitive.
+                    </p>
+                    <div className="space-y-2">
+                      <h3 className="text-xl font-semibold text-orange-500">Key Benefits</h3>
+                      <ul className="space-y-1" style={{ color: "#0D1B2A" }} role="list">
+                        <li className="flex items-start">
+                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                          <span>Lower rates because equipment serves as collateral</span>
+                        </li>
+                        <li className="flex items-start">
+                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                          <span>Flexible terms aligned with equipment lifespan</span>
+                        </li>
+                        <li className="flex items-start">
+                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                          <span>Finance 100% of equipment costs with minimal down payment</span>
+                        </li>
+                        <li className="flex items-start">
+                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                          <span>Preserve working capital and cash flow</span>
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="pt-3">
+                      <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
+                        <Link href="/apply">Apply for Equipment Financing</Link>
+                      </Button>
+                    </div>
+                  </div>
+                  <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-4">
+                    <div className="space-y-3">
+                      <h3 className="text-xl font-semibold text-orange-500">Equipment Financing Details</h3>
+                      <div className="grid grid-cols-2 gap-3">
+                        <div className="space-y-2">
+                          <div className="text-sm text-gray-400">Financing Amount</div>
+                          <div className="text-lg font-medium text-white">$2,500 - $2,000,000</div>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="text-sm text-gray-400">Loan Term</div>
+                          <div className="text-lg font-medium text-white">2 - 7 years</div>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="text-sm text-gray-400">Funding Speed</div>
+                          <div className="text-lg font-medium text-white">5-15 business days</div>
+                        </div>
+                        <div className="space-y-2">
+                          <div className="text-sm text-gray-400">Interest Rate</div>
+                          <div className="text-lg font-medium text-white">Starting at 6.5%</div>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="space-y-3">
+                      <h3 className="text-xl font-semibold text-orange-500">Eligibility Requirements</h3>
+                      <ul className="space-y-1" role="list">
+                        <li className="flex items-start">
+                          <DollarSignIcon
+                            className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5"
+                            aria-hidden="true"
+                          />
+                          <div>
+                            <span className="font-medium text-white">Equipment Type:</span>
+                            <p className="text-gray-300">Most commercial/industrial equipment eligible</p>
+                          </div>
+                        </li>
+                        <li className="flex items-start">
+                          <ClockIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                          <div>
+                            <span className="font-medium text-white">Time in Business:</span>
+                            <p className="text-gray-300">6+ months in operation</p>
+                          </div>
+                        </li>
+                        <li className="flex items-start">
+                          <PercentIcon
+                            className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5"
+                            aria-hidden="true"
+                          />
+                          <div>
+                            <span className="font-medium text-white">Credit Score:</span>
+                            <p className="text-gray-300">550+ for owners</p>
+                          </div>
+                        </li>
+                      </ul>
+                    </div>
+                    <div className="bg-gray-900 border border-gray-700 rounded-lg p-4">
+                      <h4 className="font-medium text-orange-500 mb-2">Best For:</h4>
+                      <ul className="space-y-1 text-gray-300">
+                        <li>Purchasing machinery and industrial equipment</li>
+                        <li>Fleet vehicle acquisition</li>
+                        <li>Technology and IT infrastructure</li>
+                        <li>Construction equipment and tools</li>
                       </ul>
                     </div>
                   </div>
