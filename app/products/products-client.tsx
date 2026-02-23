@@ -8,12 +8,12 @@ import { useState, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 
 const products = [
-  { id: "working-capital", name: "Working Capital" },
-  { id: "merchant-cash", name: "Merchant Cash Advances" },
+  { id: "working-capital", name: "Term Loan" },
   { id: "line-of-credit", name: "Business Line of Credit" },
   { id: "sba-7a", name: "SBA 7a Loans" },
   { id: "sba-504", name: "SBA 504" },
   { id: "bridge-loan", name: "Bridge Loan" },
+  { id: "merchant-cash", name: "Merchant Cash Advances" },
   { id: "equipment-financing", name: "Equipment Financing" },
 ]
 
@@ -88,9 +88,9 @@ export default function ProductsClient() {
               <div className="container px-4 md:px-6">
                 <div className="grid gap-6 lg:grid-cols-2">
                   <div className="space-y-3">
-                    <h3 className="text-2xl font-bold text-orange-500">Working Capital Loans</h3>
+                    <h3 className="text-2xl font-bold text-orange-500">Term Loans</h3>
                     <p style={{ color: "#0D1B2A" }}>
-                      Working capital provides the financial resources your business needs to cover operational
+                      Term loans provide the financial resources your business needs to cover operational
                       expenses, manage cash flow gaps, and take advantage of growth opportunities without disrupting
                       your daily operations.
                     </p>
@@ -117,13 +117,13 @@ export default function ProductsClient() {
                     </div>
                     <div className="pt-3">
                       <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
-                        <Link href="/apply">Apply for Working Capital</Link>
+                        <Link href="/apply">Apply for Term Loan</Link>
                       </Button>
                     </div>
                   </div>
                   <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-4">
                     <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-orange-500">Working Capital Details</h3>
+                      <h3 className="text-xl font-semibold text-orange-500">Term Loan Details</h3>
                       <div className="grid grid-cols-2 gap-3">
                         <div className="space-y-2">
                           <div className="text-sm text-gray-400">Amount</div>
