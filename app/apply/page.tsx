@@ -773,8 +773,6 @@ export default function ApplyPage() {
     
     if (!formData.useOfFunds || formData.useOfFunds.trim() === "") {
       newErrors.useOfFunds = "Please describe how you plan to use the funds"
-    } else if (formData.useOfFunds.trim().length < 10) {
-      newErrors.useOfFunds = "Please provide more detail (at least 10 characters)"
     }
     
     setErrors(newErrors)
@@ -1363,9 +1361,11 @@ export default function ApplyPage() {
       
       try {
         const pdfResult = await downloadApplicationPDF(updatedFormData)
-        if (pdfResult.success && pdfResult.pdfBytes) {
-          pdfBytes = pdfResult.pdfBytes
-          console.log("[Submit] PDF generated successfully, size:", pdfResult.pdfBytes.length, "bytes")
+        if (pdfResult.success && pdfResult.pdfBase64) {
+          // Convert base64 back to bytes
+          const binaryString = atob(pdfResult.pdfBase64)
+          pdfBytes = Array.from(binaryString).map(char => char.charCodeAt(0))
+          console.log("[Submit] PDF generated successfully, size:", pdfBytes.length, "bytes")
         } else {
           console.error("[Submit] PDF generation failed:", pdfResult.error)
           setIsSubmitting(false)
@@ -1624,9 +1624,11 @@ export default function ApplyPage() {
       
       try {
         const pdfResult = await downloadApplicationPDF(updatedFormData)
-        if (pdfResult.success && pdfResult.pdfBytes) {
-          pdfBytes = pdfResult.pdfBytes
-          console.log("[Submit] PDF generated successfully, size:", pdfResult.pdfBytes.length, "bytes")
+        if (pdfResult.success && pdfResult.pdfBase64) {
+          // Convert base64 back to bytes
+          const binaryString = atob(pdfResult.pdfBase64)
+          pdfBytes = Array.from(binaryString).map(char => char.charCodeAt(0))
+          console.log("[Submit] PDF generated successfully, size:", pdfBytes.length, "bytes")
         } else {
           console.error("[Submit] PDF generation failed:", pdfResult.error)
           setIsSubmitting(false)
@@ -1925,7 +1927,12 @@ export default function ApplyPage() {
         
         // Success - redirect to success page
         setIsUploadingDocs(false)
-        router.push("/apply/success")
+        
+        // Use setTimeout to ensure proper state update before navigation
+        setTimeout(() => {
+          console.log("[Docs] Navigating to success page...")
+          router.push("/apply/success")
+        }, 100)
       } else {
         const errorMsg = uploadResult.error || "Unknown error"
         console.error("[Docs] ❌ Document upload failed:", errorMsg)
@@ -2390,7 +2397,7 @@ export default function ApplyPage() {
 
                           <div className="space-y-3">
                             <Label htmlFor="dba" className="text-gray-800">
-                              DBA (if applicable)
+                              DBA (“Doing Business As”)
                             </Label>
                             <Input
                               id="dba"
@@ -3920,6 +3927,42 @@ export default function ApplyPage() {
                       currency="USD"
                     />
                     
+                    {/* Speed Up Your Approval - Prominent CTA */}
+                    <div className="btn-blue-elite rounded-xl p-5 md:p-6 mb-6 shadow-lg">
+                      <div className="flex items-center gap-4">
+                        <div className="flex-shrink-0 w-14 h-14 rounded-full bg-white/20 backdrop-blur flex items-center justify-center">
+                          <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                          </svg>
+                        </div>
+                        <div className="flex-1">
+                          <h4 className="font-bold text-white text-lg mb-1">Speed Up Your Approval!</h4>
+                          <p className="text-white/90 text-sm">
+                            Upload your bank statements and business documents now to expedite your review and get funded faster.
+                          </p>
+                        </div>
+                        <Button 
+                          onClick={() => {
+                            window.scrollTo({ top: 0, behavior: "smooth" })
+                            setStep(6)
+                          }} 
+                          className="hidden sm:flex bg-white text-blue-600 hover:bg-blue-50 font-semibold px-6 py-2 shadow-md"
+                        >
+                          Upload Now →
+                        </Button>
+                      </div>
+                      {/* Mobile Upload Button */}
+                      <Button 
+                        onClick={() => {
+                          window.scrollTo({ top: 0, behavior: "smooth" })
+                          setStep(6)
+                        }} 
+                        className="sm:hidden w-full mt-4 bg-white text-blue-600 hover:bg-blue-50 font-semibold py-3"
+                      >
+                        Upload Documents Now →
+                      </Button>
+                    </div>
+                    
                     {/* Success Header Card */}
                     <div className="bg-white rounded-xl p-6 md:p-8 mb-6 shadow-sm border border-gray-200 text-center">
                       <div className="mx-auto w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mb-4">
@@ -3991,42 +4034,6 @@ export default function ApplyPage() {
                           ))}
                         </div>
                       </div>
-                    </div>
-
-                    {/* Speed Up Your Approval - Prominent CTA */}
-                    <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-xl p-5 md:p-6 mb-6 shadow-lg shadow-blue-500/20">
-                      <div className="flex items-center gap-4">
-                        <div className="flex-shrink-0 w-14 h-14 rounded-full bg-white/20 backdrop-blur flex items-center justify-center">
-                          <svg className="w-7 h-7 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                          </svg>
-                        </div>
-                        <div className="flex-1">
-                          <h4 className="font-bold text-white text-lg mb-1">Speed Up Your Approval!</h4>
-                          <p className="text-blue-100 text-sm">
-                            Upload your bank statements and business documents now to expedite your review and get funded faster.
-                          </p>
-                        </div>
-                        <Button 
-                          onClick={() => {
-                            window.scrollTo({ top: 0, behavior: "smooth" })
-                            setStep(6)
-                          }} 
-                          className="hidden sm:flex bg-white text-blue-600 hover:bg-blue-50 font-semibold px-6 py-2 shadow-md"
-                        >
-                          Upload Now →
-                        </Button>
-                      </div>
-                      {/* Mobile Upload Button */}
-                      <Button 
-                        onClick={() => {
-                          window.scrollTo({ top: 0, behavior: "smooth" })
-                          setStep(6)
-                        }} 
-                        className="sm:hidden w-full mt-4 bg-white text-blue-600 hover:bg-blue-50 font-semibold py-3"
-                      >
-                        Upload Documents Now →
-                      </Button>
                     </div>
 
                     {/* Other Actions */}
@@ -4307,20 +4314,6 @@ export default function ApplyPage() {
                             </div>
                           ))}
                         </div>
-                        <div className="mt-4 pt-4 border-t border-gray-200">
-                          <Button
-                            type="button"
-                            variant="outline"
-                            size="sm"
-                            className="text-orange-600 border-orange-300 hover:bg-orange-50"
-                            onClick={() => window.open("/documents-needed", "_blank")}
-                          >
-                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                            </svg>
-                            View Documents Needed for Different Products
-                          </Button>
-                        </div>
                       </div>
                     </div>
 
@@ -4407,7 +4400,7 @@ export default function ApplyPage() {
                         <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                       </svg>
                       <div className="flex-1">
-                        <p className="text-xs md:text-sm text-blue-900 font-medium mb-1">Privacy & Data Security (GLBA Compliant)</p>
+                        <p className="text-xs md:text-sm text-blue-900 font-medium mb-1">Privacy & Data Security</p>
                         <p className="text-xs text-blue-800 leading-relaxed">
                           All information is encrypted with AES-256 encryption and protected under the Gramm-Leach-Bliley Act. We maintain strict confidentiality and safeguards. See our <Link href="/privacy" className="text-blue-600 hover:text-blue-700 underline">Privacy Policy</Link> for details.
                         </p>
