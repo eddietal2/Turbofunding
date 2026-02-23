@@ -5,10 +5,28 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { CheckIcon, DollarSignIcon, ClockIcon, PercentIcon } from "lucide-react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
 
 export default function ProductsClient() {
+  const searchParams = useSearchParams()
   const [selectedProduct, setSelectedProduct] = useState("working-capital")
+
+  // Map navbar product slugs to component tab values
+  const productSlugMap: { [key: string]: string } = {
+    "working-capital": "working-capital",
+    "merchant-cash-advance": "merchant-cash",
+    "business-line-of-credit": "line-of-credit",
+    "sba-7a-loans": "sba-7a",
+    "sba-504": "sba-504",
+  }
+
+  useEffect(() => {
+    const productParam = searchParams.get("product")
+    if (productParam && productSlugMap[productParam]) {
+      setSelectedProduct(productSlugMap[productParam])
+    }
+  }, [searchParams])
 
   return (
     <div className="flex min-h-screen flex-col bg-[#F5F7FA]">

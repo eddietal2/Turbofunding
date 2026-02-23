@@ -5,20 +5,31 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
-import { MenuIcon, XIcon } from "lucide-react"
+import { MenuIcon, XIcon, ChevronDownIcon } from "lucide-react"
 
 const navItems = [
   { href: "/", label: "Home" },
-  { href: "/products", label: "Products" },
   { href: "/industries", label: "Industries" },
   { href: "/team", label: "About Us" },
   { href: "/contact", label: "Contact" },
-  { href: "/apply", label: "Apply" },
+  // { href: "/apply", label: "Apply" },
+]
+
+const products = [
+  { name: "Working Capital", slug: "working-capital" },
+  { name: "Bridge Loan", slug: "bridge-loan" },
+  { name: "Business Line of Credit", slug: "business-line-of-credit" },
+  { name: "SBA 7a Loans", slug: "sba-7a-loans" },
+  { name: "Merchant Cash Advance", slug: "merchant-cash-advance" },
+  { name: "SBA 504", slug: "sba-504" },
+  { name: "Equipment Financing", slug: "equipment-financing" },
 ]
 
 export function Navbar() {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
+  const [isProductsDropdownOpen, setIsProductsDropdownOpen] = useState(false)
+  const [isMobileProductsOpen, setIsMobileProductsOpen] = useState(false)
 
   const toggleMenu = () => setIsOpen(!isOpen)
   const closeMenu = () => setIsOpen(false)
@@ -68,6 +79,46 @@ export function Navbar() {
               {item.label}
             </Link>
           ))}
+
+          {/* Products Dropdown */}
+          <div
+            className="relative group"
+            onMouseEnter={() => setIsProductsDropdownOpen(true)}
+            onMouseLeave={() => setIsProductsDropdownOpen(false)}
+          >
+            <button
+              className="text-sm tracking-wide transition-colors whitespace-nowrap leading-tight font-semibold text-white hover:text-orange-500 flex items-center gap-1"
+              aria-haspopup="true"
+              aria-expanded={isProductsDropdownOpen}
+            >
+              Products
+              <ChevronDownIcon 
+                className={`h-4 w-4 transition-transform duration-200 ${
+                  isProductsDropdownOpen ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+
+            {/* Dropdown Menu */}
+            <div
+              className={`absolute top-full left-0 mt-0 w-64 bg-[#0D1B2A] border border-gray-700 rounded-lg shadow-xl overflow-hidden transition-all duration-200 origin-top ${
+                isProductsDropdownOpen
+                  ? "opacity-100 scale-y-100 pointer-events-auto"
+                  : "opacity-0 scale-y-95 pointer-events-none"
+              }`}
+            >
+              {products.map((product) => (
+                <Link
+                  key={product.slug}
+                  href={`/products?product=${product.slug}`}
+                  className="block px-4 py-3 text-sm text-gray-300 hover:bg-orange-500 hover:text-white transition-colors font-medium border-b border-gray-700 last:border-b-0"
+                  onClick={() => setIsProductsDropdownOpen(false)}
+                >
+                  {product.name}
+                </Link>
+              ))}
+            </div>
+          </div>
         </nav>
 
         {/* Desktop CTA - hidden on /apply pages */}
@@ -150,6 +201,38 @@ export function Navbar() {
                   </Link>
                 </li>
               ))}
+              
+              {/* Mobile Products Submenu */}
+              <li>
+                <button
+                  onClick={() => setIsMobileProductsOpen(!isMobileProductsOpen)}
+                  className="w-full flex items-center justify-between py-3 px-4 rounded-lg text-lg tracking-wide transition-colors text-gray-300 font-normal hover:text-white hover:bg-gray-800"
+                >
+                  <span>Products</span>
+                  <ChevronDownIcon 
+                    className={`h-5 w-5 transition-transform duration-200 ${
+                      isMobileProductsOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+                
+                {/* Products Submenu */}
+                {isMobileProductsOpen && (
+                  <ul className="mt-2 ml-4 space-y-2 border-l border-gray-700">
+                    {products.map((product) => (
+                      <li key={product.slug}>
+                        <Link
+                          href={`/products?product=${product.slug}`}
+                          onClick={closeMenu}
+                          className="block py-2 px-4 text-lg text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+                        >
+                          {product.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
             </ul>
           </nav>
 
