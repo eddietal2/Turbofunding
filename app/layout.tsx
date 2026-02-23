@@ -270,7 +270,7 @@ export default function RootLayout({
           redditPixelId={process.env.NEXT_PUBLIC_REDDIT_PIXEL_ID}
         />
       </head>
-      <body className={`${inter.className} ${spaceGrotesk.variable}`}>
+      <body className={`${inter.className} ${spaceGrotesk.variable} pt-16`}>
         {/* ScrollToTop component to reset scroll position on navigation */}
         <ScrollToTop />
         <Navbar />

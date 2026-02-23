@@ -42,7 +42,7 @@ export function Navbar() {
   }
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-gray-800 bg-[#0D1B2A]">
+    <header className="fixed top-0 left-0 right-0 z-50 h-16 w-full border-b border-gray-800 bg-[#0D1B2A]">
       <div className="container flex h-16 items-center justify-between">
         {/* Logo */}
         <Link
