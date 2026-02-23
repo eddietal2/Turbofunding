@@ -67,19 +67,13 @@ export default function GlobalError({
             )}
 
             {/* Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
+            <div className="flex justify-center pt-6">
               <button
                 onClick={reset}
                 className="px-8 py-3 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white font-semibold rounded-lg transition-all"
               >
                 Try Again
               </button>
-              <a
-                href="/"
-                className="px-8 py-3 border border-gray-600 text-white hover:bg-gray-900 font-semibold rounded-lg transition-all"
-              >
-                Go Home
-              </a>
             </div>
 
             {/* Contact Info */}

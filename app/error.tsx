@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { AlertTriangle, Home, RefreshCw } from "lucide-react"
+import { AlertTriangle, RefreshCw } from "lucide-react"
 
 export default function Error({
   error,
@@ -82,23 +82,13 @@ export default function Error({
           )}
 
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
+          <div className="flex justify-center pt-6">
             <Button
               onClick={reset}
               className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white text-base h-12 px-8 inline-flex items-center justify-center gap-2"
             >
               <RefreshCw className="w-5 h-5" />
               Try Again
-            </Button>
-            <Button
-              asChild
-              variant="outline"
-              className="border-gray-600 text-white hover:bg-gray-900 text-base h-12 px-8 inline-flex items-center justify-center gap-2"
-            >
-              <Link href="/">
-                <Home className="w-5 h-5" />
-                Back to Home
-              </Link>
             </Button>
           </div>
 
