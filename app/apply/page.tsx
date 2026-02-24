@@ -1,6 +1,6 @@
 "use client"
 // DEV MODE: Set to true to pre-fill all required fields for quick testing
-const DEV_MODE = false
+const DEV_MODE = true
 
 import { useState, useEffect, useCallback, useRef } from "react"
 import Link from "next/link"
@@ -32,7 +32,7 @@ import { ConversionTracking } from "@/components/conversion-tracking"
 import { SignatureModal } from "@/components/signature-modal"
 import { submitApplication } from "@/lib/actions/submit-application"
 import { downloadApplicationPDF } from "@/lib/actions/download-application-pdf"
-import { uploadApplicationDocuments, ApplicationFolder } from "@/lib/actions/upload-application-documents"
+import { uploadApplicationDocuments, ApplicationFolder, saveIncompleteApplication, deleteIncompleteApplication } from "@/lib/actions/upload-application-documents"
 
 const DRAFT_STORAGE_KEY = "turbo_funding_application_draft"
 const DRAFT_STEP_KEY = "turbo_funding_application_step"
@@ -255,6 +255,7 @@ export default function ApplyPage() {
   const [lastSaved, setLastSaved] = useState<Date | null>(null)
   const [formData, setFormData] = useState(getInitialFormData())
   const [applicationFolderPath, setApplicationFolderPath] = useState<string | null>(null)
+  const [incompleteApplicationPath, setIncompleteApplicationPath] = useState<string | null>(null)
   const [isUploadingDocs, setIsUploadingDocs] = useState(false)
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     funding: true,
@@ -1281,7 +1282,7 @@ export default function ApplyPage() {
     }
   }
 
-  const nextStep = () => {
+  const nextStep = async () => {
     // Validate current step before proceeding
     let validationErrors: Record<string, string> = {}
     
@@ -1307,6 +1308,22 @@ export default function ApplyPage() {
         phone: prev.phone || formData.startingPhone,
         email: prev.email || formData.startingEmail,
       }))
+      
+      // Save incomplete application to Vercel Blob
+      console.log("[Apply] Saving incomplete application for tracking...")
+      const incompleteResult = await saveIncompleteApplication(
+        formData.startingBusinessName,
+        formData.startingOwnerName,
+        formData.startingPhone,
+        formData.startingEmail
+      )
+      
+      if (incompleteResult.success && incompleteResult.filePath) {
+        setIncompleteApplicationPath(incompleteResult.filePath)
+        console.log("[Apply] Incomplete application saved:", incompleteResult.filePath)
+      } else {
+        console.warn("[Apply] Failed to save incomplete application:", incompleteResult.error)
+      }
     } else if (step === 2) {
       validationErrors = validateStep1()
       if (Object.keys(validationErrors).length > 0) {
@@ -1487,8 +1504,16 @@ export default function ApplyPage() {
 
         if (result.success) {
           console.log("[Submit] Application submitted successfully!")
+          
+          // Delete incomplete application file from Vercel Blob
+          if (incompleteApplicationPath) {
+            console.log("[Submit] Deleting incomplete application file...")
+            await deleteIncompleteApplication(incompleteApplicationPath)
+            setIncompleteApplicationPath(null)
+          }
+          
           setIsSubmitting(false)
-          nextStep()
+          await nextStep()
         } else {
           throw new Error(result.error || "Submission failed")
         }
@@ -1791,7 +1816,7 @@ export default function ApplyPage() {
           }
           
           setIsSubmitting(false)
-          nextStep()
+          await nextStep()
         } else {
           console.error("[Submit] Application submission API failed:", result.error)
           setIsSubmitting(false)
@@ -2467,10 +2492,10 @@ export default function ApplyPage() {
                           </Button>
                           <Button
                             type="button"
-                            onClick={() => {
+                            onClick={async () => {
                               const newErrors = validateStartingInfo()
                               if (Object.keys(newErrors).length === 0) {
-                                nextStep()
+                                await nextStep()
                               } else {
                                 setErrors(newErrors)
                               }
@@ -3481,9 +3506,9 @@ export default function ApplyPage() {
                         </Button>
                         <Button
                           type="button"
-                          onClick={() => {
+                          onClick={async () => {
                             if (DEV_MODE || validateStep3()) {
-                              nextStep()
+                              await nextStep()
                             }
                           }}
                           className="bg-orange-500 hover:bg-orange-600 text-white"
