@@ -97,12 +97,17 @@ const US_STATES = [
 const MIN_FUNDING_AMOUNT = 1000
 
 const devFormData = {
-  // Step 1: Funding Information
+  // Step 1: Starting Information (NEW)
+  startingBusinessName: "Test Business LLC",
+  startingOwnerName: "John Doe",
+  startingPhone: "(555) 987-6543",
+  startingEmail: "john@testbusiness.com",
+  // Step 2: Funding Information
   amountRequested: "50000",
   useOfFunds: "expansion",
   fundingAmount: "$50,000",
   fundingPurpose: "Business Expansion",
-  // Step 2: Business Information
+  // Step 3: Business Information
   businessName: "Test Business LLC",
   legalBusinessName: "Test Business LLC",
   dba: "Test DBA",
@@ -122,7 +127,7 @@ const devFormData = {
   businessZipCode: "90001",
   businessPhone: "(555) 123-4567",
   businessEmail: "contact@testbusiness.com",
-  email: "john@testbusiness.com",
+  email: "eddielacrosse2@gmail.com",
   // Step 3: Owner Information
   firstName: "John",
   lastName: "Doe",
@@ -156,6 +161,11 @@ const devFormData = {
 }
 
 const getInitialFormData = () => ({
+  // Starting Information (Step 1 - NEW)
+  startingBusinessName: DEV_MODE ? devFormData.startingBusinessName : "",
+  startingOwnerName: DEV_MODE ? devFormData.startingOwnerName : "",
+  startingPhone: DEV_MODE ? devFormData.startingPhone : "",
+  startingEmail: DEV_MODE ? devFormData.startingEmail : "",
   // Business Information
   legalBusinessName: DEV_MODE ? devFormData.legalBusinessName : "",
   dbaName: DEV_MODE ? devFormData.dbaName : "",
@@ -760,6 +770,41 @@ export default function ApplyPage() {
     return `${digits.slice(0, 5)}-${digits.slice(5)}`
   }
 
+  // VALIDATION HELPERS
+  const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
+  const isValidPhone = (phone: string) => phone.replace(/\D/g, "").length >= 10
+  const isValidPersonName = (name: string) => /^[a-zA-Z\s\-']+$/.test(name)
+  const isValidEIN = (ein: string) => /^\d{2}-?\d{7}$/.test(ein.replace(/\s/g, ""))
+
+  const validateStartingInfo = (): Record<string, string> => {
+    const newErrors: Record<string, string> = {}
+    
+    if (!formData.startingBusinessName.trim()) {
+      newErrors.startingBusinessName = "Business name is required"
+    }
+    
+    if (!formData.startingOwnerName.trim()) {
+      newErrors.startingOwnerName = "Owner name is required"
+    } else if (!isValidPersonName(formData.startingOwnerName)) {
+      newErrors.startingOwnerName = "Owner name contains invalid characters"
+    }
+    
+    if (!formData.startingPhone.trim()) {
+      newErrors.startingPhone = "Phone number is required"
+    } else if (!isValidPhone(formData.startingPhone)) {
+      newErrors.startingPhone = "Invalid phone format"
+    }
+    
+    if (!formData.startingEmail.trim()) {
+      newErrors.startingEmail = "Email is required"
+    } else if (!isValidEmail(formData.startingEmail)) {
+      newErrors.startingEmail = "Invalid email format"
+    }
+    
+    setErrors(newErrors)
+    return newErrors
+  }
+
   const validateStep1 = (): Record<string, string> => {
     const newErrors: Record<string, string> = {}
     
@@ -779,7 +824,7 @@ export default function ApplyPage() {
     return newErrors
   }
 
-  // Check if step 1 fields are valid (without setting errors)
+  // Check if Step 2 (Funding Info) fields are valid (without setting errors)
   const isStep1Valid = 
     formData.amountRequested.trim() !== "" &&
     !isNaN(Number(formData.amountRequested)) &&
@@ -787,17 +832,8 @@ export default function ApplyPage() {
     Number(formData.amountRequested) >= MIN_FUNDING_AMOUNT &&
     formData.useOfFunds.trim().length >= 1
 
-  // Email validation helper
-  const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
-  
-  // Phone validation helper (at least 10 digits)
-  const isValidPhone = (phone: string) => phone.replace(/\D/g, "").length >= 10
-
   // Zip code validation helper (5 digits)
   const isValidZip = (zip: string) => /^\d{5}(-\d{4})?$/.test(zip)
-
-  // EIN validation helper (XX-XXXXXXX format)
-  const isValidEIN = (ein: string) => /^\d{2}-?\d{7}$/.test(ein.replace(/\s/g, ""))
 
   // URL validation helper
   const isValidURL = (url: string) => {
@@ -1028,13 +1064,6 @@ export default function ApplyPage() {
     return "Invalid date of birth"
   }
 
-  // Name validation - check for invalid characters
-  const isValidPersonName = (name: string) => {
-    // Allow alphanumeric, spaces, hyphens, apostrophes
-    const validPattern = /^[a-zA-Z\s\-']+$/
-    return validPattern.test(name)
-  }
-
   const validateStep3 = (): Record<string, string> => {
     const newErrors: Record<string, string> = {}
     
@@ -1257,18 +1286,40 @@ export default function ApplyPage() {
     let validationErrors: Record<string, string> = {}
     
     if (step === 1) {
+      // Validate Starting Information step
+      validationErrors = validateStartingInfo()
+      if (Object.keys(validationErrors).length > 0) {
+        scrollToFirstError(validationErrors)
+        return
+      }
+      // Autofill subsequent steps with Starting Info data
+      // Parse owner name into first and last name
+      const ownerNameParts = formData.startingOwnerName.trim().split(/\s+/)
+      const firstName = ownerNameParts[0] || ""
+      const lastName = ownerNameParts.slice(1).join(" ") || ""
+      
+      // Autofill corresponding fields
+      setFormData((prev) => ({
+        ...prev,
+        legalBusinessName: prev.legalBusinessName || formData.startingBusinessName,
+        firstName: prev.firstName || firstName,
+        lastName: prev.lastName || lastName,
+        phone: prev.phone || formData.startingPhone,
+        email: prev.email || formData.startingEmail,
+      }))
+    } else if (step === 2) {
       validationErrors = validateStep1()
       if (Object.keys(validationErrors).length > 0) {
         scrollToFirstError(validationErrors)
         return
       }
-    } else if (step === 2) {
+    } else if (step === 3) {
       validationErrors = validateStep2()
       if (Object.keys(validationErrors).length > 0) {
         scrollToFirstError(validationErrors)
         return
       }
-    } else if (step === 3) {
+    } else if (step === 4) {
       validationErrors = validateStep3()
       if (Object.keys(validationErrors).length > 0) {
         scrollToFirstError(validationErrors)
@@ -2194,7 +2245,7 @@ export default function ApplyPage() {
                       <div className="h-2 bg-gray-200 rounded-full overflow-hidden relative">
                         {/* Step markers */}
                         <div className="absolute inset-0 flex justify-between px-1 items-center">
-                          {[1, 2, 3, 4, 5, 6].map((s) => (
+                          {[1, 2, 3, 4, 5, 6, 7].map((s) => (
                             <div
                               key={s}
                               className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
@@ -2206,7 +2257,7 @@ export default function ApplyPage() {
                         {/* Progress fill - minimum 8% so step 1 shows some progress */}
                         <div 
                           className="h-full bg-gradient-to-r from-orange-400 to-orange-600 rounded-full transition-all duration-500 ease-out"
-                          style={{ width: `${Math.max(8, ((step) / 6) * 100)}%` }}
+                          style={{ width: `${Math.max(8, ((step) / 7) * 100)}%` }}
                         />
                       </div>
                     </div>
@@ -2219,20 +2270,21 @@ export default function ApplyPage() {
                         </div>
                         <div>
                           <p className="text-sm font-semibold text-gray-900 font-space-grotesk">
-                            {step === 1 && "Funding Info"}
-                            {step === 2 && "Business Info"}
-                            {step === 3 && "Owner Info"}
-                            {step === 4 && "Signature"}
-                            {step === 5 && "Confirmation"}
-                            {step === 6 && "Documents"}
+                            {step === 1 && "Starting Info"}
+                            {step === 2 && "Funding Info"}
+                            {step === 3 && "Business Info"}
+                            {step === 4 && "Owner Info"}
+                            {step === 5 && "Signature"}
+                            {step === 6 && "Confirmation"}
+                            {step === 7 && "Documents"}
                           </p>
-                          <p className="text-xs text-gray-500 font-space-grotesk">Step {step} of 6</p>
+                          <p className="text-xs text-gray-500 font-space-grotesk">Step {step} of 7</p>
                         </div>
                       </div>
                       
                       {/* Step Pills */}
                       <div className="flex gap-1.5">
-                        {[1, 2, 3, 4, 5, 6].map((s) => (
+                        {[1, 2, 3, 4, 5, 6, 7].map((s) => (
                           <div
                             key={s}
                             className={`w-2 h-2 rounded-full transition-all duration-300 ${
@@ -2255,18 +2307,19 @@ export default function ApplyPage() {
                       <div className="absolute top-6 left-0 right-0 h-1.5 bg-gray-200 rounded-full" />
                       <div 
                         className="absolute top-6 left-0 h-1.5 bg-gradient-to-r from-green-400 via-green-500 to-green-600 rounded-full transition-all duration-500 ease-out"
-                        style={{ width: `${((step - 1) / 5) * 100}%` }}
+                        style={{ width: `${((step - 1) / 6) * 100}%` }}
                       />
                       
                       {/* Step Circles */}
                       <div className="relative flex justify-between">
                         {[
-                          { num: 1, label: "Funding Info" },
-                          { num: 2, label: "Business Info" },
-                          { num: 3, label: "Owner Info" },
-                          { num: 4, label: "Signature" },
-                          { num: 5, label: "Confirmation" },
-                          { num: 6, label: "Documents" },
+                          { num: 1, label: "Starting Info" },
+                          { num: 2, label: "Funding Info" },
+                          { num: 3, label: "Business Info" },
+                          { num: 4, label: "Owner Info" },
+                          { num: 5, label: "Signature" },
+                          { num: 6, label: "Confirmation" },
+                          { num: 7, label: "Documents" },
                         ].map(({ num, label }) => (
                           <div 
                             key={num} 
@@ -2298,10 +2351,143 @@ export default function ApplyPage() {
                   </div>
                 </div>
 
-                {/* Step 1: Funding Information */}
+                {/* Step 1: Starting Information */}
                 {step === 1 && (
                   <>
-                    <ConversionTracking eventName="AddPaymentInfo" eventData={{ content_type: "application_step_1" }} />
+                    <Card className="bg-white border-gray-200">
+                      <CardContent className="pt-6">
+                        <p className="text-gray-600 mb-6">Let's start with your basic information.</p>
+                        <form className="space-y-6">
+                          <div className="space-y-3">
+                            <Label htmlFor="startingBusinessName" className="text-gray-800">
+                              Business Name <span className="text-red-500">*</span>
+                            </Label>
+                            <Input
+                              id="startingBusinessName"
+                              name="startingBusinessName"
+                              type="text"
+                              value={formData.startingBusinessName}
+                              onChange={(e) => {
+                                handleChange(e)
+                                if (errors.startingBusinessName) {
+                                  setErrors((prev) => ({ ...prev, startingBusinessName: "" }))
+                                }
+                              }}
+                              placeholder="Enter your business name"
+                              className={`bg-white border-gray-300 text-gray-900 ${errors.startingBusinessName ? "border-red-500 focus:ring-red-500" : ""}`}
+                              required
+                            />
+                            {errors.startingBusinessName && (
+                              <p className="text-red-500 text-sm">{errors.startingBusinessName}</p>
+                            )}
+                          </div>
+
+                          <div className="space-y-3">
+                            <Label htmlFor="startingOwnerName" className="text-gray-800">
+                              Owner Name <span className="text-red-500">*</span>
+                            </Label>
+                            <Input
+                              id="startingOwnerName"
+                              name="startingOwnerName"
+                              type="text"
+                              value={formData.startingOwnerName}
+                              onChange={(e) => {
+                                handleChange(e)
+                                if (errors.startingOwnerName) {
+                                  setErrors((prev) => ({ ...prev, startingOwnerName: "" }))
+                                }
+                              }}
+                              placeholder="Enter owner's full name"
+                              className={`bg-white border-gray-300 text-gray-900 ${errors.startingOwnerName ? "border-red-500 focus:ring-red-500" : ""}`}
+                              required
+                            />
+                            {errors.startingOwnerName && (
+                              <p className="text-red-500 text-sm">{errors.startingOwnerName}</p>
+                            )}
+                          </div>
+
+                          <div className="space-y-3">
+                            <Label htmlFor="startingPhone" className="text-gray-800">
+                              Phone Number <span className="text-red-500">*</span>
+                            </Label>
+                            <Input
+                              id="startingPhone"
+                              name="startingPhone"
+                              type="tel"
+                              value={formData.startingPhone}
+                              onChange={(e) => {
+                                const formatted = formatPhone(e.target.value)
+                                setFormData({ ...formData, startingPhone: formatted })
+                                if (errors.startingPhone) {
+                                  setErrors((prev) => ({ ...prev, startingPhone: "" }))
+                                }
+                              }}
+                              placeholder="(123) 456-7890"
+                              className={`bg-white border-gray-300 text-gray-900 ${errors.startingPhone ? "border-red-500 focus:ring-red-500" : ""}`}
+                              required
+                            />
+                            {errors.startingPhone && (
+                              <p className="text-red-500 text-sm">{errors.startingPhone}</p>
+                            )}
+                          </div>
+
+                          <div className="space-y-3">
+                            <Label htmlFor="startingEmail" className="text-gray-800">
+                              Email Address <span className="text-red-500">*</span>
+                            </Label>
+                            <Input
+                              id="startingEmail"
+                              name="startingEmail"
+                              type="email"
+                              value={formData.startingEmail}
+                              onChange={(e) => {
+                                handleChange(e)
+                                if (errors.startingEmail) {
+                                  setErrors((prev) => ({ ...prev, startingEmail: "" }))
+                                }
+                              }}
+                              placeholder="your@email.com"
+                              className={`bg-white border-gray-300 text-gray-900 ${errors.startingEmail ? "border-red-500 focus:ring-red-500" : ""}`}
+                              required
+                            />
+                            {errors.startingEmail && (
+                              <p className="text-red-500 text-sm">{errors.startingEmail}</p>
+                            )}
+                          </div>
+                        </form>
+
+                        <div className="flex gap-3 mt-8">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            onClick={() => (window.location.href = "/")}
+                            className="font-semibold"
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              const newErrors = validateStartingInfo()
+                              if (Object.keys(newErrors).length === 0) {
+                                nextStep()
+                              } else {
+                                setErrors(newErrors)
+                              }
+                            }}
+                            className="flex-1 bg-gradient-to-r from-orange-400 to-orange-600 hover:from-orange-500 hover:to-orange-700 text-white"
+                          >
+                            Next
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </>
+                )}
+
+                {/* Step 2: Funding Information (ORIGINAL Step 1) */}
+                {step === 2 && (
+                  <>
+                    <ConversionTracking eventName="AddPaymentInfo" eventData={{ content_type: "application_step_2" }} />
                     <Card className="bg-white border-gray-200">
                       <CardContent className="pt-6">
                         <p className="text-gray-600 mb-6">Tell us about your funding needs.</p>
@@ -2375,10 +2561,10 @@ export default function ApplyPage() {
                   </>
                 )}
 
-                {/* Step 2: Business Information */}
-                {step === 2 && (
+                {/* Step 3: Business Information */}
+                {step === 3 && (
                   <>
-                    <ConversionTracking eventName="AddPaymentInfo" eventData={{ content_type: "application_step_2" }} />
+                    <ConversionTracking eventName="AddPaymentInfo" eventData={{ content_type: "application_step_3" }} />
                     <Card className="bg-white border-gray-200">
                       <CardContent className="pt-6">
                         <p className="text-gray-600 mb-6">Tell us about your business to help us find the right funding solution.</p>
@@ -2720,10 +2906,10 @@ export default function ApplyPage() {
                   </>
                 )}
 
-                {/* Step 3: Owner Information */}
-                {step === 3 && (
+                {/* Step 4: Owner Information */}
+                {step === 4 && (
                   <>
-                    <ConversionTracking eventName="AddPaymentInfo" eventData={{ content_type: "application_step_3" }} />
+                    <ConversionTracking eventName="AddPaymentInfo" eventData={{ content_type: "application_step_4" }} />
                     <Card className="bg-white border-gray-200">
                       <CardContent className="pt-6">
                         <p className="text-gray-600 mb-6">Please provide owner information.</p>
@@ -3308,12 +3494,12 @@ export default function ApplyPage() {
                   </>
                 )}
 
-                {/* Step 4: Review & Submit */}
-                {step === 4 && (
+                {/* Step 5: Review & Submit */}
+                {step === 5 && (
                   <>
                     <ConversionTracking
                       eventName="InitiateCheckout"
-                      eventData={{ content_type: "application_step_4" }}
+                      eventData={{ content_type: "application_step_5" }}
                     />
                     
                     {/* Header Card */}
@@ -3918,8 +4104,8 @@ export default function ApplyPage() {
                   </>
                 )}
 
-                {/* Step 5: Confirmation */}
-                {step === 5 && (
+                {/* Step 6: Confirmation */}
+                {step === 6 && (
                   <>
                     <ConversionTracking
                       eventName="Purchase"
@@ -4103,10 +4289,10 @@ export default function ApplyPage() {
                   </>
                 )}
 
-                {/* Step 6: Documents */}
-                {step === 6 && (
+                {/* Step 7: Documents */}
+                {step === 7 && (
                   <>
-                    <ConversionTracking eventName="AddPaymentInfo" eventData={{ content_type: "application_step_6" }} />
+                    <ConversionTracking eventName="AddPaymentInfo" eventData={{ content_type: "application_step_7" }} />
                     
                     {/* Header Card */}
                     <div className="bg-white rounded-xl p-6 md:p-8 mb-6 shadow-sm border border-gray-200">
