@@ -124,6 +124,14 @@ export function Navbar() {
         {/* Desktop CTA - hidden on /apply pages */}
         {!pathname.startsWith("/apply") && (
           <div className="hidden md:flex items-center gap-4">
+            <Link
+              href="https://calendly.com/vivek"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2 text-sm font-semibold text-white hover:text-orange-500 transition-colors"
+            >
+              Book a Call
+            </Link>
             <Button asChild className="btn-gold-elite text-white font-semibold">
               <Link href="/apply">Apply Now</Link>
             </Button>
@@ -238,7 +246,16 @@ export function Navbar() {
 
           {/* CTA Button - hidden on /apply pages */}
           {!pathname.startsWith("/apply") && (
-            <div className="p-4">
+            <div className="p-4 space-y-2">
+              <Link
+                href="https://calendly.com/vivek"
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={closeMenu}
+                className="block py-3 px-4 text-center rounded-lg font-semibold text-white bg-gray-800 hover:bg-gray-700 transition-colors"
+              >
+                Book a Call
+              </Link>
               <Button asChild className="w-full btn-gold-elite text-white font-semibold" onClick={closeMenu}>
                 <Link href="/apply">Apply Now</Link>
               </Button>

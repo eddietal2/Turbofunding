@@ -431,7 +431,7 @@ export default function Home() {
                       playsInline
                       className="w-full h-full object-cover"
                     >
-                      <source src="/videos/hero-phone-video-01.mp4" type="video/mp4" />
+                      <source src="/videos/TF_Phone_Video.mp4" type="video/mp4" />
                     </video>
                   </div>
                   

@@ -1,0 +1,65 @@
+{
+  "platforms": {
+    "google_analytics": {
+      "enabled": true,
+      "events": ["page_view", "purchase", "begin_checkout", "generate_lead", "contact", "view_item"],
+      "enhanced_ecommerce": true
+    },
+    "facebook": {
+      "enabled": true,
+      "events": ["PageView", "Purchase", "InitiateCheckout", "Lead", "Contact", "ViewContent"],
+      "conversion_api": true,
+      "custom_audiences": true
+    },
+    "linkedin": {
+      "enabled": true,
+      "events": ["PageView", "Purchase", "Lead"],
+      "matched_audiences": true
+    },
+    "tiktok": {
+      "enabled": true,
+      "events": ["PageView", "CompletePayment", "InitiateCheckout", "SubmitForm", "ViewContent"],
+      "advanced_matching": true
+    },
+    "twitter": {
+      "enabled": true,
+      "events": ["PageView", "Purchase", "Lead"],
+      "tailored_audiences": true
+    },
+    "snapchat": {
+      "enabled": true,
+      "events": ["PAGE_VIEW", "PURCHASE", "SIGN_UP", "VIEW_CONTENT"],
+      "snap_audience_match": true
+    },
+    "pinterest": {
+      "enabled": true,
+      "events": ["pagevisit", "signup", "lead", "viewcategory"],
+      "enhanced_match": true
+    },
+    "microsoft": {
+      "enabled": true,
+      "events": ["page_view", "purchase", "lead"],
+      "offline_conversions": true
+    },
+    "reddit": {
+      "enabled": true,
+      "events": ["PageVisit", "Purchase", "Lead", "ViewContent"]
+    }
+  },
+  "conversion_values": {
+    "application_submitted": {
+      "less_than_50k": 25000,
+      "50k_to_100k": 75000,
+      "100k_to_250k": 175000,
+      "250k_to_500k": 375000,
+      "500k_to_1m": 750000,
+      "more_than_1m": 1500000
+    },
+    "lead_values": {
+      "contact_form": 50,
+      "phone_call": 100,
+      "application_start": 200,
+      "consultation_booking": 150
+    }
+  }
+}

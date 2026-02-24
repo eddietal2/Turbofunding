@@ -48,6 +48,25 @@ export default function ContactPage() {
   return (
     <div className="flex min-h-screen flex-col bg-[#F5F7FA]" style={{ color: "#0D1B2A" }}>
       <main className="flex-1">
+        {/* Book a Call CTA Section */}
+        <section className="w-full py-8 md:py-12 bg-gradient-to-r from-blue-50 to-blue-100 border-b-2 border-blue-200">
+          <div className="container px-4 md:px-6">
+            <div className="max-w-2xl mx-auto text-center">
+              <h2 className="text-3xl md:text-4xl font-bold text-blue-900 mb-3">
+                Get Expert Guidance on Your Funding
+              </h2>
+              <p className="text-lg text-blue-700 mb-6">
+                Schedule a personalized call with Vivek to discuss your funding options and accelerate your application.
+              </p>
+              <Link href="https://calendly.com/vivek" target="_blank" rel="noopener noreferrer">
+                <Button className="btn-blue-elite text-white px-8 py-3 text-lg font-semibold rounded-lg hover:shadow-lg transition-shadow">
+                  Book a Call with Vivek
+                </Button>
+              </Link>
+            </div>
+          </div>
+        </section>
+
         {/* Contact Form and Info Section */}
         <section className="w-full py-8 md:py-16 bg-[#F5F7FA]">
           <div className="container px-4 md:px-6">
