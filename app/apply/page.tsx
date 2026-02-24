@@ -1,6 +1,6 @@
 "use client"
 // DEV MODE: Set to true to pre-fill all required fields for quick testing
-const DEV_MODE = true
+const DEV_MODE = false
 
 import { useState, useEffect, useCallback, useRef } from "react"
 import Link from "next/link"
@@ -2408,7 +2408,7 @@ export default function ApplyPage() {
 
                           <div className="space-y-3">
                             <Label htmlFor="startingPhone" className="text-gray-800">
-                              Phone Number <span className="text-red-500">*</span>
+                              Personal Phone Number <span className="text-red-500">*</span>
                             </Label>
                             <Input
                               id="startingPhone"
@@ -2744,7 +2744,7 @@ export default function ApplyPage() {
                                 setFormData({ ...formData, businessEmail: e.target.value })
                                 if (errors.businessEmail) setErrors((prev) => ({ ...prev, businessEmail: "" }))
                               }}
-                              className={`bg-[#F5F7FA] border-gray-300 text-gray-900 ${errors.businessEmail ? "border-red-500" : ""}`}
+                              className={`bg-white border-gray-300 text-gray-900 ${errors.businessEmail ? "border-red-500" : ""}`}
                               required
                             />
                             {errors.businessEmail && <p className="text-red-500 text-sm">{errors.businessEmail}</p>}
@@ -2790,7 +2790,7 @@ export default function ApplyPage() {
                                 setFormData({ ...formData, businessStartDate: e.target.value })
                                 if (errors.businessStartDate) setErrors((prev) => ({ ...prev, businessStartDate: "" }))
                               }}
-                              className={`bg-[#F5F7FA] border-gray-300 text-gray-900 ${errors.businessStartDate ? "border-red-500" : ""}`}
+                              className={`bg-white border-gray-300 text-gray-900 ${errors.businessStartDate ? "border-red-500" : ""}`}
                               required
                             />
                             {errors.businessStartDate && <p className="text-red-500 text-sm">{errors.businessStartDate}</p>}
