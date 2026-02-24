@@ -2456,7 +2456,7 @@ export default function ApplyPage() {
                           </div>
                         </form>
 
-                        <div className="flex gap-3 mt-8">
+                        <CardFooter className="flex justify-between pt-6 border-t border-gray-200">
                           <Button
                             type="button"
                             variant="outline"
@@ -2466,6 +2466,7 @@ export default function ApplyPage() {
                             Cancel
                           </Button>
                           <Button
+                            type="button"
                             onClick={() => {
                               const newErrors = validateStartingInfo()
                               if (Object.keys(newErrors).length === 0) {
@@ -2474,11 +2475,11 @@ export default function ApplyPage() {
                                 setErrors(newErrors)
                               }
                             }}
-                            className="flex-1 bg-gradient-to-r from-orange-400 to-orange-600 hover:from-orange-500 hover:to-orange-700 text-white"
+                            className="bg-orange-500 hover:bg-orange-600 text-white"
                           >
-                            Next
+                            Next Step
                           </Button>
-                        </div>
+                        </CardFooter>
                       </CardContent>
                     </Card>
                   </>
@@ -2544,10 +2545,10 @@ export default function ApplyPage() {
                         <Button
                           type="button"
                           variant="outline"
-                          onClick={() => (window.location.href = "/")}
-                          className="font-semibold"
+                          onClick={prevStep}
+                          className="font-semibold bg-transparent"
                         >
-                          Cancel
+                          Previous
                         </Button>
                         <Button
                           type="button"
