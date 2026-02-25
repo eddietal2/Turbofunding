@@ -1,6 +1,6 @@
 "use server"
 
-import { put } from "@vercel/blob"
+import { put, del } from "@vercel/blob"
 import { createCipheriv, randomBytes } from "crypto"
 
 const MAX_FILE_SIZE = 15 * 1024 * 1024 // 15 MB
@@ -159,13 +159,18 @@ User can continue from Step 2 using the app folder system.
  */
 export async function deleteIncompleteApplication(filePath: string): Promise<{ success: boolean; error?: string }> {
   try {
-    console.log("[IncompleteApp] Attempting to delete incomplete application:", filePath)
+    if (!filePath) {
+      console.log("[IncompleteApp] No file path provided for deletion")
+      return { success: true } // Not an error, just nothing to delete
+    }
+
+    console.log("[IncompleteApp] Deleting incomplete application file:", filePath)
     
-    // Note: Vercel Blob doesn't have a native delete API, but we can use the delete endpoint
-    // For now, we'll log that the incomplete app should be archived/ignored
-    // In production, you might want to use a different strategy (e.g., mark as complete in DB)
+    // Use Vercel Blob's del function to delete the file
+    const response = await del(filePath)
     
-    console.log("[IncompleteApp] Incomplete application marked for deletion:", filePath)
+    console.log("[IncompleteApp] ✅ Successfully deleted incomplete application:", filePath)
+    console.log("[IncompleteApp] Delete response:", response)
     
     return {
       success: true,
@@ -173,8 +178,12 @@ export async function deleteIncompleteApplication(filePath: string): Promise<{ s
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : "Unknown error"
     console.error("[IncompleteApp] Error deleting incomplete application:", errorMessage)
+    console.error("[IncompleteApp] File path attempted:", filePath)
+    
+    // Don't fail application submission if deletion fails
+    // The file will still exist but that's okay
     return {
-      success: false,
+      success: true,
       error: errorMessage,
     }
   }
