@@ -271,7 +271,7 @@ export function LoanCalculator() {
 
           {/* CTA */}
           <div className="text-center mt-2.5">
-            <Button asChild size="sm" className="btn-blue-elite text-white text-xs md:text-sm px-6 md:px-10 py-2.5 md:py-3 font-bold tracking-wide uppercase">
+            <Button asChild size="sm" className="btn-blue-elite text-white text-sm md:text-base px-8 md:px-12 py-3 md:py-4 font-bold tracking-wide uppercase">
               <a href="/apply">Get Funded</a>
             </Button>
           </div>

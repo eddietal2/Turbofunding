@@ -359,7 +359,7 @@ export default function Home() {
               <div className="flex flex-col gap-3 min-[400px]:flex-row pt-4">
                   <Button 
                     asChild 
-                    className="btn-blue-elite text-base px-6 py-5 w-fit font-semibold tracking-wide text-white"
+                    className="btn-blue-elite text-lg md:text-xl px-8 py-6 w-fit font-semibold tracking-wide text-white"
                   >
                     <Link href="/apply">See Your Loan Options</Link>
                   </Button>
@@ -724,7 +724,7 @@ export default function Home() {
               </Card>
             </div>
             <div className="flex justify-center mt-6">
-              <Button asChild className="btn-blue-elite text-white">
+              <Button asChild className="btn-blue-elite text-base md:text-lg px-6 md:px-8 py-4 md:py-5 font-semibold text-white">
                 <Link href="/apply">Check Your Eligibility</Link>
               </Button>
             </div>
@@ -1049,6 +1049,36 @@ export default function Home() {
                       </p>
                     </CardContent>
                   </Card>
+                  
+                  <Card className="bg-white border-gray-200 fs-card">
+                    <CardContent className="p-6">
+                      <div className="flex items-center gap-4 mb-4">
+                        <div className="fs-card-icon rounded-lg bg-blue-100 p-3 flex items-center justify-center" aria-hidden="true">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="24"
+                            height="24"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            className="h-6 w-6 text-blue-600"
+                          >
+                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                            <polyline points="9 22 9 12 15 12 15 22" />
+                          </svg>
+                        </div>
+                        <h3 className="text-lg font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
+                          Equipment Financing
+                        </h3>
+                      </div>
+                      <p className="text-gray-600 text-sm leading-relaxed">
+                        Financing specifically for purchasing or leasing equipment, with flexible terms based on the value of the equipment being financed.
+                      </p>
+                    </CardContent>
+                  </Card>
                   <Card className="bg-white border-gray-200 fs-card">
                     <CardContent className="p-6">
                       <div className="flex items-center gap-4 mb-4">
@@ -1108,38 +1138,9 @@ export default function Home() {
                       </p>
                     </CardContent>
                   </Card>
-                  <Card className="bg-white border-gray-200 fs-card">
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className="fs-card-icon rounded-lg bg-blue-100 p-3 flex items-center justify-center" aria-hidden="true">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="h-6 w-6 text-blue-600"
-                          >
-                            <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                            <polyline points="9 22 9 12 15 12 15 22" />
-                          </svg>
-                        </div>
-                        <h3 className="text-lg font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
-                          Equipment Financing
-                        </h3>
-                      </div>
-                      <p className="text-gray-600 text-sm leading-relaxed">
-                        Financing specifically for purchasing or leasing equipment, with flexible terms based on the value of the equipment being financed.
-                      </p>
-                    </CardContent>
-                  </Card>
               </div>
               <div className="flex justify-center mt-8">
-                <Button asChild className="btn-blue-elite text-white">
+                <Button asChild className="btn-blue-elite text-base md:text-lg px-6 md:px-8 py-4 md:py-5 font-semibold text-white">
                   <Link href="/products">Explore All Products</Link>
                 </Button>
               </div>
@@ -1506,7 +1507,7 @@ export default function Home() {
                 <p className="md:text-xl mx-auto text-orange-400">Apply now and get a decision within 24 hours.</p>
               </div>
               <div className="flex flex-col gap-2 min-[400px]:flex-row justify-center">
-                <Button asChild className="bg-blue-600 text-white hover:bg-blue-700">
+                <Button asChild className="btn-blue-elite text-lg md:text-xl px-8 py-6 font-semibold text-white">
                   <Link href="/apply">Apply Now</Link>
                 </Button>
               </div>
