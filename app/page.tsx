@@ -480,7 +480,7 @@ export default function Home() {
 
         {/* How To Qualify Section */}
         {/* Changed section background from gray-800 to bg-[#F5F7FA] with updated text colors */}
-        <section className="w-full py-16 md:py-16 lg:py-0 lg:h-screen lg:flex lg:flex-col lg:justify-center bg-[#F5F7FA] relative overflow-hidden" id="qualify">
+        <section className="w-full py-16 md:py-16 lg:py-40 lg:h-screen lg:flex lg:flex-col lg:justify-center bg-[#F5F7FA] relative overflow-hidden" id="qualify">
           <style>{`
             @keyframes cardHoverGlow {
               0%, 100% {
@@ -677,7 +677,7 @@ export default function Home() {
                 </div>
               </div>
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
+                <h2 className="text-2xl font-bold tracking-tighter sm:text-5xl" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
                   How To Qualify
                 </h2>
                 <p className="max-w-[900px] text-gray-600 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
@@ -685,7 +685,7 @@ export default function Home() {
                 </p>
               </div>
             </div>
-            <div className="mx-auto grid max-w-5xl grid-cols-1 gap-4 py-8 md:grid-cols-2 lg:grid-cols-4">
+            <div className="mx-auto grid max-w-5xl grid-cols-1 gap-4 py-2 md:grid-cols-2 lg:grid-cols-2">
               {/* Cool animated cards with hover effects */}
               <Card className="qualify-card" style={{ color: "#0D1B2A" }}>
                 <CardContent className="p-4 text-center">
