@@ -1255,7 +1255,7 @@ export default function Home() {
             </div>
           </div>
         </section>
-        <section className="w-full py-8 md:py-24 lg:py-32 bg-[#F5F7FA]" id="testimonials">
+        <section className="w-full py-8 md:py-24 lg:py-32 bg-[#F5F7FA] relative overflow-hidden" id="testimonials">
           <style>{`
             @media (max-width: 768px) {
               #testimonials {
@@ -1264,7 +1264,20 @@ export default function Home() {
               }
             }
           `}</style>
-          <div className="container px-4 md:px-6">
+          {/* Grid SVG Background */}
+          <svg 
+            className="absolute inset-0 w-full h-full pointer-events-none" 
+            xmlns="http://www.w3.org/2000/svg"
+            style={{ animation: "gridGlow 5s ease-in-out infinite" }}
+          >
+            <defs>
+              <pattern id="grid-testimonials" width="40" height="40" patternUnits="userSpaceOnUse">
+                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#2460e3" strokeWidth="2"/>
+              </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid-testimonials)" />
+          </svg>
+          <div className="container px-4 md:px-6 relative z-10">
             <div className="flex flex-col items-center justify-center space-y-3 text-center">
               <div className="space-y-2">
                 <div className="mb-4 flex justify-center">
@@ -1385,7 +1398,7 @@ export default function Home() {
               <div className="carousel-track">
                 {/* Original set of cards */}
                 <div className="carousel-card">
-                  <Card className="bg-[#F5F7FA] border-gray-200 h-full">
+                  <Card className="bg-white border-gray-200 h-full">
                     <CardContent className="p-4">
                       <div className="flex items-center gap-4 mb-3">
                         <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
@@ -1420,7 +1433,7 @@ export default function Home() {
                   </Card>
                 </div>
                 <div className="carousel-card">
-                  <Card className="bg-[#F5F7FA] border-gray-200 h-full">
+                  <Card className="bg-white border-gray-200 h-full">
                     <CardContent className="p-4">
                       <div className="flex items-center gap-4 mb-3">
                         <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
@@ -1455,7 +1468,7 @@ export default function Home() {
                   </Card>
                 </div>
                 <div className="carousel-card">
-                  <Card className="bg-[#F5F7FA] border-gray-200 h-full">
+                  <Card className="bg-white border-gray-200 h-full">
                     <CardContent className="p-4">
                       <div className="flex items-center gap-4 mb-3">
                         <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
@@ -1492,7 +1505,7 @@ export default function Home() {
                 
                 {/* Duplicated set for seamless loop */}
                 <div className="carousel-card">
-                  <Card className="bg-[#F5F7FA] border-gray-200 h-full">
+                  <Card className="bg-white border-gray-200 h-full">
                     <CardContent className="p-4">
                       <div className="flex items-center gap-4 mb-3">
                         <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
@@ -1527,7 +1540,7 @@ export default function Home() {
                   </Card>
                 </div>
                 <div className="carousel-card">
-                  <Card className="bg-[#F5F7FA] border-gray-200 h-full">
+                  <Card className="bg-white border-gray-200 h-full">
                     <CardContent className="p-4">
                       <div className="flex items-center gap-4 mb-3">
                         <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
@@ -1562,7 +1575,7 @@ export default function Home() {
                   </Card>
                 </div>
                 <div className="carousel-card">
-                  <Card className="bg-[#F5F7FA] border-gray-200 h-full">
+                  <Card className="bg-white border-gray-200 h-full">
                     <CardContent className="p-4">
                       <div className="flex items-center gap-4 mb-3">
                         <div className="rounded-full bg-blue-100 p-2" aria-hidden="true">
