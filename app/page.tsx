@@ -9,7 +9,7 @@ import { LoanCalculator } from "@/components/loan-calculator"
 import { useEffect } from "react"
 
 export default function Home() {
-  const productNames = ["Working Capital", "Bridge Loans", "SBA Loans", "Business Lines of Credit", "Equipment Financing"]
+  const productNames = ["Term Loans", "Bridge Loans", "SBA Loans", "Business Lines of Credit", "Equipment Financing"]
   const heroImage = '/images/hero-bg.jpg'
   const heroGradient = 'linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.50), rgba(255, 255, 255, 0.0))'
 
@@ -323,8 +323,8 @@ export default function Home() {
                     letterSpacing: "-0.02em"
                   }}
                 >
-                  <span style={{ fontSize: '0.8em', color: "#1D4ED8", display: "block", marginTop: "0.2em" }}><span className="text-[#D97706]">Turbo</span>Charge your</span>
-                  <span style={{ fontSize: '0.8em', color: "#1D4ED8", display: "block" }}>Business with</span>
+                  <span style={{ fontSize: '1.4em', color: "#1D4ED8", display: "block", marginTop: "0.2em" }}><span className="text-[#D97706]">Turbo</span>Charge your</span>
+                  <span style={{ fontSize: '1.4em', color: "#1D4ED8", display: "block" }}>Business with</span>
                   <RotatingText
                     words={productNames}
                     className="font-bold"
@@ -350,7 +350,7 @@ export default function Home() {
                     fontFamily: "var(--font-space-grotesk), sans-serif"
                   }}
                 >
-                  Fast, reliable business funding solutions to help your company grow at the speed of opportunity.
+                  <span style={{ color: "#D97706", fontWeight: "600" }}>Fast,</span> <span style={{ color: "#2460e3", fontWeight: "600" }}>reliable</span> business funding solutions to help your company grow at the <span style={{ color: "#10b981", fontWeight: "600" }}>speed of opportunity.</span>
                 </p>
               </div>
 
