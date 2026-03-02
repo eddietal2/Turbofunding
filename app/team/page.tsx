@@ -60,7 +60,7 @@ export default function TeamPage() {
               </div>
             </div>
 
-            <div className="grid gap-6 md:grid-cols-3">
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
               <Card className="bg-[#F5F7FA] border-gray-200 overflow-hidden">
                 <CardHeader className="pb-3 text-center">
                   <div className="mx-auto rounded-full bg-blue-900/20 w-14 h-14 flex items-center justify-center mb-3">

@@ -23,12 +23,12 @@ export default function ResourcesPage() {
   return (
     <main className="w-full">
       {/* Hero Section */}
-      <section className="w-full pt-32 pb-16 md:pt-40 md:pb-24 bg-gradient-to-b from-[#F5F7FA] to-white">
+      <section className="w-full pt-32 pb-16 md:pt-36 md:pb-20 lg:pt-40 lg:pb-24 bg-gradient-to-b from-[#F5F7FA] to-white">
         <div className="container px-4 md:px-6 mx-auto">
           <div className="flex flex-col items-center justify-center space-y-4 text-center max-w-3xl mx-auto">
             <div className="space-y-2">
               <h1 
-                className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight" 
+                className="text-4xl sm:text-5xl md:text-5xl lg:text-6xl font-bold tracking-tight" 
                 style={{ 
                   fontFamily: "var(--font-space-grotesk), sans-serif",
                   color: "#0D1B2A"
@@ -48,7 +48,7 @@ export default function ResourcesPage() {
 
       {/* Loan Calculator Section */}
       <section 
-        className="w-full py-16 md:py-24 lg:py-32 bg-white" 
+        className="w-full py-16 md:py-16 lg:py-32 bg-white" 
         id="calculator"
       >
         <div className="container px-4 md:px-6 mx-auto">
@@ -74,7 +74,7 @@ export default function ResourcesPage() {
       </section>
 
       {/* Coming Soon Section */}
-      <section className="w-full py-16 md:py-24 lg:py-32 bg-[#F5F7FA]">
+      <section className="w-full py-16 md:py-16 lg:py-32 bg-[#F5F7FA]">
         <div className="container px-4 md:px-6 mx-auto">
           <div className="flex flex-col items-center justify-center space-y-8 text-center">
             <div className="space-y-4">

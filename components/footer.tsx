@@ -6,7 +6,7 @@ export function Footer() {
     <footer className="w-full bg-[#0D1B2A] text-gray-300 border-t border-gray-800">
       <div className="container px-4 md:px-6 py-12">
         {/* Main Footer Content */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-8 md:gap-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Brand Column */}
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center gap-2 mb-4">

@@ -70,7 +70,7 @@ export default function ContactPage() {
         {/* Contact Form and Info Section */}
         <section className="w-full py-8 md:py-16 bg-[#F5F7FA]">
           <div className="container px-4 md:px-6">
-            <div className="grid gap-8 lg:grid-cols-2">
+            <div className="grid gap-8 md:grid-cols-2">
               {/* Contact Form */}
               <div>
                 {!formSubmitted ? (

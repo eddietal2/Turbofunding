@@ -65,23 +65,33 @@ export default function Home() {
         });
       }
       
-      // Mobile parallax: translate the background image on scroll
+      // Enhanced parallax effect on hero section
       const parallaxBg = document.querySelector('.hero-parallax-bg') as HTMLElement;
-      if (parallaxBg) {
+      const gradientOverlay = document.querySelector('.hero-gradient-overlay') as HTMLElement;
+      
+      if (parallaxBg || gradientOverlay) {
         let ticking = false;
         
         const updateParallax = () => {
           const scrollY = window.scrollY;
-          const heroSection = parallaxBg.parentElement;
+          const heroSection = parallaxBg?.parentElement;
           if (!heroSection) return;
           
           const heroHeight = heroSection.offsetHeight;
           
           // Only run parallax while hero is in viewport
-          if (scrollY < heroHeight * 1.5) {
-            // Move at 40% of scroll speed for a clear parallax effect
-            const offset = -(scrollY * 0.4);
-            parallaxBg.style.transform = `translate3d(0, ${offset}px, 0)`;
+          if (scrollY < heroHeight * 2) {
+            // Background image parallax at 50% scroll speed
+            if (parallaxBg) {
+              const bgOffset = scrollY * 0.5;
+              parallaxBg.style.transform = `translate3d(0, ${bgOffset}px, 0)`;
+            }
+            
+            // Gradient overlay parallax at 35% scroll speed (faster effect)
+            if (gradientOverlay) {
+              const gradientOffset = scrollY * 0.35;
+              gradientOverlay.style.transform = `scaleX(-1) translate3d(0, ${gradientOffset}px, 0)`;
+            }
           }
           ticking = false;
         };
@@ -218,7 +228,7 @@ export default function Home() {
       <div className="flex flex-col">
         {/* Hero Section */}
       <section 
-        className="hero-bg-responsive relative w-full h-screen overflow-hidden"
+        className="hero-bg-responsive relative w-full h-screen md:h-[55vh] lg:h-[65vh] overflow-hidden"
         style={{
           backgroundImage: `url('${heroImage}')`,
           backgroundAttachment: "fixed",
@@ -271,6 +281,11 @@ export default function Home() {
               background: linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.4)) !important;
             }
           }
+          @media (min-width: 769px) and (max-width: 1024px) {
+            .hero-gradient-overlay {
+              background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.7) 40%, rgba(255, 255, 255, 0.3) 70%, transparent 100%) !important;
+            }
+          }
         `}</style>
         
         {/* Subtle Animated Overlay Elements */}
@@ -312,30 +327,30 @@ export default function Home() {
         </div>
 
         {/* Content Container */}
-        <div className="container relative z-10 px-4 md:px-6 h-full flex flex-col md:block md:h-auto" style={{ transform: "scaleX(-1)" }}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start md:items-center h-full md:h-auto py-8 md:py-0">
+        <div className="container relative z-10 px-4 md:px-6 lg:px-8 h-full flex flex-col justify-center pt-16 md:pt-12 lg:pt-16 pb-16 md:pb-12 lg:pb-16" style={{ transform: "scaleX(-1)" }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-6 lg:gap-12 items-center h-auto py-8 md:py-0">
             {/* Left Column - Text Content */}
-            <div className="flex flex-col h-full md:h-auto space-y-6 md:space-y-6">
+            <div className="flex flex-col h-full md:h-auto space-y-4 md:space-y-3 lg:space-y-6">
               {/* H1 and description - at top */}
-              <div className="space-y-4 pt-2 md:pt-0">
+              <div className="space-y-3 md:space-y-2 lg:space-y-4 pt-2 md:pt-0">
                 <h1 
-                  className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-widest leading-tight" 
+                  className="text-3xl sm:text-4xl md:text-3xl lg:text-3xl xl:text-4xl font-bold tracking-widest leading-tight" 
                   style={{ 
                     fontFamily: "var(--font-space-grotesk), sans-serif",
                     letterSpacing: "-0.02em"
                   }}
                 >
-                  <span style={{ fontSize: '1.4em', color: "#1D4ED8", display: "block", marginTop: "0.2em" }}><span className="text-[#D97706]">Turbo</span>Charge your</span>
-                  <span style={{ fontSize: '1.4em', color: "#1D4ED8", display: "block" }}>Business with</span>
+                  <span className="md:text-[1.1em] lg:text-[1.1em] xl:text-[1.2em]" style={{ color: "#1D4ED8", display: "block", marginTop: "0.1em" }}><span className="text-[#D97706]">Turbo</span>Charge your</span>
+                  <span className="md:text-[1.1em] lg:text-[1.1em] xl:text-[1.2em]" style={{ color: "#1D4ED8", display: "block" }}>Business with</span>
                   <RotatingText
                     words={productNames}
                     className="font-bold"
                     style={{
                       color: "#D97706",
                       display: "inline-block",
-                      paddingTop: "0.4em",
-                      paddingBottom: "0.4em",
-                      marginTop: "0.2em",
+                      paddingTop: "0.2em",
+                      paddingBottom: "0.2em",
+                      marginTop: "0.1em",
                       fontSize: "inherit",
                       lineHeight: "1.2",
                       textShadow: "none",
@@ -345,10 +360,10 @@ export default function Home() {
                   />
                 </h1>
                 <p 
-                  className="text-base md:text-lg font-medium tracking-wide" 
+                  className="text-base md:text-sm lg:text-sm xl:text-base font-medium tracking-wide" 
                   style={{ 
                     color: "#1F2937", 
-                    marginTop: "1em",
+                    marginTop: "0.4em",
                     fontFamily: "var(--font-space-grotesk), sans-serif"
                   }}
                 >
@@ -357,17 +372,17 @@ export default function Home() {
               </div>
 
               {/* Button and disclaimer - positioned at bottom on mobile using margin-top: auto */}
-              <div className="space-y-4 md:space-y-4 mt-auto md:mt-0">
-              <div className="flex flex-col gap-3 min-[400px]:flex-row pt-4">
+              <div className="space-y-2 md:space-y-2 lg:space-y-3 mt-auto md:mt-4 lg:mt-6">
+              <div className="flex flex-col gap-3 min-[400px]:flex-row pt-2 lg:pt-0">
                   <Button 
                     asChild 
-                    className="btn-blue-elite text-lg md:text-xl px-8 py-6 w-fit font-semibold tracking-wide text-white"
+                    className="btn-blue-elite text-lg md:text-base lg:text-base xl:text-lg px-8 md:px-6 lg:px-8 py-6 md:py-3 lg:py-5 w-fit font-semibold tracking-wide text-white"
                   >
                     <Link href="/apply">See Your Loan Options</Link>
                   </Button>
               </div>
                 <p 
-                  className="text-[0.6em] md:text-sm font-medium tracking-wider" 
+                  className="text-[0.6em] md:text-xs lg:text-sm font-medium tracking-wider" 
                   style={{ 
                     color: "#4B5563", 
                     textTransform: "uppercase", 
@@ -381,7 +396,7 @@ export default function Home() {
             </div>
 
             {/* Right Column - iPhone Frame Illustration */}
-            <div className="flex items-center justify-center hidden md:flex mt-8 ml-40" style={{
+            <div className="flex items-center justify-center hidden md:flex md:ml-0 lg:ml-8 xl:ml-12" style={{
               animation: "fadeInUp 0.8s ease-out 1s forwards",
               opacity: 0
             }}>
@@ -389,7 +404,7 @@ export default function Home() {
                 @keyframes fadeInUp {
                   from {
                     opacity: 0;
-                    transform: translateY(200px);
+                    transform: translateY(80px);
                   }
                   to {
                     opacity: 1;
@@ -397,7 +412,7 @@ export default function Home() {
                   }
                 }
               `}</style>
-              <div className="relative" style={{ width: "280px", height: "560px" }}>
+              <div className="relative md:scale-[0.55] lg:scale-[0.65] xl:scale-[0.75] origin-center" style={{ width: "280px", height: "560px" }}>
                 {/* Phone Shadow */}
                 <div className="absolute inset-0 rounded-3xl" style={{
                   background: "radial-gradient(ellipse 180% 100% at 50% 100%, rgba(0, 0, 0, 0.4) 0%, rgba(0, 0, 0, 0.15) 40%, transparent 70%)",
@@ -465,7 +480,7 @@ export default function Home() {
 
         {/* How To Qualify Section */}
         {/* Changed section background from gray-800 to bg-[#F5F7FA] with updated text colors */}
-        <section className="w-full py-16 md:py-0 md:h-screen md:flex md:flex-col md:justify-center lg:py-0 bg-[#F5F7FA] relative overflow-hidden" id="qualify">
+        <section className="w-full py-16 md:py-16 lg:py-0 lg:h-screen lg:flex lg:flex-col lg:justify-center bg-[#F5F7FA] relative overflow-hidden" id="qualify">
           <style>{`
             @keyframes cardHoverGlow {
               0%, 100% {
@@ -736,7 +751,7 @@ export default function Home() {
 
         {/* Features Section */}
         {/* CHANGE> Changed Funding Solutions section from dark gray (bg-gray-900) to white background with #0D1B2A text */}
-        <section className="w-full py-16 md:py-24 lg:py-32 relative min-h-screen fs-section" id="features" style={{
+        <section className="w-full py-16 md:py-16 lg:py-32 relative min-h-screen fs-section" id="features" style={{
           backgroundImage: "url('/images/fs-image-01.jpg')",
           backgroundSize: "cover",
           backgroundPosition: "80% center",
@@ -1281,7 +1296,7 @@ export default function Home() {
             </div>
           </div>
         </section>
-        <section className="w-full py-8 md:py-24 lg:py-32 bg-[#F5F7FA] relative overflow-hidden" id="testimonials">
+        <section className="w-full py-8 md:py-16 lg:py-32 bg-[#F5F7FA] relative overflow-hidden" id="testimonials">
           <style>{`
             @media (max-width: 768px) {
               #testimonials {
@@ -1641,7 +1656,7 @@ export default function Home() {
         </section>
 
         {/* CTA Section */}
-        <section className="w-full py-16 md:py-24 lg:py-32 relative overflow-hidden" style={{
+        <section className="w-full py-16 md:py-16 lg:py-32 relative overflow-hidden" style={{
           background: "linear-gradient(135deg, #0D1B2A 0%, #1a2a3a 50%, #0D1B2A 100%)",
         }}>
           <style>{`
@@ -1712,7 +1727,7 @@ export default function Home() {
               {/* Main Heading */}
               <div className="space-y-4 max-w-4xl">
                 <h2 
-                  className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-tight" 
+                  className="text-4xl sm:text-5xl md:text-5xl lg:text-6xl font-bold tracking-tight leading-tight" 
                   style={{ 
                     fontFamily: "var(--font-space-grotesk), sans-serif",
                     color: "#FFFFFF",

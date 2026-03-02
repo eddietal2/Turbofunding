@@ -86,7 +86,7 @@ export default function ProductsClient() {
           {selectedProduct === "working-capital" && (
             <section className="w-full py-8 md:py-12 bg-[#F5F7FA]">
               <div className="container px-4 md:px-6">
-                <div className="grid gap-6 lg:grid-cols-2">
+                <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-3">
                     <h3 className="text-2xl font-bold text-orange-500">Term Loans</h3>
                     <p style={{ color: "#0D1B2A" }}>
@@ -187,7 +187,7 @@ export default function ProductsClient() {
           {selectedProduct === "merchant-cash" && (
             <section className="w-full py-8 md:py-12 bg-[#F5F7FA]">
               <div className="container px-4 md:px-6">
-                <div className="grid gap-6 lg:grid-cols-2">
+                <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-3">
                     <h3 className="text-2xl font-bold text-orange-500">Merchant Cash Advances</h3>
                     <p style={{ color: "#0D1B2A" }}>
@@ -287,7 +287,7 @@ export default function ProductsClient() {
           {selectedProduct === "line-of-credit" && (
             <section className="w-full py-8 md:py-12 bg-[#F5F7FA]">
               <div className="container px-4 md:px-6">
-                <div className="grid gap-6 lg:grid-cols-2">
+                <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-3">
                     <h3 className="text-2xl font-bold text-orange-500">Business Line of Credit</h3>
                     <p style={{ color: "#0D1B2A" }}>
@@ -386,7 +386,7 @@ export default function ProductsClient() {
           {selectedProduct === "sba-7a" && (
             <section className="w-full py-8 md:py-12 bg-[#F5F7FA]">
               <div className="container px-4 md:px-6">
-                <div className="grid gap-6 lg:grid-cols-2">
+                <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-3">
                     <h3 className="text-2xl font-bold text-orange-500">SBA 7a Loans</h3>
                     <p style={{ color: "#0D1B2A" }}>
@@ -485,7 +485,7 @@ export default function ProductsClient() {
           {selectedProduct === "sba-504" && (
             <section className="w-full py-8 md:py-12 bg-[#F5F7FA]">
               <div className="container px-4 md:px-6">
-                <div className="grid gap-6 lg:grid-cols-2">
+                <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-3">
                     <h3 className="text-2xl font-bold text-orange-500">SBA 504 Loans</h3>
                     <p style={{ color: "#0D1B2A" }}>
@@ -584,7 +584,7 @@ export default function ProductsClient() {
           {selectedProduct === "bridge-loan" && (
             <section className="w-full py-8 md:py-12 bg-[#F5F7FA]">
               <div className="container px-4 md:px-6">
-                <div className="grid gap-6 lg:grid-cols-2">
+                <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-3">
                     <h3 className="text-2xl font-bold text-orange-500">Bridge Loans</h3>
                     <p style={{ color: "#0D1B2A" }}>
@@ -683,7 +683,7 @@ export default function ProductsClient() {
           {selectedProduct === "equipment-financing" && (
             <section className="w-full py-8 md:py-12 bg-[#F5F7FA]">
               <div className="container px-4 md:px-6">
-                <div className="grid gap-6 lg:grid-cols-2">
+                <div className="grid gap-6 md:grid-cols-2">
                   <div className="space-y-3">
                     <h3 className="text-2xl font-bold text-orange-500">Equipment Financing</h3>
                     <p style={{ color: "#0D1B2A" }}>

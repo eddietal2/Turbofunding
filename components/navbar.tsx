@@ -92,7 +92,7 @@ export function Navbar() {
 
         {/* Desktop Navigation */}
         <nav
-          className="hidden md:flex items-center gap-6 absolute left-1/2 transform -translate-x-1/2 font-space-grotesk"
+          className="hidden lg:flex items-center gap-4 absolute left-1/2 transform -translate-x-1/2 font-space-grotesk"
           role="navigation"
           aria-label="Main navigation"
         >
@@ -219,7 +219,7 @@ export function Navbar() {
 
         {/* Desktop CTA - hidden on /apply pages */}
         {!pathname.startsWith("/apply") && (
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-4">
             <Button asChild className="btn-gold-elite text-white font-semibold">
               <Link href="/apply">Apply Now</Link>
             </Button>
@@ -227,7 +227,7 @@ export function Navbar() {
         )}
 
         {/* Mobile Menu Button */}
-        <div className="md:hidden">
+        <div className="lg:hidden">
           <Button
             variant="ghost"
             size="icon"
@@ -243,7 +243,7 @@ export function Navbar() {
       {/* Mobile Menu Overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 z-40 bg-black/60 md:hidden"
+          className="fixed inset-0 z-40 bg-black/60 lg:hidden"
           onClick={closeMenu}
           aria-hidden="true"
         />
@@ -251,7 +251,7 @@ export function Navbar() {
 
       {/* Mobile Menu Sidebar */}
       <div
-        className={`fixed top-0 right-0 z-50 h-full w-64 bg-[#0D1B2A] border-l border-gray-800 transform transition-transform duration-300 ease-in-out md:hidden ${
+        className={`fixed top-0 right-0 z-50 h-full w-72 bg-[#0D1B2A] border-l border-gray-800 transform transition-transform duration-300 ease-in-out lg:hidden ${
           isOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
