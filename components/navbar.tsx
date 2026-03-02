@@ -243,15 +243,13 @@ export function Navbar() {
         <div className="flex flex-col h-full">
           {/* Sidebar Header with Logo */}
           <div className="flex items-center justify-between p-4 border-b border-gray-800">
-            <Link href="/" onClick={closeMenu} className="flex items-center gap-2">
+            <Link href="/" onClick={closeMenu} className="flex items-center">
               <Image
-                src="/images/TF-text-logo.png"
+                src="/images/tf-logo.png"
                 alt="TurboFunding Logo"
-                width={36}
-                height={36}
-                className="h-9 w-auto"
+                width={60}
+                height={48}
               />
-              <span className="text-white font-bold text-lg font-space-grotesk">TurboFunding</span>
             </Link>
             <Button
               variant="ghost"
