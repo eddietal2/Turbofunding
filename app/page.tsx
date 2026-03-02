@@ -1615,18 +1615,117 @@ export default function Home() {
         </section>
 
         {/* CTA Section */}
-        <section className="w-full py-8 md:py-16 lg:py-20 bg-gray-900 text-white">
-          <div className="container px-4 md:px-6 mx-auto">
-            <div className="flex flex-col items-center justify-center space-y-3 text-center max-w-3xl mx-auto">
-              <div className="space-y-2 w-full">
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight text-orange-500">
-                  Ready to Transform Your Business Finances? Get Turbo Funded
+        <section className="w-full py-16 md:py-24 lg:py-32 relative overflow-hidden" style={{
+          background: "linear-gradient(135deg, #0D1B2A 0%, #1a2a3a 50%, #0D1B2A 100%)",
+        }}>
+          <style>{`
+            @keyframes floatGradient {
+              0% { transform: translateY(0px); }
+              50% { transform: translateY(-20px); }
+              100% { transform: translateY(0px); }
+            }
+            
+            @keyframes pulseGlow {
+              0%, 100% { opacity: 0.5; }
+              50% { opacity: 1; }
+            }
+            
+            .cta-grid {
+              position: absolute;
+              inset: 0;
+              opacity: 0.1;
+              background-image: 
+                linear-gradient(rgba(36, 96, 227, 0.5) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(36, 96, 227, 0.5) 1px, transparent 1px);
+              background-size: 40px 40px;
+              pointer-events: none;
+            }
+            
+            .cta-accent {
+              position: absolute;
+              border-radius: 50%;
+              background: radial-gradient(circle, rgba(217, 119, 6, 0.2) 0%, transparent 70%);
+              pointer-events: none;
+            }
+            
+            .cta-accent-1 {
+              width: 300px;
+              height: 300px;
+              top: -100px;
+              right: -100px;
+              animation: floatGradient 6s ease-in-out infinite;
+            }
+            
+            .cta-accent-2 {
+              width: 250px;
+              height: 250px;
+              bottom: -75px;
+              left: -75px;
+              animation: floatGradient 8s ease-in-out infinite 1s;
+            }
+            
+            .cta-content {
+              position: relative;
+              z-10;
+            }
+            
+            .cta-button-group {
+              animation: floatGradient 4s ease-in-out infinite;
+            }
+          `}</style>
+          
+          {/* Background Grid */}
+          <div className="cta-grid" />
+          
+          {/* Floating Accents */}
+          <div className="cta-accent cta-accent-1" />
+          <div className="cta-accent cta-accent-2" />
+          
+          <div className="container px-4 md:px-6 relative z-10">
+            <div className="cta-content flex flex-col items-center justify-center space-y-6 md:space-y-8 text-center">
+              {/* Main Heading */}
+              <div className="space-y-4 max-w-4xl">
+                <h2 
+                  className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight leading-tight" 
+                  style={{ 
+                    fontFamily: "var(--font-space-grotesk), sans-serif",
+                    color: "#FFFFFF",
+                  }}
+                >
+                  Ready to Transform Your <span style={{ color: "#D97706" }}>Business Finances?</span>
                 </h2>
-                <p className="md:text-xl mx-auto text-orange-400">Apply now and get a decision within 24 hours.</p>
+                <p 
+                  className="text-lg md:text-xl leading-relaxed" 
+                  style={{
+                    color: "rgba(255, 255, 255, 0.85)",
+                    fontFamily: "var(--font-space-grotesk), sans-serif",
+                  }}
+                >
+                  Get approved in as little as 24 hours. No credit impact, simple process, fast funding.
+                </p>
               </div>
-              <div className="flex flex-col gap-2 min-[400px]:flex-row justify-center">
-                <Button asChild className="btn-blue-elite text-lg md:text-xl px-8 py-6 font-semibold text-white">
-                  <Link href="/apply">Apply Now</Link>
+              
+              {/* CTA Buttons */}
+              <div className="cta-button-group flex flex-col sm:flex-row gap-4 pt-4">
+                <Button 
+                  asChild 
+                  className="btn-gold-elite text-base md:text-lg px-8 md:px-12 py-4 md:py-6 font-bold tracking-wide rounded-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+                  style={{
+                    background: "linear-gradient(135deg, #D97706 0%, #F59E0B 100%)",
+                    color: "#FFFFFF",
+                  }}
+                >
+                  <Link href="/apply">Start Your Application</Link>
+                </Button>
+                <Button 
+                  asChild 
+                  className="btn-blue-elite text-base md:text-lg px-8 md:px-12 py-4 md:py-6 font-bold tracking-wide rounded-lg hover:shadow-2xl transition-all duration-300 transform hover:scale-105"
+                  style={{
+                    background: "linear-gradient(135deg, #2460e3 0%, #1947b8 100%)",
+                    color: "#FFFFFF",
+                  }}
+                >
+                  <Link href="/resources#calculator">Use Loan Calculator</Link>
                 </Button>
               </div>
             </div>
