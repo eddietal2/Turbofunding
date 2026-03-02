@@ -10,8 +10,8 @@ import { useEffect } from "react"
 
 export default function Home() {
   const productNames = ["Working Capital", "Bridge Loans", "SBA Loans", "Business Lines of Credit", "Equipment Financing"]
-  const heroImage = '/images/hero-bg-05.jpg'
-  const heroGradient = 'linear-gradient(to right, rgba(255, 255, 255, 0.88), rgba(255, 255, 255, 0.65), rgba(255, 255, 255, 0.3))'
+  const heroImage = '/images/hero-bg.jpg'
+  const heroGradient = 'linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.50), rgba(255, 255, 255, 0.0))'
 
   // Setup Intersection Observer for scroll animations
   useEffect(() => {
@@ -216,23 +216,25 @@ export default function Home() {
       <div className="flex flex-col">
         {/* Hero Section */}
       <section 
-        className="hero-bg-responsive relative w-full md:h-screen md:flex md:items-center overflow-hidden"
+        className="hero-bg-responsive relative w-full h-screen overflow-hidden"
         style={{
           backgroundImage: `url('${heroImage}')`,
           backgroundAttachment: "fixed",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
+          backgroundSize: "110%",
+          backgroundPosition: "100% center",
           backgroundRepeat: "no-repeat",
           minHeight: "auto",
-          "--hero-image-mobile": "url('/images/hero-bg-xs-05.png')",
+          "--hero-image-mobile": "url('/images/hero-bg-xs.png')",
+          transform: "scaleX(-1)",
         } as any}
       >
         {/* Mobile Parallax Background Image */}
         <img
-          src="/images/hero-bg-xs-05.png"
+          src="/images/hero-bg-xs.png"
           alt=""
           className="hero-parallax-bg"
           aria-hidden="true"
+          style={{ transform: "scaleX(-1)" }}
         />
         {/* Background Filter/Blur Overlay */}
         <div
@@ -240,7 +242,8 @@ export default function Home() {
           style={{
             filter: "blur(2px) brightness(0.8)",
             animation: "slideHorizontal 20s linear infinite",
-            pointerEvents: "none"
+            pointerEvents: "none",
+            transform: "scaleX(-1)"
           }}
         >
           <style>{`
@@ -256,19 +259,20 @@ export default function Home() {
         <div 
           className="absolute inset-0 z-[1] pointer-events-none hero-gradient-overlay"
           style={{
-            background: heroGradient
+            background: heroGradient,
+            transform: "scaleX(-1)"
           }}
         />
         <style>{`
           @media (max-width: 768px) {
             .hero-gradient-overlay {
-              background: linear-gradient(to right, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.5)) !important;
+              background: linear-gradient(to bottom, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.75), rgba(255, 255, 255, 0.4)) !important;
             }
           }
         `}</style>
         
         {/* Subtle Animated Overlay Elements */}
-        <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden">
+        <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden" style={{ transform: "scaleX(-1)" }}>
           {/* Rising data particles */}
           <style>{`
             @keyframes floatUp {
@@ -306,11 +310,12 @@ export default function Home() {
         </div>
 
         {/* Content Container */}
-        <div className="container relative z-10 px-4 md:px-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center py-8 md:py-0">
+        <div className="container relative z-10 px-4 md:px-6 h-full flex flex-col md:block md:h-auto" style={{ transform: "scaleX(-1)" }}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start md:items-center h-full md:h-auto py-8 md:py-0">
             {/* Left Column - Text Content */}
-            <div className="space-y-6">
-              <div className="space-y-4">
+            <div className="flex flex-col h-full md:h-auto space-y-6 md:space-y-6">
+              {/* H1 and description - at top */}
+              <div className="space-y-4 pt-2 md:pt-0">
                 <h1 
                   className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-widest leading-tight" 
                   style={{ 
@@ -318,8 +323,8 @@ export default function Home() {
                     letterSpacing: "-0.02em"
                   }}
                 >
-                  <span style={{ fontSize: '0.8em', color: "#1D4ED8", display: "block", marginTop: "0.2em" }}>Turbo Charge your</span>
-                  <span style={{ fontSize: '0.8em', color: "#1D4ED8", display: "block" }}>Business with:</span>
+                  <span style={{ fontSize: '0.8em', color: "#1D4ED8", display: "block", marginTop: "0.2em" }}><span className="text-[#D97706]">Turbo</span>Charge your</span>
+                  <span style={{ fontSize: '0.8em', color: "#1D4ED8", display: "block" }}>Business with</span>
                   <RotatingText
                     words={productNames}
                     className="font-bold"
@@ -348,29 +353,33 @@ export default function Home() {
                   Fast, reliable business funding solutions to help your company grow at the speed of opportunity.
                 </p>
               </div>
+
+              {/* Button and disclaimer - positioned at bottom on mobile using margin-top: auto */}
+              <div className="space-y-4 md:space-y-4 mt-auto md:mt-0">
               <div className="flex flex-col gap-3 min-[400px]:flex-row pt-4">
-                <Button 
-                  asChild 
-                  className="btn-blue-elite text-base px-6 py-5 w-fit font-semibold tracking-wide text-white"
-                >
-                  <Link href="/apply">See Your Loan Options</Link>
-                </Button>
+                  <Button 
+                    asChild 
+                    className="btn-blue-elite text-base px-6 py-5 w-fit font-semibold tracking-wide text-white"
+                  >
+                    <Link href="/apply">See Your Loan Options</Link>
+                  </Button>
               </div>
-              <p 
-                className="text-[0.6em] md:text-sm font-medium tracking-wider" 
-                style={{ 
-                  color: "#4B5563", 
-                  textTransform: "uppercase", 
-                  letterSpacing: "0.1em",
-                  fontFamily: "var(--font-space-grotesk), sans-serif"
-                }}
-              >
-                ✓ Applying will not impact your credit score
-              </p>
+                <p 
+                  className="text-[0.6em] md:text-sm font-medium tracking-wider" 
+                  style={{ 
+                    color: "#4B5563", 
+                    textTransform: "uppercase", 
+                    letterSpacing: "0.1em",
+                    fontFamily: "var(--font-space-grotesk), sans-serif"
+                  }}
+                >
+                  ✓ Applying will not impact your credit score
+                </p>
+              </div>
             </div>
 
             {/* Right Column - iPhone Frame Illustration */}
-            <div className="flex items-center justify-center hidden md:flex -mt-16" style={{
+            <div className="flex items-center justify-center hidden md:flex mt-8 ml-40" style={{
               animation: "fadeInUp 0.8s ease-out 1s forwards",
               opacity: 0
             }}>
