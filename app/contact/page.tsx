@@ -60,7 +60,7 @@ export default function ContactPage() {
               </p>
               <Link href="https://calendly.com/vivek" target="_blank" rel="noopener noreferrer">
                 <Button className="btn-blue-elite text-white px-8 py-3 text-lg font-semibold rounded-lg hover:shadow-lg transition-shadow">
-                  Book a Call with Vivek
+                  Book a Call
                 </Button>
               </Link>
             </div>
