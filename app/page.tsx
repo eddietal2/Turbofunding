@@ -1614,9 +1614,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Loan Calculator Section */}
-        <LoanCalculator />
-
         {/* CTA Section */}
         <section className="w-full py-8 md:py-16 lg:py-20 bg-gray-900 text-white">
           <div className="container px-4 md:px-6 mx-auto">

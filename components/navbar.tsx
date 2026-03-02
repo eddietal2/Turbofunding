@@ -25,11 +25,17 @@ const products = [
   { name: "Equipment Financing", slug: "equipment-financing" },
 ]
 
+const resources = [
+  { name: "Loan Calculator", href: "/resources#calculator" },
+]
+
 export function Navbar() {
   const pathname = usePathname()
   const [isOpen, setIsOpen] = useState(false)
   const [isProductsDropdownOpen, setIsProductsDropdownOpen] = useState(false)
+  const [isResourcesDropdownOpen, setIsResourcesDropdownOpen] = useState(false)
   const [isMobileProductsOpen, setIsMobileProductsOpen] = useState(false)
+  const [isMobileResourcesOpen, setIsMobileResourcesOpen] = useState(false)
 
   const toggleMenu = () => setIsOpen(!isOpen)
   const closeMenu = () => setIsOpen(false)
@@ -115,6 +121,46 @@ export function Navbar() {
                   onClick={() => setIsProductsDropdownOpen(false)}
                 >
                   {product.name}
+                </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* Resources Dropdown */}
+          <div
+            className="relative group"
+            onMouseEnter={() => setIsResourcesDropdownOpen(true)}
+            onMouseLeave={() => setIsResourcesDropdownOpen(false)}
+          >
+            <button
+              className="text-sm tracking-wide transition-colors whitespace-nowrap leading-tight font-semibold text-white hover:text-orange-500 flex items-center gap-1"
+              aria-haspopup="true"
+              aria-expanded={isResourcesDropdownOpen}
+            >
+              Resources
+              <ChevronDownIcon 
+                className={`h-4 w-4 transition-transform duration-200 ${
+                  isResourcesDropdownOpen ? "rotate-180" : ""
+                }`}
+              />
+            </button>
+
+            {/* Dropdown Menu */}
+            <div
+              className={`absolute top-full left-0 mt-0 w-64 bg-[#0D1B2A] border border-gray-700 rounded-lg shadow-xl overflow-hidden transition-all duration-200 origin-top ${
+                isResourcesDropdownOpen
+                  ? "opacity-100 scale-y-100 pointer-events-auto"
+                  : "opacity-0 scale-y-95 pointer-events-none"
+              }`}
+            >
+              {resources.map((resource) => (
+                <Link
+                  key={resource.href}
+                  href={resource.href}
+                  className="block px-4 py-3 text-sm text-gray-300 hover:bg-orange-500 hover:text-white transition-colors font-medium border-b border-gray-700 last:border-b-0"
+                  onClick={() => setIsResourcesDropdownOpen(false)}
+                >
+                  {resource.name}
                 </Link>
               ))}
             </div>
@@ -235,6 +281,38 @@ export function Navbar() {
                           className="block py-2 px-4 text-lg text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
                         >
                           {product.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+
+              {/* Mobile Resources Submenu */}
+              <li>
+                <button
+                  onClick={() => setIsMobileResourcesOpen(!isMobileResourcesOpen)}
+                  className="w-full flex items-center justify-between py-3 px-4 rounded-lg text-lg tracking-wide transition-colors text-gray-300 font-normal hover:text-white hover:bg-gray-800"
+                >
+                  <span>Resources</span>
+                  <ChevronDownIcon 
+                    className={`h-5 w-5 transition-transform duration-200 ${
+                      isMobileResourcesOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+                
+                {/* Resources Submenu */}
+                {isMobileResourcesOpen && (
+                  <ul className="mt-2 ml-4 space-y-2 border-l border-gray-700">
+                    {resources.map((resource) => (
+                      <li key={resource.href}>
+                        <Link
+                          href={resource.href}
+                          onClick={closeMenu}
+                          className="block py-2 px-4 text-lg text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+                        >
+                          {resource.name}
                         </Link>
                       </li>
                     ))}
