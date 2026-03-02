@@ -4,6 +4,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
+import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
 import { RotatingText } from "@/components/rotating-text"
 import { LoanCalculator } from "@/components/loan-calculator"
 import { useEffect } from "react"
@@ -19,8 +20,9 @@ export default function Home() {
       const qualifyCards = document.querySelectorAll('.qualify-card');
       const fsCards = document.querySelectorAll('.fs-card');
       const fsHeader = document.querySelectorAll('.fs-header');
+      const fsAccordionItems = document.querySelectorAll('.fs-accordion-item');
       
-      const allCards = [...Array.from(qualifyCards), ...Array.from(fsCards), ...Array.from(fsHeader)];
+      const allCards = [...Array.from(qualifyCards), ...Array.from(fsCards), ...Array.from(fsHeader), ...Array.from(fsAccordionItems)];
       
       if (allCards.length === 0) {
         // Retry if cards not found yet
@@ -641,22 +643,23 @@ export default function Home() {
           </svg>
           <div className="container px-4 md:px-6 relative z-10">
             <div className="flex flex-col items-center justify-center space-y-3 text-center">
-              <div className="mb-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="48"
-                  height="48"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="#10b981"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="mx-auto"
-                  style={{ animation: "floatPulse 3s ease-in-out infinite" }}
-                >
-                  <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
-                </svg>
+              <div className="mb-4 flex justify-center">
+                <div className="p-3 rounded-lg" style={{ background: "rgba(16, 185, 129, 0.1)", color: "#10b981" }}>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="48"
+                    height="48"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    style={{ animation: "floatPulse 3s ease-in-out infinite" }}
+                  >
+                    <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                  </svg>
+                </div>
               </div>
               <div className="space-y-2">
                 <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
@@ -747,6 +750,110 @@ export default function Home() {
                 background-size: cover !important;
                 background-position: center center !important;
                 padding: 2em 0em;
+              }
+            }
+          `}} />
+          <style dangerouslySetInnerHTML={{__html: `
+            .fs-accordion-item {
+              border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+              margin-bottom: 0.5rem;
+              opacity: 0;
+              background: rgba(255, 255, 255, 0.8);
+              padding: 0.75rem;
+              border-radius: 0.5rem;
+              backdrop-filter: blur(10px);
+            }
+
+            .fs-accordion-item.scroll-visible {
+              animation: fadeUpIn 0.6s ease-out forwards;
+            }
+
+            .fs-accordion-item:nth-child(1).scroll-visible {
+              animation-delay: 0s;
+            }
+
+            .fs-accordion-item:nth-child(2).scroll-visible {
+              animation-delay: 0.1s;
+            }
+
+            .fs-accordion-item:nth-child(3).scroll-visible {
+              animation-delay: 0.2s;
+            }
+
+            .fs-accordion-item:nth-child(4).scroll-visible {
+              animation-delay: 0.3s;
+            }
+
+            .fs-accordion-item:nth-child(5).scroll-visible {
+              animation-delay: 0.4s;
+            }
+
+            .fs-accordion-item:nth-child(6).scroll-visible {
+              animation-delay: 0.5s;
+            }
+
+            .fs-accordion-item:nth-child(7).scroll-visible {
+              animation-delay: 0.6s;
+            }
+
+            .fs-accordion-item:last-child {
+              border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+            }
+
+            .fs-accordion-trigger {
+              color: #0D1B2A;
+              font-weight: 600;
+              padding: 0.5rem 0;
+              transition: all 0.3s ease;
+              font-size: 1rem;
+            }
+
+            .fs-accordion-trigger:hover {
+              color: #2460e3;
+            }
+
+            .fs-accordion-trigger[data-state="open"] {
+              color: #2460e3;
+            }
+
+            .fs-accordion-content {
+              border-bottom: none;
+              padding: 0.5rem 0;
+              background: transparent;
+              color: #0D1B2A;
+            }
+
+            .fs-accordion-icon {
+              transition: all 0.3s ease;
+              background: #E8F1FF !important;
+            }
+
+            .fs-accordion-trigger:hover .fs-accordion-icon {
+              background: #2460e3 !important;
+            }
+
+            .fs-accordion-trigger:hover .fs-accordion-icon svg {
+              color: white;
+              stroke: white;
+            }
+
+            .fs-accordion-trigger[data-state="open"] .fs-accordion-icon {
+              background: linear-gradient(135deg, #2460e3 0%, #1947b8 100%) !important;
+            }
+
+            .fs-accordion-trigger[data-state="open"] .fs-accordion-icon svg {
+              color: white;
+              stroke: white;
+            }
+
+            @keyframes fadeUpIn {
+              from {
+                opacity: 0;
+                transform: translateY(30px);
+              }
+              to {
+                opacity: 1;
+                transform: translateY(0);
               }
             }
           `}} />
@@ -887,263 +994,264 @@ export default function Home() {
           <div 
             className="absolute inset-0 pointer-events-none" 
             style={{
-              background: "linear-gradient(to bottom, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.25) 50%, rgba(0, 0, 0, 0.4) 100%)"
+              background: "linear-gradient(to bottom, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.1) 50%, rgba(255, 255, 255, 0.12) 100%)"
             }}
           />
           
-          <div className="container px-4 md:px-6 relative z-10 max-w-6xl mx-auto">
-            <div className="flex flex-col items-center w-full">
-              {/* FS Header - Centered Label */}
-              <div className="mb-4 fs-header px-4 py-2 rounded-lg border-2" style={{ background: "linear-gradient(135deg, rgba(36, 96, 227, 0.3) 0%, rgba(25, 71, 184, 0.3) 100%)", borderColor: "#2460e3" }}>
-                <div className="flex items-center gap-3">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="32"
-                    height="32"
-                    viewBox="0 0 48 48"
-                    fill="none"
-                  >
-                    {/* Loan/Contract Document Icon */}
-                    {/* Document outline */}
-                    <rect x="8" y="6" width="22" height="28" rx="2" fill="none" stroke="#FFFFFF" strokeWidth="2" />
-                    
-                    {/* Fold corner */}
-                    <path d="M 30 6 L 30 14 L 38 14" fill="none" stroke="#FFFFFF" strokeWidth="2" strokeLinejoin="round" />
-                    
-                    {/* Document lines */}
-                    <line x1="12" y1="12" x2="26" y2="12" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" />
-                    <line x1="12" y1="18" x2="26" y2="18" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" />
-                    <line x1="12" y1="24" x2="22" y2="24" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" />
-                    
-                    {/* Dollar sign - large and prominent */}
-                    <circle cx="28" cy="28" r="8" fill="none" stroke="#FFFFFF" strokeWidth="1.5" />
-                    <path d="M 28 24 L 28 32 M 24.5 26 Q 28 25 31.5 26 M 24.5 30 Q 28 31 31.5 30" 
-                          fill="none" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                    
-                    {/* Arrow pointing up-right - representing growth/approval */}
-                    <path d="M 36 20 L 42 14 M 42 14 L 42 20 L 36 20" 
-                          fill="none" stroke="#FFFFFF" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
-                  <h2 className="text-2xl font-bold tracking-tight text-white" style={{ fontFamily: "var(--font-space-grotesk), sans-serif" }}>
-                    Funding Solutions
-                  </h2>
+          <div className="container px-4 md:px-6 relative z-10 max-w-7xl mx-auto">
+            <div className="flex flex-col md:flex-row gap-8 md:gap-12 w-full">
+              {/* Left Column - Accordion */}
+              <div className="w-full md:w-2/5 flex flex-col">
+                {/* FS Header - Left Aligned */}
+                <div className="mb-12 fs-header">
+                  <div className="flex items-start gap-4 mb-6">
+                    <div className="flex-shrink-0 p-3 rounded-lg" style={{ background: "rgba(16, 185, 129, 0.1)", color: "#10b981" }}>
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        width="28"
+                        height="28"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                      </svg>
+                    </div>
+                    <div className="flex-1">
+                      <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-2" style={{ fontFamily: "var(--font-space-grotesk), sans-serif", color: "#0D1B2A" }}>
+                        Funding Solutions
+                      </h2>
+                      <p className="text-sm md:text-base leading-relaxed" style={{ color: "#0D1B2A", opacity: 0.75 }}>Explore our range of business financing options tailored to your company's unique needs</p>
+                    </div>
+                  </div>
                 </div>
-              </div>
 
-              {/* Cards Grid - Centered 2x3 on desktop */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 md:gap-3 w-full">
-                  <Card className="bg-white border-gray-200 fs-card">
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className="fs-card-icon rounded-lg bg-blue-100 p-3 flex items-center justify-center" aria-hidden="true">
+                {/* Accordion */}
+                <Accordion type="single" collapsible className="w-full">
+                  <AccordionItem value="working-capital" className="fs-accordion-item">
+                    <AccordionTrigger className="fs-accordion-trigger">
+                      <div className="flex items-center gap-3">
+                        <div className="fs-accordion-icon rounded-lg bg-blue-100 p-2 flex items-center justify-center flex-shrink-0">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
+                            width="20"
+                            height="20"
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
                             strokeWidth="2"
                             strokeLinecap="round"
                             strokeLinejoin="round"
-                            className="h-6 w-6 text-blue-600"
+                            className="h-5 w-5 text-blue-600"
                           >
-                            <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                            <polyline points="23 6 13.5 15.5 8 10 1 17" />
+                            <polyline points="17 6 23 6 23 12" />
                           </svg>
                         </div>
-                        <h3 className="text-lg font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
-                          Working Capital
-                        </h3>
+                        <span className="font-semibold" style={{ color: "#0D1B2A" }}>Working Capital</span>
                       </div>
-                      <p className="text-gray-600 text-sm leading-relaxed">
+                    </AccordionTrigger>
+                    <AccordionContent className="fs-accordion-content">
+                      <p className="text-sm leading-relaxed ml-11" style={{ color: "#0D1B2A" }}>
                         Access the working capital your business needs to manage cash flow and day-to-day operations.
                       </p>
-                    </CardContent>
-                  </Card>
-                  <Card className="bg-white border-gray-200 fs-card">
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className="fs-card-icon rounded-lg bg-blue-100 p-3 flex items-center justify-center" aria-hidden="true">
+                    </AccordionContent>
+                  </AccordionItem>
+
+                  <AccordionItem value="bridge-loan" className="fs-accordion-item">
+                    <AccordionTrigger className="fs-accordion-trigger">
+                      <div className="flex items-center gap-3">
+                        <div className="fs-accordion-icon rounded-lg bg-blue-100 p-2 flex items-center justify-center flex-shrink-0">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
+                            width="20"
+                            height="20"
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
                             strokeWidth="2"
                             strokeLinecap="round"
                             strokeLinejoin="round"
-                            className="h-6 w-6 text-blue-600"
+                            className="h-5 w-5 text-blue-600"
                           >
                             <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4" />
                             <path d="M3 5v14a2 2 0 0 0 2 2h16v-5" />
                             <path d="M18 12a2 2 0 0 0 0 4h4v-4Z" />
                           </svg>
                         </div>
-                        <h3 className="text-lg font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
-                          Bridge Loan
-                        </h3>
+                        <span className="font-semibold" style={{ color: "#0D1B2A" }}>Bridge Loan</span>
                       </div>
-                      <p className="text-gray-600 text-sm leading-relaxed">
+                    </AccordionTrigger>
+                    <AccordionContent className="fs-accordion-content">
+                      <p className="text-sm leading-relaxed ml-11" style={{ color: "#0D1B2A" }}>
                         Get quick access to capital with flexible repayment based on your future sales and daily revenue.
                       </p>
-                    </CardContent>
-                  </Card>
-                  <Card className="bg-white border-gray-200 fs-card">
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className="fs-card-icon rounded-lg bg-blue-100 p-3 flex items-center justify-center" aria-hidden="true">
+                    </AccordionContent>
+                  </AccordionItem>
+
+                  <AccordionItem value="business-line" className="fs-accordion-item">
+                    <AccordionTrigger className="fs-accordion-trigger">
+                      <div className="flex items-center gap-3">
+                        <div className="fs-accordion-icon rounded-lg bg-blue-100 p-2 flex items-center justify-center flex-shrink-0">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
+                            width="20"
+                            height="20"
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
                             strokeWidth="2"
                             strokeLinecap="round"
                             strokeLinejoin="round"
-                            className="h-6 w-6 text-blue-600"
+                            className="h-5 w-5 text-blue-600"
                           >
                             <rect width="20" height="14" x="2" y="5" rx="2" />
                             <line x1="2" x2="22" y1="10" y2="10" />
                           </svg>
                         </div>
-                        <h3 className="text-lg font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
-                          Business Line of Credit
-                        </h3>
+                        <span className="font-semibold" style={{ color: "#0D1B2A" }}>Business Line of Credit</span>
                       </div>
-                      <p className="text-gray-600 text-sm leading-relaxed">
+                    </AccordionTrigger>
+                    <AccordionContent className="fs-accordion-content">
+                      <p className="text-sm leading-relaxed ml-11" style={{ color: "#0D1B2A" }}>
                         Flexible funding that allows you to draw funds as needed and only pay interest on what you use.
                       </p>
-                    </CardContent>
-                  </Card>
-                  <Card className="bg-white border-gray-200 fs-card">
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className="fs-card-icon rounded-lg bg-blue-100 p-3 flex items-center justify-center" aria-hidden="true">
+                    </AccordionContent>
+                  </AccordionItem>
+
+                  <AccordionItem value="sba-7a" className="fs-accordion-item">
+                    <AccordionTrigger className="fs-accordion-trigger">
+                      <div className="flex items-center gap-3">
+                        <div className="fs-accordion-icon rounded-lg bg-blue-100 p-2 flex items-center justify-center flex-shrink-0">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
+                            width="20"
+                            height="20"
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
                             strokeWidth="2"
                             strokeLinecap="round"
                             strokeLinejoin="round"
-                            className="h-6 w-6 text-blue-600"
+                            className="h-5 w-5 text-blue-600"
                           >
                             <path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z" />
-                            <path d="M2 9v1c0 1.1.9 2 2 2h1" />
-                            <path d="M16 11h0" />
                           </svg>
                         </div>
-                        <h3 className="text-lg font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
-                          SBA 7a Loans
-                        </h3>
+                        <span className="font-semibold" style={{ color: "#0D1B2A" }}>SBA 7a Loans</span>
                       </div>
-                      <p className="text-gray-600 text-sm leading-relaxed">
+                    </AccordionTrigger>
+                    <AccordionContent className="fs-accordion-content">
+                      <p className="text-sm leading-relaxed ml-11" style={{ color: "#0D1B2A" }}>
                         Government-backed loans with favorable terms for small businesses that meet SBA eligibility requirements.
                       </p>
-                    </CardContent>
-                  </Card>
-                  
-                  <Card className="bg-white border-gray-200 fs-card">
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className="fs-card-icon rounded-lg bg-blue-100 p-3 flex items-center justify-center" aria-hidden="true">
+                    </AccordionContent>
+                  </AccordionItem>
+
+                  <AccordionItem value="equipment-financing" className="fs-accordion-item">
+                    <AccordionTrigger className="fs-accordion-trigger">
+                      <div className="flex items-center gap-3">
+                        <div className="fs-accordion-icon rounded-lg bg-blue-100 p-2 flex items-center justify-center flex-shrink-0">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
+                            width="20"
+                            height="20"
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
                             strokeWidth="2"
                             strokeLinecap="round"
                             strokeLinejoin="round"
-                            className="h-6 w-6 text-blue-600"
+                            className="h-5 w-5 text-blue-600"
                           >
                             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                             <polyline points="9 22 9 12 15 12 15 22" />
                           </svg>
                         </div>
-                        <h3 className="text-lg font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
-                          Equipment Financing
-                        </h3>
+                        <span className="font-semibold" style={{ color: "#0D1B2A" }}>Equipment Financing</span>
                       </div>
-                      <p className="text-gray-600 text-sm leading-relaxed">
+                    </AccordionTrigger>
+                    <AccordionContent className="fs-accordion-content">
+                      <p className="text-sm leading-relaxed ml-11" style={{ color: "#0D1B2A" }}>
                         Financing specifically for purchasing or leasing equipment, with flexible terms based on the value of the equipment being financed.
                       </p>
-                    </CardContent>
-                  </Card>
-                  <Card className="bg-white border-gray-200 fs-card">
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className="fs-card-icon rounded-lg bg-blue-100 p-3 flex items-center justify-center" aria-hidden="true">
+                    </AccordionContent>
+                  </AccordionItem>
+
+                  <AccordionItem value="mca" className="fs-accordion-item">
+                    <AccordionTrigger className="fs-accordion-trigger">
+                      <div className="flex items-center gap-3">
+                        <div className="fs-accordion-icon rounded-lg bg-blue-100 p-2 flex items-center justify-center flex-shrink-0">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
+                            width="20"
+                            height="20"
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
                             strokeWidth="2"
                             strokeLinecap="round"
                             strokeLinejoin="round"
-                            className="h-6 w-6 text-blue-600"
+                            className="h-5 w-5 text-blue-600"
                           >
                             <rect width="20" height="14" x="2" y="5" rx="2" />
                             <line x1="2" x2="22" y1="10" y2="10" />
                             <path d="M6 16h.01M10 16h.01" />
                           </svg>
                         </div>
-                        <h3 className="text-lg font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
-                          Merchant Cash Advance
-                        </h3>
+                        <span className="font-semibold" style={{ color: "#0D1B2A" }}>Merchant Cash Advance</span>
                       </div>
-                      <p className="text-gray-600 text-sm leading-relaxed">
+                    </AccordionTrigger>
+                    <AccordionContent className="fs-accordion-content">
+                      <p className="text-sm leading-relaxed ml-11" style={{ color: "#0D1B2A" }}>
                         Quick access to capital by selling a portion of your future daily credit card sales with transparent, simple repayment terms.
                       </p>
-                    </CardContent>
-                  </Card>
-                  <Card className="bg-white border-gray-200 fs-card">
-                    <CardContent className="p-6">
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className="fs-card-icon rounded-lg bg-blue-100 p-3 flex items-center justify-center" aria-hidden="true">
+                    </AccordionContent>
+                  </AccordionItem>
+
+                  <AccordionItem value="sba-504" className="fs-accordion-item">
+                    <AccordionTrigger className="fs-accordion-trigger">
+                      <div className="flex items-center gap-3">
+                        <div className="fs-accordion-icon rounded-lg bg-blue-100 p-2 flex items-center justify-center flex-shrink-0">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
+                            width="20"
+                            height="20"
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
                             strokeWidth="2"
                             strokeLinecap="round"
                             strokeLinejoin="round"
-                            className="h-6 w-6 text-blue-600"
+                            className="h-5 w-5 text-blue-600"
                           >
                             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                             <polyline points="9 22 9 12 15 12 15 22" />
                           </svg>
                         </div>
-                        <h3 className="text-lg font-bold" style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}>
-                          SBA 504
-                        </h3>
+                        <span className="font-semibold" style={{ color: "#0D1B2A" }}>SBA 504</span>
                       </div>
-                      <p className="text-gray-600 text-sm leading-relaxed">
+                    </AccordionTrigger>
+                    <AccordionContent className="fs-accordion-content">
+                      <p className="text-sm leading-relaxed ml-11" style={{ color: "#0D1B2A" }}>
                         Long-term, fixed-rate financing for major assets like real estate and equipment to help your business expand.
                       </p>
-                    </CardContent>
-                  </Card>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+
+                <div className="flex justify-start mt-8">
+                  <Button asChild className="btn-blue-elite text-base md:text-lg px-6 md:px-8 py-4 md:py-5 font-semibold text-white">
+                    <Link href="/products">Get Started Today</Link>
+                  </Button>
+                </div>
               </div>
-              <div className="flex justify-center mt-8">
-                <Button asChild className="btn-blue-elite text-base md:text-lg px-6 md:px-8 py-4 md:py-5 font-semibold text-white">
-                  <Link href="/products">Explore All Products</Link>
-                </Button>
-              </div>
+
+              {/* Right Column - Background Space (empty on desktop, hidden on mobile) */}
+              <div className="hidden md:block w-3/5"></div>
             </div>
           </div>
         </section>
