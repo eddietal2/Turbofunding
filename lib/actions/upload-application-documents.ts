@@ -5,11 +5,20 @@ import { createCipheriv, randomBytes } from "crypto"
 
 const MAX_FILE_SIZE = 15 * 1024 * 1024 // 15 MB
 const ENCRYPTION_KEY = process.env.ENCRYPTION_KEY
+const VERCEL_BLOB_TOKEN = process.env.BLOB_READ_WRITE_TOKEN
 
 // Validate encryption key on startup
 if (!ENCRYPTION_KEY || !/^[a-f0-9]{64}$/i.test(ENCRYPTION_KEY)) {
   console.warn("[UploadDocs] ⚠️  WARNING: ENCRYPTION_KEY missing or invalid in .env")
   console.warn("[UploadDocs]    Files will NOT be encrypted before upload")
+}
+
+// Validate Blob token
+if (!VERCEL_BLOB_TOKEN) {
+  console.warn("[UploadDocs] ⚠️  WARNING: BLOB_READ_WRITE_TOKEN missing in .env")
+  console.warn("[UploadDocs]    Blob uploads will fail")
+} else {
+  console.log("[UploadDocs] ✓ BLOB_READ_WRITE_TOKEN found in environment")
 }
 
 export interface ApplicationFolder {
@@ -135,6 +144,7 @@ User can continue from Step 2 using the app folder system.
     const blob = await put(filePath + ".txt", textContent, {
       access: "public",
       contentType: "text/plain",
+      token: VERCEL_BLOB_TOKEN,
       addRandomSuffix: false,
     })
     
@@ -354,6 +364,7 @@ export async function uploadApplicationDocuments(
       const pdfBlob = await put(pdfPath, encryptedPdfBuffer, {
         access: "public",
         contentType: "application/octet-stream",
+        token: VERCEL_BLOB_TOKEN,
         addRandomSuffix: false,
       })
       
@@ -384,6 +395,7 @@ export async function uploadApplicationDocuments(
       const bankBlob = await put(bankStatementsPath, encryptedBankStatementsBuffer, {
         access: "public",
         contentType,
+        token: VERCEL_BLOB_TOKEN,
         addRandomSuffix: false,
       })
       
@@ -416,6 +428,7 @@ export async function uploadApplicationDocuments(
       const otherBlob = await put(otherDocumentsPath, encryptedOtherDocumentsBuffer, {
         access: "public",
         contentType,
+        token: VERCEL_BLOB_TOKEN,
         addRandomSuffix: false,
       })
       

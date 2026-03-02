@@ -2233,7 +2233,7 @@ export default function ApplyPage() {
       <SignatureModal
         isOpen={showSignatureModal}
         onClose={handleSignatureModalClose}
-        onSign={handleInlineSignature}
+        onSign={handleSignatureAndSubmit}
         signerName={
           currentSignerIndex === 0 
             ? `${formData.firstName} ${formData.lastName}`.trim() || "Primary Owner"
