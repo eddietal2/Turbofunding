@@ -9,10 +9,18 @@ import { MenuIcon, XIcon, ChevronDownIcon } from "lucide-react"
 
 const navItems = [
   { href: "/", label: "Home" },
-  { href: "/industries", label: "Industries" },
   { href: "/team", label: "About Us" },
   { href: "/contact", label: "Contact" },
   // { href: "/apply", label: "Apply" },
+]
+
+const industries = [
+  { name: "All Industries", href: "/industries" },
+  { name: "Technology", href: "/industries" },
+  { name: "Retail", href: "/industries" },
+  { name: "Healthcare", href: "/industries" },
+  { name: "Manufacturing", href: "/industries" },
+  { name: "Professional Services", href: "/industries" },
 ]
 
 const products = [
@@ -34,8 +42,10 @@ export function Navbar() {
   const [isOpen, setIsOpen] = useState(false)
   const [isProductsDropdownOpen, setIsProductsDropdownOpen] = useState(false)
   const [isResourcesDropdownOpen, setIsResourcesDropdownOpen] = useState(false)
+  const [isIndustriesDropdownOpen, setIsIndustriesDropdownOpen] = useState(false)
   const [isMobileProductsOpen, setIsMobileProductsOpen] = useState(false)
   const [isMobileResourcesOpen, setIsMobileResourcesOpen] = useState(false)
+  const [isMobileIndustriesOpen, setIsMobileIndustriesOpen] = useState(false)
 
   const toggleMenu = () => setIsOpen(!isOpen)
   const closeMenu = () => setIsOpen(false)
@@ -93,16 +103,11 @@ export function Navbar() {
             onMouseLeave={() => setIsProductsDropdownOpen(false)}
           >
             <button
-              className="text-sm tracking-wide transition-colors whitespace-nowrap leading-tight font-semibold text-white hover:text-orange-500 flex items-center gap-1"
+              className="text-sm tracking-wide transition-colors whitespace-nowrap leading-tight font-semibold text-white hover:text-orange-500"
               aria-haspopup="true"
               aria-expanded={isProductsDropdownOpen}
             >
               Products
-              <ChevronDownIcon 
-                className={`h-4 w-4 transition-transform duration-200 ${
-                  isProductsDropdownOpen ? "rotate-180" : ""
-                }`}
-              />
             </button>
 
             {/* Dropdown Menu */}
@@ -126,6 +131,41 @@ export function Navbar() {
             </div>
           </div>
 
+          {/* Industries Dropdown */}
+          <div
+            className="relative group"
+            onMouseEnter={() => setIsIndustriesDropdownOpen(true)}
+            onMouseLeave={() => setIsIndustriesDropdownOpen(false)}
+          >
+            <button
+              className="text-sm tracking-wide transition-colors whitespace-nowrap leading-tight font-semibold text-white hover:text-orange-500"
+              aria-haspopup="true"
+              aria-expanded={isIndustriesDropdownOpen}
+            >
+              Industries
+            </button>
+
+            {/* Dropdown Menu */}
+            <div
+              className={`absolute top-full left-0 mt-0 w-64 bg-[#0D1B2A] border border-gray-700 rounded-lg shadow-xl overflow-hidden transition-all duration-200 origin-top ${
+                isIndustriesDropdownOpen
+                  ? "opacity-100 scale-y-100 pointer-events-auto"
+                  : "opacity-0 scale-y-95 pointer-events-none"
+              }`}
+            >
+              {industries.map((industry, index) => (
+                <Link
+                  key={index}
+                  href={industry.href}
+                  className="block px-4 py-3 text-sm text-gray-300 hover:bg-orange-500 hover:text-white transition-colors font-medium border-b border-gray-700 last:border-b-0"
+                  onClick={() => setIsIndustriesDropdownOpen(false)}
+                >
+                  {industry.name}
+                </Link>
+              ))}
+            </div>
+          </div>
+
           {/* Resources Dropdown */}
           <div
             className="relative group"
@@ -133,16 +173,11 @@ export function Navbar() {
             onMouseLeave={() => setIsResourcesDropdownOpen(false)}
           >
             <button
-              className="text-sm tracking-wide transition-colors whitespace-nowrap leading-tight font-semibold text-white hover:text-orange-500 flex items-center gap-1"
+              className="text-sm tracking-wide transition-colors whitespace-nowrap leading-tight font-semibold text-white hover:text-orange-500"
               aria-haspopup="true"
               aria-expanded={isResourcesDropdownOpen}
             >
               Resources
-              <ChevronDownIcon 
-                className={`h-4 w-4 transition-transform duration-200 ${
-                  isResourcesDropdownOpen ? "rotate-180" : ""
-                }`}
-              />
             </button>
 
             {/* Dropdown Menu */}
@@ -273,6 +308,38 @@ export function Navbar() {
                           className="block py-2 px-4 text-lg text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
                         >
                           {product.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </li>
+
+              {/* Mobile Industries Submenu */}
+              <li>
+                <button
+                  onClick={() => setIsMobileIndustriesOpen(!isMobileIndustriesOpen)}
+                  className="w-full flex items-center justify-between py-3 px-4 rounded-lg text-lg tracking-wide transition-colors text-gray-300 font-normal hover:text-white hover:bg-gray-800"
+                >
+                  <span>Industries</span>
+                  <ChevronDownIcon 
+                    className={`h-5 w-5 transition-transform duration-200 ${
+                      isMobileIndustriesOpen ? "rotate-180" : ""
+                    }`}
+                  />
+                </button>
+                
+                {/* Industries Submenu */}
+                {isMobileIndustriesOpen && (
+                  <ul className="mt-2 ml-4 space-y-2 border-l border-gray-700">
+                    {industries.map((industry, index) => (
+                      <li key={index}>
+                        <Link
+                          href={industry.href}
+                          onClick={closeMenu}
+                          className="block py-2 px-4 text-lg text-gray-400 hover:text-white hover:bg-gray-800 rounded-lg transition-colors"
+                        >
+                          {industry.name}
                         </Link>
                       </li>
                     ))}
