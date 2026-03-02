@@ -655,9 +655,9 @@ export default function Home() {
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    style={{ animation: "floatPulse 3s ease-in-out infinite" }}
                   >
-                    <path d="M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                    <path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z" />
+                    <path d="m9 12 2 2 4-4" />
                   </svg>
                 </div>
               </div>
@@ -1004,8 +1004,8 @@ export default function Home() {
                   <div className="flex-shrink-0 p-3 rounded-lg" style={{ background: "rgba(16, 185, 129, 0.1)", color: "#10b981" }}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
-                      width="28"
-                      height="28"
+                      width="48"
+                      height="48"
                       viewBox="0 0 24 24"
                       fill="none"
                       stroke="currentColor"
@@ -1278,7 +1278,7 @@ export default function Home() {
                     height="48"
                     viewBox="0 0 24 24"
                     fill="none"
-                    stroke="#2460e3"
+                    stroke="#10b981"
                     strokeWidth="2"
                     strokeLinecap="round"
                     strokeLinejoin="round"
