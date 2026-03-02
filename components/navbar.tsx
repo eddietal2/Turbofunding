@@ -3,7 +3,7 @@
 import Image from "next/image"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { MenuIcon, XIcon, ChevronDownIcon } from "lucide-react"
 
@@ -49,6 +49,21 @@ export function Navbar() {
 
   const toggleMenu = () => setIsOpen(!isOpen)
   const closeMenu = () => setIsOpen(false)
+
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.documentElement.style.overflow = "hidden"
+      document.body.style.overflow = "hidden"
+    } else {
+      document.documentElement.style.overflow = "unset"
+      document.body.style.overflow = "unset"
+    }
+    return () => {
+      document.documentElement.style.overflow = "unset"
+      document.body.style.overflow = "unset"
+    }
+  }, [isOpen])
 
   const isActive = (href: string) => {
     if (href === "/") {
@@ -263,7 +278,7 @@ export function Navbar() {
           </div>
 
           {/* Navigation Links */}
-          <nav className="flex-1 px-4 py-2 font-space-grotesk">
+          <nav className="flex-1 overflow-y-auto px-4 py-2 font-space-grotesk">
             <ul className="space-y-4">
               {navItems.map((item) => (
                 <li key={item.href}>
