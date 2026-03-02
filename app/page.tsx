@@ -914,7 +914,7 @@ export default function Home() {
             }
             
             .fs-card:hover .fs-card-icon {
-              background: linear-gradient(135deg, #2460e3 0%, #1947b8 100%) !important;
+              background: linear-gradient(135deg, #D97706 0%, #F59E0B 100%) !important;
               transform: scale(1.1);
               color: white !important;
             }
@@ -955,7 +955,7 @@ export default function Home() {
               }
               
               .fs-card:hover .fs-card-icon {
-                background: linear-gradient(135deg, #2460e3 0%, #1947b8 100%) !important;
+                background: linear-gradient(135deg, #D97706 0%, #F59E0B 100%) !important;
                 transform: scale(1.1);
               }
             }
@@ -1027,212 +1027,247 @@ export default function Home() {
               <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                 {/* Working Capital */}
                 <div className="fs-card">
-                  <div>
-                    <div className="fs-card-icon rounded-lg bg-blue-100 p-3 flex items-center justify-center flex-shrink-0 w-12 h-12 mb-4" style={{
-                      background: "#E8F1FF",
-                      color: "#2460e3"
-                    }}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="h-6 w-6"
-                      >
-                        <polyline points="23 6 13.5 15.5 8 10 1 17" />
-                        <polyline points="17 6 23 6 23 12" />
-                      </svg>
+                  <div className="flex flex-col h-full">
+                    <div>
+                      <div className="fs-card-icon rounded-lg bg-blue-100 p-3 flex items-center justify-center flex-shrink-0 w-12 h-12 mb-4" style={{
+                        background: "#E8F1FF",
+                        color: "#2460e3"
+                      }}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="h-6 w-6"
+                        >
+                          <polyline points="23 6 13.5 15.5 8 10 1 17" />
+                          <polyline points="17 6 23 6 23 12" />
+                        </svg>
+                      </div>
+                      <h3 className="text-xl font-bold mb-3" style={{ color: "#0D1B2A" }}>Working Capital</h3>
+                      <p className="text-base leading-relaxed mb-6" style={{ color: "#0D1B2A", opacity: 0.85 }}>
+                        Access the working capital your business needs to manage cash flow and day-to-day operations.
+                      </p>
                     </div>
-                    <h3 className="text-xl font-bold mb-3" style={{ color: "#0D1B2A" }}>Working Capital</h3>
-                    <p className="text-base leading-relaxed" style={{ color: "#0D1B2A", opacity: 0.85 }}>
-                      Access the working capital your business needs to manage cash flow and day-to-day operations.
-                    </p>
+                    <Button asChild className="mt-auto btn-blue-elite text-sm px-4 py-2 font-semibold text-white w-full">
+                      <Link href="/products?product=working-capital">Learn More</Link>
+                    </Button>
                   </div>
                 </div>
 
                 {/* Bridge Loan */}
                 <div className="fs-card">
-                  <div>
-                    <div className="fs-card-icon rounded-lg p-3 flex items-center justify-center flex-shrink-0 w-12 h-12 mb-4" style={{
-                      background: "#E8F1FF",
-                      color: "#2460e3"
-                    }}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="h-6 w-6"
-                      >
-                        <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4" />
-                        <path d="M3 5v14a2 2 0 0 0 2 2h16v-5" />
-                        <path d="M18 12a2 2 0 0 0 0 4h4v-4Z" />
-                      </svg>
+                  <div className="flex flex-col h-full">
+                    <div>
+                      <div className="fs-card-icon rounded-lg p-3 flex items-center justify-center flex-shrink-0 w-12 h-12 mb-4" style={{
+                        background: "#E8F1FF",
+                        color: "#2460e3"
+                      }}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="h-6 w-6"
+                        >
+                          <path d="M21 12V7H5a2 2 0 0 1 0-4h14v4" />
+                          <path d="M3 5v14a2 2 0 0 0 2 2h16v-5" />
+                          <path d="M18 12a2 2 0 0 0 0 4h4v-4Z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-xl font-bold mb-3" style={{ color: "#0D1B2A" }}>Bridge Loan</h3>
+                      <p className="text-base leading-relaxed mb-6" style={{ color: "#0D1B2A", opacity: 0.85 }}>
+                        Get quick access to capital with flexible repayment based on your future sales and daily revenue.
+                      </p>
                     </div>
-                    <h3 className="text-xl font-bold mb-3" style={{ color: "#0D1B2A" }}>Bridge Loan</h3>
-                    <p className="text-base leading-relaxed" style={{ color: "#0D1B2A", opacity: 0.85 }}>
-                      Get quick access to capital with flexible repayment based on your future sales and daily revenue.
-                    </p>
+                    <Button asChild className="mt-auto btn-blue-elite text-sm px-4 py-2 font-semibold text-white w-full">
+                      <Link href="/products?product=bridge-loan">Learn More</Link>
+                    </Button>
                   </div>
                 </div>
 
                 {/* Business Line of Credit */}
                 <div className="fs-card">
-                  <div>
-                    <div className="fs-card-icon rounded-lg p-3 flex items-center justify-center flex-shrink-0 w-12 h-12 mb-4" style={{
-                      background: "#E8F1FF",
-                      color: "#2460e3"
-                    }}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="h-6 w-6"
-                      >
-                        <rect width="20" height="14" x="2" y="5" rx="2" />
-                        <line x1="2" x2="22" y1="10" y2="10" />
-                      </svg>
+                  <div className="flex flex-col h-full">
+                    <div>
+                      <div className="fs-card-icon rounded-lg p-3 flex items-center justify-center flex-shrink-0 w-12 h-12 mb-4" style={{
+                        background: "#E8F1FF",
+                        color: "#2460e3"
+                      }}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="h-6 w-6"
+                        >
+                          <rect width="20" height="14" x="2" y="5" rx="2" />
+                          <line x1="2" x2="22" y1="10" y2="10" />
+                        </svg>
+                      </div>
+                      <h3 className="text-xl font-bold mb-3" style={{ color: "#0D1B2A" }}>Business Line of Credit</h3>
+                      <p className="text-base leading-relaxed mb-6" style={{ color: "#0D1B2A", opacity: 0.85 }}>
+                        Flexible funding that allows you to draw funds as needed and only pay interest on what you use.
+                      </p>
                     </div>
-                    <h3 className="text-xl font-bold mb-3" style={{ color: "#0D1B2A" }}>Business Line of Credit</h3>
-                    <p className="text-base leading-relaxed" style={{ color: "#0D1B2A", opacity: 0.85 }}>
-                      Flexible funding that allows you to draw funds as needed and only pay interest on what you use.
-                    </p>
+                    <Button asChild className="mt-auto btn-blue-elite text-sm px-4 py-2 font-semibold text-white w-full">
+                      <Link href="/products?product=business-line-of-credit">Learn More</Link>
+                    </Button>
                   </div>
                 </div>
 
                 {/* SBA 7a Loans */}
                 <div className="fs-card">
-                  <div>
-                    <div className="fs-card-icon rounded-lg p-3 flex items-center justify-center flex-shrink-0 w-12 h-12 mb-4" style={{
-                      background: "#E8F1FF",
-                      color: "#2460e3"
-                    }}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="h-6 w-6"
-                      >
-                        <path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z" />
-                      </svg>
+                  <div className="flex flex-col h-full">
+                    <div>
+                      <div className="fs-card-icon rounded-lg p-3 flex items-center justify-center flex-shrink-0 w-12 h-12 mb-4" style={{
+                        background: "#E8F1FF",
+                        color: "#2460e3"
+                      }}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="h-6 w-6"
+                        >
+                          <path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z" />
+                        </svg>
+                      </div>
+                      <h3 className="text-xl font-bold mb-3" style={{ color: "#0D1B2A" }}>SBA 7a Loans</h3>
+                      <p className="text-base leading-relaxed mb-6" style={{ color: "#0D1B2A", opacity: 0.85 }}>
+                        Government-backed loans with favorable terms for small businesses that meet SBA eligibility requirements.
+                      </p>
                     </div>
-                    <h3 className="text-xl font-bold mb-3" style={{ color: "#0D1B2A" }}>SBA 7a Loans</h3>
-                    <p className="text-base leading-relaxed" style={{ color: "#0D1B2A", opacity: 0.85 }}>
-                      Government-backed loans with favorable terms for small businesses that meet SBA eligibility requirements.
-                    </p>
+                    <Button asChild className="mt-auto btn-blue-elite text-sm px-4 py-2 font-semibold text-white w-full">
+                      <Link href="/products?product=sba-7a-loans">Learn More</Link>
+                    </Button>
                   </div>
                 </div>
 
                 {/* Equipment Financing */}
                 <div className="fs-card">
-                  <div>
-                    <div className="fs-card-icon rounded-lg p-3 flex items-center justify-center flex-shrink-0 w-12 h-12 mb-4" style={{
-                      background: "#E8F1FF",
-                      color: "#2460e3"
-                    }}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="h-6 w-6"
-                      >
-                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                        <polyline points="9 22 9 12 15 12 15 22" />
-                      </svg>
+                  <div className="flex flex-col h-full">
+                    <div>
+                      <div className="fs-card-icon rounded-lg p-3 flex items-center justify-center flex-shrink-0 w-12 h-12 mb-4" style={{
+                        background: "#E8F1FF",
+                        color: "#2460e3"
+                      }}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="h-6 w-6"
+                        >
+                          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                          <polyline points="9 22 9 12 15 12 15 22" />
+                        </svg>
+                      </div>
+                      <h3 className="text-xl font-bold mb-3" style={{ color: "#0D1B2A" }}>Equipment Financing</h3>
+                      <p className="text-base leading-relaxed mb-6" style={{ color: "#0D1B2A", opacity: 0.85 }}>
+                        Financing specifically for purchasing or leasing equipment, with flexible terms based on the value of the equipment being financed.
+                      </p>
                     </div>
-                    <h3 className="text-xl font-bold mb-3" style={{ color: "#0D1B2A" }}>Equipment Financing</h3>
-                    <p className="text-base leading-relaxed" style={{ color: "#0D1B2A", opacity: 0.85 }}>
-                      Financing specifically for purchasing or leasing equipment, with flexible terms based on the value of the equipment being financed.
-                    </p>
+                    <Button asChild className="mt-auto btn-blue-elite text-sm px-4 py-2 font-semibold text-white w-full">
+                      <Link href="/products?product=equipment-financing">Learn More</Link>
+                    </Button>
                   </div>
                 </div>
 
                 {/* Merchant Cash Advance */}
                 <div className="fs-card">
-                  <div>
-                    <div className="fs-card-icon rounded-lg p-3 flex items-center justify-center flex-shrink-0 w-12 h-12 mb-4" style={{
-                      background: "#E8F1FF",
-                      color: "#2460e3"
-                    }}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="h-6 w-6"
-                      >
-                        <rect width="20" height="14" x="2" y="5" rx="2" />
-                        <line x1="2" x2="22" y1="10" y2="10" />
-                        <path d="M6 16h.01M10 16h.01" />
-                      </svg>
+                  <div className="flex flex-col h-full">
+                    <div>
+                      <div className="fs-card-icon rounded-lg p-3 flex items-center justify-center flex-shrink-0 w-12 h-12 mb-4" style={{
+                        background: "#E8F1FF",
+                        color: "#2460e3"
+                      }}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="h-6 w-6"
+                        >
+                          <rect width="20" height="14" x="2" y="5" rx="2" />
+                          <line x1="2" x2="22" y1="10" y2="10" />
+                          <path d="M6 16h.01M10 16h.01" />
+                        </svg>
+                      </div>
+                      <h3 className="text-xl font-bold mb-3" style={{ color: "#0D1B2A" }}>Merchant Cash Advance</h3>
+                      <p className="text-base leading-relaxed mb-6" style={{ color: "#0D1B2A", opacity: 0.85 }}>
+                        Quick access to capital by selling a portion of your future daily credit card sales with transparent, simple repayment terms.
+                      </p>
                     </div>
-                    <h3 className="text-xl font-bold mb-3" style={{ color: "#0D1B2A" }}>Merchant Cash Advance</h3>
-                    <p className="text-base leading-relaxed" style={{ color: "#0D1B2A", opacity: 0.85 }}>
-                      Quick access to capital by selling a portion of your future daily credit card sales with transparent, simple repayment terms.
-                    </p>
+                    <Button asChild className="mt-auto btn-blue-elite text-sm px-4 py-2 font-semibold text-white w-full">
+                      <Link href="/products?product=merchant-cash-advance">Learn More</Link>
+                    </Button>
                   </div>
                 </div>
 
                 {/* SBA 504 */}
                 <div className="fs-card">
-                  <div>
-                    <div className="fs-card-icon rounded-lg p-3 flex items-center justify-center flex-shrink-0 w-12 h-12 mb-4" style={{
-                      background: "#E8F1FF",
-                      color: "#2460e3"
-                    }}>
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="h-6 w-6"
-                      >
-                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                        <polyline points="9 22 9 12 15 12 15 22" />
-                      </svg>
+                  <div className="flex flex-col h-full">
+                    <div>
+                      <div className="fs-card-icon rounded-lg p-3 flex items-center justify-center flex-shrink-0 w-12 h-12 mb-4" style={{
+                        background: "#E8F1FF",
+                        color: "#2460e3"
+                      }}>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          width="24"
+                          height="24"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="h-6 w-6"
+                        >
+                          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                          <polyline points="9 22 9 12 15 12 15 22" />
+                        </svg>
+                      </div>
+                      <h3 className="text-xl font-bold mb-3" style={{ color: "#0D1B2A" }}>SBA 504</h3>
+                      <p className="text-base leading-relaxed mb-6" style={{ color: "#0D1B2A", opacity: 0.85 }}>
+                        Long-term, fixed-rate financing for major assets like real estate and equipment to help your business expand.
+                      </p>
                     </div>
-                    <h3 className="text-xl font-bold mb-3" style={{ color: "#0D1B2A" }}>SBA 504</h3>
-                    <p className="text-base leading-relaxed" style={{ color: "#0D1B2A", opacity: 0.85 }}>
-                      Long-term, fixed-rate financing for major assets like real estate and equipment to help your business expand.
-                    </p>
+                    <Button asChild className="mt-auto btn-blue-elite text-sm px-4 py-2 font-semibold text-white w-full">
+                      <Link href="/products?product=sba-504">Learn More</Link>
+                    </Button>
                   </div>
                 </div>
               </div>
