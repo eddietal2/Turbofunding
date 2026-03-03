@@ -56,9 +56,9 @@ export default function ContactPage() {
                 Get Expert Guidance on Your Funding
               </h2>
               <p className="text-lg text-blue-700 mb-6">
-                Schedule a personalized call with Vivek to discuss your funding options and accelerate your application.
+                Schedule a personalized call with us to discuss your funding options and accelerate your application.
               </p>
-              <Link href="https://calendly.com/vivek" target="_blank" rel="noopener noreferrer">
+              <Link href="https://calendly.com/vivek-turbofunding" target="_blank" rel="noopener noreferrer">
                 <Button className="btn-blue-elite text-white px-8 py-3 text-lg font-semibold rounded-lg hover:shadow-lg transition-shadow">
                   Book a Call
                 </Button>
