@@ -131,6 +131,7 @@ export function LoanCalculator() {
                 const numValue = rawValue === "" ? MIN_SALES : Math.min(Math.max(Number(rawValue) || MIN_SALES, MIN_SALES), MAX_SALES)
                 setAnnualSales(numValue)
                 setInputValue(`$${numValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`)
+                e.target.style.borderColor = "#d6dfff"
               }}
               className="w-full rounded-xl p-5 text-center mb-4 text-3xl sm:text-4xl font-extrabold tracking-tight border-2 outline-none transition-all"
               style={{
@@ -140,9 +141,6 @@ export function LoanCalculator() {
               }}
               onFocus={(e) => {
                 e.target.style.borderColor = "#2460e3"
-              }}
-              onBlur={(e) => {
-                e.target.style.borderColor = "#d6dfff"
               }}
             />
 
@@ -273,13 +271,12 @@ export function LoanCalculator() {
 
           {/* Disclaimer */}
           <p className="text-[11px] text-gray-400 leading-relaxed m-0">
-            * Calculator is for display purposes only and is based on self-reported information. Estimated loan amount and monthly payment are subject to a credit check and review of required financial information.
-          </p>
+            * Results shown are estimates based on user-provided information and do not constitute a loan offer. Final loan amount and monthly payment are contingent upon credit approval and verification of financial documentation          </p>
 
           {/* CTA */}
           <Button
             asChild
-            className="btn-blue-elite text-white text-base font-bold tracking-wide rounded-full py-5 px-8 shadow-lg mt-1"
+            className="btn-gold-elite text-white text-base font-bold tracking-wide rounded-full py-5 px-8 shadow-lg mt-1"
           >
             <Link href="/apply">Get Funded Today!</Link>
           </Button>
