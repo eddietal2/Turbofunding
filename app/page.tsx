@@ -359,7 +359,7 @@ export default function Home() {
                 <h1 
                   className="text-3xl sm:text-4xl md:text-3xl lg:text-3xl xl:text-4xl font-bold tracking-widest leading-tight" 
                   style={{ 
-                    fontFamily: "var(--font-space-grotesk), sans-serif",
+                    // fontFamily: "var(--font-space-grotesk), sans-serif",
                     letterSpacing: "-0.02em"
                   }}
                 >
@@ -377,7 +377,7 @@ export default function Home() {
                       lineHeight: "1.2",
                       textShadow: "none",
                       borderRadius: "0.5em",
-                      fontFamily: "var(--font-space-grotesk), sans-serif"
+                      // fontFamily: "var(--font-space-grotesk), sans-serif"
                     }}
                   />
                 </h1>
@@ -386,7 +386,7 @@ export default function Home() {
                   style={{ 
                     color: "#1F2937", 
                     marginTop: "0.4em",
-                    fontFamily: "var(--font-space-grotesk), sans-serif"
+                    // fontFamily: "var(--font-space-grotesk), sans-serif"
                   }}
                 >
                   <span style={{ color: "#D97706", fontWeight: "600" }}>Fast,</span> <span style={{ color: "#2460e3", fontWeight: "600" }}>reliable</span> business funding solutions to help your company grow at the <span style={{ color: "#10b981", fontWeight: "600" }}>speed of opportunity.</span>
