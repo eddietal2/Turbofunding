@@ -160,7 +160,7 @@ export function LoanCalculator() {
                 }}
                 className="w-full h-1.5 rounded-full appearance-none cursor-pointer outline-none calc-slider"
                 style={{
-                  background: `linear-gradient(to right, #2460e3 ${sliderPct}%, #d0d7e8 ${sliderPct}%)`,
+                  background: `linear-gradient(to right, #FF9500 ${sliderPct}%, #d0d7e8 ${sliderPct}%)`,
                 }}
               />
               <style>{`
@@ -170,18 +170,18 @@ export function LoanCalculator() {
                   width: 22px;
                   height: 22px;
                   border-radius: 50%;
-                  background: #2460e3;
+                  background: #FF9500;
                   border: 3px solid #fff;
-                  box-shadow: 0 2px 8px rgba(36, 96, 227, 0.35);
+                  box-shadow: 0 2px 8px rgba(255, 149, 0, 0.35);
                   cursor: pointer;
                 }
                 .calc-slider::-moz-range-thumb {
                   width: 22px;
                   height: 22px;
                   border-radius: 50%;
-                  background: #2460e3;
+                  background: #FF9500;
                   border: 3px solid #fff;
-                  box-shadow: 0 2px 8px rgba(36, 96, 227, 0.35);
+                  box-shadow: 0 2px 8px rgba(255, 149, 0, 0.35);
                   cursor: pointer;
                 }
               `}</style>
