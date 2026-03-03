@@ -154,17 +154,16 @@ export function Navbar() {
             onMouseEnter={() => setIsIndustriesDropdownOpen(true)}
             onMouseLeave={() => setIsIndustriesDropdownOpen(false)}
           >
-            <button
+            <Link
+              href={industries[0].href}
               className={`text-sm tracking-wide transition-colors whitespace-nowrap leading-tight font-semibold ${
                 isActive("/industries")
                   ? "text-orange-500"
                   : "text-white hover:text-orange-500"
               }`}
-              aria-haspopup="true"
-              aria-expanded={isIndustriesDropdownOpen}
             >
               Industries
-            </button>
+            </Link>
 
             {/* Dropdown Menu */}
             <div
@@ -193,17 +192,16 @@ export function Navbar() {
             onMouseEnter={() => setIsResourcesDropdownOpen(true)}
             onMouseLeave={() => setIsResourcesDropdownOpen(false)}
           >
-            <button
+            <Link
+              href={resources[0].href}
               className={`text-sm tracking-wide transition-colors whitespace-nowrap leading-tight font-semibold ${
                 isActive("/resources")
                   ? "text-orange-500"
                   : "text-white hover:text-orange-500"
               }`}
-              aria-haspopup="true"
-              aria-expanded={isResourcesDropdownOpen}
             >
               Resources
-            </button>
+            </Link>
 
             {/* Dropdown Menu */}
             <div
@@ -371,22 +369,32 @@ export function Navbar() {
               </li>
 
               {/* Mobile Industries Submenu */}
+              {/* Mobile Industries Submenu */}
               <li>
-                <button
-                  onClick={() => setIsMobileIndustriesOpen(!isMobileIndustriesOpen)}
-                  className={`w-full flex items-center justify-between py-3 px-4 rounded-lg text-lg tracking-wide transition-colors font-normal ${
-                    isActive("/industries")
-                      ? "text-orange-500"
-                      : "text-gray-300 hover:text-white hover:bg-gray-800"
-                  }`}
-                >
-                  <span>Industries</span>
-                  <ChevronDownIcon 
-                    className={`h-5 w-5 transition-transform duration-200 ${
-                      isMobileIndustriesOpen ? "rotate-180" : ""
+                <div className="flex items-center justify-between py-3 px-4 rounded-lg">
+                  <Link
+                    href={industries[0].href}
+                    onClick={closeMenu}
+                    className={`flex-1 text-lg tracking-wide transition-colors font-normal ${
+                      isActive("/industries")
+                        ? "text-orange-500"
+                        : "text-gray-300 hover:text-white"
                     }`}
-                  />
-                </button>
+                  >
+                    Industries
+                  </Link>
+                  <button
+                    onClick={() => setIsMobileIndustriesOpen(!isMobileIndustriesOpen)}
+                    className="p-2 hover:bg-gray-800 rounded transition-colors"
+                    aria-label="Toggle industries submenu"
+                  >
+                    <ChevronDownIcon 
+                      className={`h-5 w-5 transition-transform duration-200 flex-shrink-0 ${
+                        isMobileIndustriesOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+                </div>
                 
                 {/* Industries Submenu */}
                 {isMobileIndustriesOpen && (
@@ -408,21 +416,30 @@ export function Navbar() {
 
               {/* Mobile Resources Submenu */}
               <li>
-                <button
-                  onClick={() => setIsMobileResourcesOpen(!isMobileResourcesOpen)}
-                  className={`w-full flex items-center justify-between py-3 px-4 rounded-lg text-lg tracking-wide transition-colors font-normal ${
-                    isActive("/resources")
-                      ? "text-orange-500"
-                      : "text-gray-300 hover:text-white hover:bg-gray-800"
-                  }`}
-                >
-                  <span>Resources</span>
-                  <ChevronDownIcon 
-                    className={`h-5 w-5 transition-transform duration-200 ${
-                      isMobileResourcesOpen ? "rotate-180" : ""
+                <div className="flex items-center justify-between py-3 px-4 rounded-lg">
+                  <Link
+                    href={resources[0].href}
+                    onClick={closeMenu}
+                    className={`flex-1 text-lg tracking-wide transition-colors font-normal ${
+                      isActive("/resources")
+                        ? "text-orange-500"
+                        : "text-gray-300 hover:text-white"
                     }`}
-                  />
-                </button>
+                  >
+                    Resources
+                  </Link>
+                  <button
+                    onClick={() => setIsMobileResourcesOpen(!isMobileResourcesOpen)}
+                    className="p-2 hover:bg-gray-800 rounded transition-colors"
+                    aria-label="Toggle resources submenu"
+                  >
+                    <ChevronDownIcon 
+                      className={`h-5 w-5 transition-transform duration-200 flex-shrink-0 ${
+                        isMobileResourcesOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+                </div>
                 
                 {/* Resources Submenu */}
                 {isMobileResourcesOpen && (
