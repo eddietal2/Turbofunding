@@ -260,7 +260,7 @@ export default function ContactPage() {
                   <div className="flex items-center justify-between bg-gray-800 p-3 rounded-lg">
                     <div>
                       <p className="text-sm text-gray-300">Funding Hotline</p>
-                      <p className="text-xl font-bold text-white">(800) 789-FUND</p>
+                      <p className="text-xl font-bold text-white">(937) 751-6937</p>
                     </div>
                     <Button className="bg-orange-500 hover:bg-orange-600 text-white">Call Now</Button>
                   </div>
