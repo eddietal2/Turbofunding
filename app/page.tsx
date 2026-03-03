@@ -367,14 +367,13 @@ export default function Home() {
                   <span className="md:text-[1.1em] lg:text-[1.1em] xl:text-[1.2em]" style={{ color: "#1D4ED8", display: "block" }}>Business with</span>
                   <RotatingText
                     words={productNames}
-                    className="font-bold"
+                    className="font-bold md:text-[1.1em] lg:text-[1.1em] xl:text-[1.2em]"
                     style={{
                       color: "#D97706",
                       display: "inline-block",
                       paddingTop: "0.2em",
                       paddingBottom: "0.2em",
                       marginTop: "0.1em",
-                      fontSize: "inherit",
                       lineHeight: "1.2",
                       textShadow: "none",
                       borderRadius: "0.5em",
