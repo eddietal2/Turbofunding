@@ -244,7 +244,7 @@ export default function Home() {
       <div className="flex flex-col">
         {/* Hero Section */}
       <section 
-        className="hero-bg-responsive relative w-full h-screen md:h-[55vh] lg:h-[65vh] overflow-hidden"
+        className="hero-bg-responsive relative w-full h-[50vh] md:h-[55vh] lg:h-[65vh] overflow-hidden"
         style={{
           backgroundImage: `url('${heroImage}')`,
           backgroundSize: "100%",
@@ -350,7 +350,7 @@ export default function Home() {
         </div>
 
         {/* Content Container */}
-        <div className="container relative z-10 px-4 md:px-6 lg:px-8 h-full flex flex-col justify-center pt-16 md:pt-12 lg:pt-16 pb-16 md:pb-12 lg:pb-16" style={{ transform: "scaleX(-1)" }}>
+        <div className="container relative z-10 px-4 md:px-6 lg:px-8 h-full flex flex-col justify-start md:justify-center pt-0 md:pt-12 lg:pt-16 pb-16 md:pb-12 lg:pb-16" style={{ transform: "scaleX(-1)" }}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-6 lg:gap-12 items-center h-auto py-8 md:py-0">
             {/* Left Column - Text Content */}
             <div className="flex flex-col h-full md:h-auto space-y-4 md:space-y-3 lg:space-y-6">
@@ -993,8 +993,9 @@ export default function Home() {
               }
               
               .fs-card:hover .fs-card-icon {
-                background: linear-gradient(135deg, #D97706 0%, #F59E0B 100%) !important;
-                transform: scale(1.1);
+                background: #E8F1FF !important;
+                color: #2460e3 !important;
+                transform: none;
               }
             }
             
