@@ -56,7 +56,7 @@ export function LoanCalculator() {
               className="text-[11px] font-bold tracking-[0.12em] uppercase mb-2"
               style={{ color: "#2460e3", fontFamily: "var(--font-space-grotesk), sans-serif" }}
             >
-              Business Loan Estimator
+              Business Loan Calculator
             </div>
             <h2
               className="text-2xl sm:text-3xl font-extrabold leading-tight"

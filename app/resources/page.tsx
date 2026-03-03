@@ -24,7 +24,7 @@ export default function ResourcesPage() {
     <main className="w-full">
       {/* Loan Calculator Section */}
       <section 
-        className="w-full pt-32 pb-16 md:pt-36 md:pb-16 lg:pt-40 lg:pb-32 bg-gradient-to-b from-[#F5F7FA] to-white" 
+        className="w-full pt-32 pb-16 md:pt-36 md:pb-16 lg:py-12 bg-gradient-to-b from-[#F5F7FA] to-white" 
         id="calculator"
       >
         <div className="container px-4 md:px-6 mx-auto">
