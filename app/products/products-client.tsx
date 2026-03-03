@@ -116,8 +116,8 @@ export default function ProductsClient() {
                       </ul>
                     </div>
                     <div className="pt-3">
-                      <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
-                        <Link href="/apply">Apply for Term Loan</Link>
+                      <Button asChild className="btn-blue-elite text-white text-lg font-semibold">
+                        <Link href="/apply">Apply for Financing</Link>
                       </Button>
                     </div>
                   </div>
@@ -131,7 +131,7 @@ export default function ProductsClient() {
                         </div>
                         <div className="space-y-2">
                           <div className="text-sm text-gray-400">Term Length</div>
-                          <div className="text-lg font-medium text-white">3 - 18 months</div>
+                          <div className="text-lg font-medium text-white">6 Months to 5 Years</div>
                         </div>
                         <div className="space-y-2">
                           <div className="text-sm text-gray-400">Funding Speed</div>
@@ -191,8 +191,7 @@ export default function ProductsClient() {
                   <div className="space-y-3">
                     <h3 className="text-2xl font-bold text-orange-500">Merchant Cash Advances</h3>
                     <p style={{ color: "#0D1B2A" }}>
-                      Merchant Cash Advances provide immediate funding in exchange for a percentage of your future
-                      credit card sales. Perfect for businesses with consistent card transactions.
+                      Provide immediate funding in exchange for a percentage of your future receivables. Perfect for businesses with recurring revenue.
                     </p>
                     <div className="space-y-2">
                       <h3 className="text-xl font-semibold text-orange-500">Key Benefits</h3>
@@ -213,11 +212,15 @@ export default function ProductsClient() {
                           <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <span>Minimal paperwork and quick application process</span>
                         </li>
+                        <li className="flex items-start">
+                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                          <span>Pre-Payment Discount</span>
+                        </li>
                       </ul>
                     </div>
                     <div className="pt-3">
-                      <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
-                        <Link href="/apply">Apply for MCA</Link>
+                      <Button asChild className="btn-blue-elite text-white text-lg font-semibold">
+                        <Link href="/apply">Apply for Financing</Link>
                       </Button>
                     </div>
                   </div>
@@ -231,15 +234,15 @@ export default function ProductsClient() {
                         </div>
                         <div className="space-y-2">
                           <div className="text-sm text-gray-400">Repayment</div>
-                          <div className="text-lg font-medium text-white">% of daily sales</div>
+                          <div className="text-lg font-medium text-white">6-36 months</div>
                         </div>
                         <div className="space-y-2">
                           <div className="text-sm text-gray-400">Funding Speed</div>
                           <div className="text-lg font-medium text-white">24-48 hours</div>
                         </div>
                         <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Factor Rate</div>
-                          <div className="text-lg font-medium text-white">1.1 - 1.5</div>
+                          <div className="text-sm text-gray-400">Rate</div>
+                          <div className="text-lg font-medium text-white">1%-3% per month</div>
                         </div>
                       </div>
                     </div>
@@ -272,10 +275,10 @@ export default function ProductsClient() {
                     <div className="bg-gray-900 border border-gray-700 rounded-lg p-4">
                       <h4 className="font-medium text-orange-500 mb-2">Best For:</h4>
                       <ul className="space-y-1 text-gray-300">
-                        <li>Retail and restaurant businesses</li>
-                        <li>High card volume businesses</li>
-                        <li>Seasonal fluctuations</li>
-                        <li>Fast-growing businesses</li>
+                        <li>General Working Capital</li>
+                        <li>Fast-Growing Businesses</li>
+                        <li>Bridge Financing</li>
+                        <li>Same Day Funding</li>
                       </ul>
                     </div>
                   </div>
@@ -315,8 +318,8 @@ export default function ProductsClient() {
                       </ul>
                     </div>
                     <div className="pt-3">
-                      <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
-                        <Link href="/apply">Apply for LOC</Link>
+                      <Button asChild className="btn-blue-elite text-white text-lg font-semibold">
+                        <Link href="/apply">Apply for Financing</Link>
                       </Button>
                     </div>
                   </div>
@@ -338,7 +341,7 @@ export default function ProductsClient() {
                         </div>
                         <div className="space-y-2">
                           <div className="text-sm text-gray-400">Interest Rate</div>
-                          <div className="text-lg font-medium text-white">Starting at 12%</div>
+                          <div className="text-lg font-medium text-white">As low as 1% per month</div>
                         </div>
                       </div>
                     </div>
@@ -363,7 +366,7 @@ export default function ProductsClient() {
                           <PercentIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <div>
                             <span className="font-medium text-white">Credit Score:</span>
-                            <p className="text-gray-300">650+</p>
+                            <p className="text-gray-300">600+</p>
                           </div>
                         </li>
                       </ul>
@@ -414,8 +417,8 @@ export default function ProductsClient() {
                       </ul>
                     </div>
                     <div className="pt-3">
-                      <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
-                        <Link href="/apply">Apply for SBA 7a</Link>
+                      <Button asChild className="btn-blue-elite text-white text-lg font-semibold">
+                        <Link href="/apply">Apply for Financing</Link>
                       </Button>
                     </div>
                   </div>
@@ -462,7 +465,7 @@ export default function ProductsClient() {
                           <PercentIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <div>
                             <span className="font-medium text-white">Credit Score:</span>
-                            <p className="text-gray-300">680+</p>
+                            <p className="text-gray-300">600+</p>
                           </div>
                         </li>
                       </ul>
@@ -513,8 +516,8 @@ export default function ProductsClient() {
                       </ul>
                     </div>
                     <div className="pt-3">
-                      <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
-                        <Link href="/apply">Apply for SBA 504</Link>
+                      <Button asChild className="btn-blue-elite text-white text-lg font-semibold">
+                        <Link href="/apply">Apply for Financing</Link>
                       </Button>
                     </div>
                   </div>
@@ -612,8 +615,8 @@ export default function ProductsClient() {
                       </ul>
                     </div>
                     <div className="pt-3">
-                      <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
-                        <Link href="/apply">Apply for Bridge Loan</Link>
+                      <Button asChild className="btn-blue-elite text-white text-lg font-semibold">
+                        <Link href="/apply">Apply for Financing</Link>
                       </Button>
                     </div>
                   </div>
@@ -711,8 +714,8 @@ export default function ProductsClient() {
                       </ul>
                     </div>
                     <div className="pt-3">
-                      <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
-                        <Link href="/apply">Apply for Equipment</Link>
+                      <Button asChild className="btn-blue-elite text-white text-lg font-semibold">
+                        <Link href="/apply">Apply for Financing</Link>
                       </Button>
                     </div>
                   </div>

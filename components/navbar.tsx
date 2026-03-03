@@ -2,7 +2,7 @@
 
 import Image from "next/image"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { MenuIcon, XIcon, ChevronDownIcon, Phone } from "lucide-react"
@@ -116,13 +116,12 @@ export function Navbar() {
             onMouseEnter={() => setIsProductsDropdownOpen(true)}
             onMouseLeave={() => setIsProductsDropdownOpen(false)}
           >
-            <button
+            <Link
+              href={`/products?product=${products[0].slug}`}
               className="text-sm tracking-wide transition-colors whitespace-nowrap leading-tight font-semibold text-white hover:text-orange-500"
-              aria-haspopup="true"
-              aria-expanded={isProductsDropdownOpen}
             >
               Products
-            </button>
+            </Link>
 
             {/* Dropdown Menu */}
             <div
@@ -316,17 +315,26 @@ export function Navbar() {
               
               {/* Mobile Products Submenu */}
               <li>
-                <button
-                  onClick={() => setIsMobileProductsOpen(!isMobileProductsOpen)}
-                  className="w-full flex items-center justify-between py-3 px-4 rounded-lg text-lg tracking-wide transition-colors text-gray-300 font-normal hover:text-white hover:bg-gray-800"
-                >
-                  <span>Products</span>
-                  <ChevronDownIcon 
-                    className={`h-5 w-5 transition-transform duration-200 ${
-                      isMobileProductsOpen ? "rotate-180" : ""
-                    }`}
-                  />
-                </button>
+                <div className="flex items-center justify-between py-3 px-4 rounded-lg">
+                  <Link
+                    href={`/products?product=${products[0].slug}`}
+                    onClick={closeMenu}
+                    className="flex-1 text-lg tracking-wide transition-colors text-gray-300 font-normal hover:text-white"
+                  >
+                    Products
+                  </Link>
+                  <button
+                    onClick={() => setIsMobileProductsOpen(!isMobileProductsOpen)}
+                    className="p-2 hover:bg-gray-800 rounded transition-colors"
+                    aria-label="Toggle products submenu"
+                  >
+                    <ChevronDownIcon 
+                      className={`h-5 w-5 transition-transform duration-200 flex-shrink-0 ${
+                        isMobileProductsOpen ? "rotate-180" : ""
+                      }`}
+                    />
+                  </button>
+                </div>
                 
                 {/* Products Submenu */}
                 {isMobileProductsOpen && (

@@ -1768,7 +1768,7 @@ export default function Home() {
                     fontFamily: "var(--font-space-grotesk), sans-serif",
                   }}
                 >
-                  Get approved in as little as 24 hours. No credit impact, simple process, fast funding.
+                  Get approved in as little as a few hours. No credit impact, simple process, fast funding.
                 </p>
               </div>
               
