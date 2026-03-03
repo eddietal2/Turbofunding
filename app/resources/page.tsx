@@ -22,30 +22,6 @@ export const metadata: Metadata = {
 export default function ResourcesPage() {
   return (
     <main className="w-full">
-      {/* Hero Section */}
-      <section className="w-full pt-32 pb-16 md:pt-36 md:pb-20 lg:pt-40 lg:pb-24 bg-gradient-to-b from-[#F5F7FA] to-white">
-        <div className="container px-4 md:px-6 mx-auto">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center max-w-3xl mx-auto">
-            <div className="space-y-2">
-              <h1 
-                className="text-4xl sm:text-5xl md:text-5xl lg:text-6xl font-bold tracking-tight" 
-                style={{ 
-                  fontFamily: "var(--font-space-grotesk), sans-serif",
-                  color: "#0D1B2A"
-                }}
-              >
-                Resources for Smart Business Funding
-              </h1>
-              <p 
-                className="text-lg md:text-xl text-gray-600 max-w-2xl"
-              >
-                Explore our comprehensive tools and guides to understand your funding options and make informed decisions for your business.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Loan Calculator Section */}
       <section 
         className="w-full py-16 md:py-16 lg:py-32 bg-white" 
