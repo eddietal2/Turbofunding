@@ -203,10 +203,6 @@ export default function ContactPage() {
               <div className="space-y-6">
                 <div className="bg-gray-800 border border-gray-700 rounded-lg p-6">
                   <h2 className="text-2xl font-bold tracking-tighter mb-3 text-orange-500">Contact Information</h2>
-                  <p className="text-gray-300 mb-4">
-                    Our team is available Monday through Friday, 9am to 6pm EST to assist you with any questions about
-                    our funding solutions.
-                  </p>
 
                   <div className="space-y-3">
                     <div className="flex items-start">
@@ -216,9 +212,9 @@ export default function ContactPage() {
                       <div>
                         <h3 className="font-medium text-white">Main Office</h3>
                         <p className="text-gray-300">
-                          123 Finance Street, Suite 500
+                          575 Lexington Ave, Fl 17,
                           <br />
-                          New York, NY 10001
+                          New York, NY 10022, United States
                         </p>
                       </div>
                     </div>
@@ -229,8 +225,7 @@ export default function ContactPage() {
                       </div>
                       <div>
                         <h3 className="font-medium text-white">Phone</h3>
-                        <p className="text-gray-300">(800) 555-TURBO</p>
-                        <p className="text-gray-300">(800) 555-8872</p>
+                        <p className="text-gray-300">(937) 751-6937</p>
                       </div>
                     </div>
 
@@ -240,8 +235,7 @@ export default function ContactPage() {
                       </div>
                       <div>
                         <h3 className="font-medium text-white">Email</h3>
-                        <p className="text-gray-300">info@turbofunding.com</p>
-                        <p className="text-gray-300">support@turbofunding.com</p>
+                        <p className="text-gray-300">help@turbofunding.com</p>
                       </div>
                     </div>
 
@@ -251,8 +245,7 @@ export default function ContactPage() {
                       </div>
                       <div>
                         <h3 className="font-medium text-white">Business Hours</h3>
-                        <p className="text-gray-300">Monday - Friday: 9am - 6pm EST</p>
-                        <p className="text-gray-300">Saturday - Sunday: Closed</p>
+                        <p className="text-gray-300">Always Open</p>
                       </div>
                     </div>
                   </div>
