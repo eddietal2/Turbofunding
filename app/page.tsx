@@ -1059,7 +1059,7 @@ export default function Home() {
                 <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4" style={{ fontFamily: "var(--font-space-grotesk), sans-serif", color: "#0D1B2A" }}>
                   Funding Solutions
                 </h2>
-                <p className="text-base md:text-lg leading-relaxed max-w-3xl mx-auto px-4 md:px-6 py-3 rounded-lg" style={{ color: "#0D1B2A", opacity: 0.85, backgroundColor: "rgba(255, 255, 255, 0.6)" }}>Explore our range of business financing options tailored to your company's unique needs</p>
+                <p className="text-base md:text-lg leading-relaxed max-w-3xl mx-auto px-4 md:px-6 py-3 rounded-lg" style={{ color: "#0D1B2A", opacity: 0.85, backgroundColor: "rgba(255, 255, 255, 0.92)" }}>Explore our range of business financing options tailored to your company's unique needs</p>
               </div>
 
               {/* Cards Grid */}
