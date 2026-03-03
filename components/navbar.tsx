@@ -10,7 +10,6 @@ import { MenuIcon, XIcon, ChevronDownIcon } from "lucide-react"
 const navItems = [
   { href: "/", label: "Home" },
   { href: "/team", label: "About Us" },
-  { href: "/contact", label: "Contact" },
   // { href: "/apply", label: "Apply" },
 ]
 
@@ -215,6 +214,19 @@ export function Navbar() {
               ))}
             </div>
           </div>
+
+          {/* Contact Link */}
+          <Link
+            href="/contact"
+            className={`text-sm tracking-wide transition-colors whitespace-nowrap leading-tight font-semibold ${
+              isActive("/contact")
+                ? "text-orange-500"
+                : "text-white hover:text-orange-500"
+            }`}
+            aria-current={isActive("/contact") ? "page" : undefined}
+          >
+            Contact
+          </Link>
         </nav>
 
         {/* Desktop CTA - hidden on /apply pages */}
@@ -390,6 +402,21 @@ export function Navbar() {
                     ))}
                   </ul>
                 )}
+              </li>
+
+              {/* Mobile Contact Link */}
+              <li>
+                <Link
+                  href="/contact"
+                  onClick={closeMenu}
+                  className={`block py-3 px-4 rounded-lg text-lg tracking-wide transition-colors ${
+                    isActive("/contact")
+                      ? "bg-blue-600 text-white font-bold"
+                      : "text-gray-300 font-normal hover:text-white hover:bg-gray-800"
+                  }`}
+                >
+                  Contact
+                </Link>
               </li>
             </ul>
           </nav>
