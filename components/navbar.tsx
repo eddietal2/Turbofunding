@@ -5,7 +5,7 @@ import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { MenuIcon, XIcon, ChevronDownIcon } from "lucide-react"
+import { MenuIcon, XIcon, ChevronDownIcon, Phone } from "lucide-react"
 
 const navItems = [
   { href: "/", label: "Home" },
@@ -232,11 +232,14 @@ export function Navbar() {
         {/* Desktop CTA - hidden on /apply pages */}
         {!pathname.startsWith("/apply") && (
           <div className="hidden lg:flex items-center gap-4">
+            <Button asChild className="btn-blue-elite text-white font-semibold flex items-center gap-2">
+              <a href="tel:(937)-751-6937">
+                <Phone className="w-4 h-4" />
+                (937)-751-6937
+              </a>
+            </Button>
             <Button asChild className="btn-gold-elite text-white font-semibold">
               <Link href="/apply">Apply Now</Link>
-            </Button>
-            <Button asChild className="btn-blue-elite text-white font-semibold">
-              <Link href="/resources#calculator">Loan Calculator</Link>
             </Button>
           </div>
         )}
@@ -427,11 +430,14 @@ export function Navbar() {
           {/* CTA Button - hidden on /apply pages */}
           {!pathname.startsWith("/apply") && (
             <div className="p-4 space-y-2">
+              <Button asChild className="w-full btn-blue-elite text-white font-semibold flex items-center justify-center gap-2" onClick={closeMenu}>
+                <a href="tel:(937)-751-6937" className="flex items-center justify-center gap-2 w-full">
+                  <Phone className="w-4 h-4" />
+                  (937)-751-6937
+                </a>
+              </Button>
               <Button asChild className="w-full btn-gold-elite text-white font-semibold" onClick={closeMenu}>
                 <Link href="/apply">Apply Now</Link>
-              </Button>
-              <Button asChild className="w-full btn-blue-elite text-white font-semibold" onClick={closeMenu}>
-                <Link href="/resources#calculator">Loan Calculator</Link>
               </Button>
             </div>
           )}
