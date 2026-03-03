@@ -24,25 +24,10 @@ export default function ResourcesPage() {
     <main className="w-full">
       {/* Loan Calculator Section */}
       <section 
-        className="w-full py-16 md:py-16 lg:py-32 bg-white" 
+        className="w-full pt-32 pb-16 md:pt-36 md:pb-16 lg:pt-40 lg:pb-32 bg-gradient-to-b from-[#F5F7FA] to-white" 
         id="calculator"
       >
         <div className="container px-4 md:px-6 mx-auto">
-          <div className="flex flex-col items-center justify-center space-y-4 text-center mb-12">
-            <h2 
-              className="text-3xl md:text-4xl font-bold tracking-tight" 
-              style={{ 
-                fontFamily: "var(--font-space-grotesk), sans-serif",
-                color: "#0D1B2A"
-              }}
-            >
-              Loan Calculator
-            </h2>
-            <p className="text-gray-600 max-w-2xl">
-              Use our interactive calculator to estimate your loan payments and understand your financing options. Simply adjust the loan amount and payment schedule to see your projections.
-            </p>
-          </div>
-          
           <div className="max-w-4xl mx-auto">
             <LoanCalculator />
           </div>

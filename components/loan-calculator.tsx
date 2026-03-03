@@ -1,282 +1,260 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import CountUp from "react-countup"
+import Link from "next/link"
+
+const TIERS = [
+  { label: "Not Open Yet", multiplier: null, term: null },
+  { label: "3 – 9 Months", multiplier: 1.49, term: 12 },
+  { label: "10 – 24 Months", multiplier: 1.79, term: 18 },
+  { label: "2 – 5 Years", multiplier: 1.99, term: 24 },
+  { label: "5 Years+", multiplier: 2.4, term: 36 },
+] as const
+
+const MIN_SALES = 200000
+const MAX_SALES = 800000
+
+function formatCurrency(val: number) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    maximumFractionDigits: 0,
+  }).format(val)
+}
+
+function round100(n: number) { return Math.round(n / 100) * 100 }
+function round10(n: number) { return Math.round(n / 10) * 10 }
 
 export function LoanCalculator() {
-  const [paymentFrequency, setPaymentFrequency] = useState<"monthly" | "biweekly">("monthly")
-  const [drawAmount, setDrawAmount] = useState(100000)
-  const [paymentsMade, setPaymentsMade] = useState(0)
+  const [selectedTier, setSelectedTier] = useState<string | null>(null)
+  const [annualSales, setAnnualSales] = useState(465000)
 
-  // Constants
-  const N = paymentFrequency === "monthly" ? 12 : 26
-  
-  // Calculations
-  const naturalMax = drawAmount * (1 + 0.01 * 12)
-  const payment = naturalMax / N
-  const monthsElapsed = paymentFrequency === "monthly" ? paymentsMade : paymentsMade * (12 / 26)
-  const payoffBeforeNext = drawAmount * (1 + 0.01 * monthsElapsed)
-  const earlyPay = payoffBeforeNext - payment * paymentsMade
-  const paidSoFar = payment * paymentsMade
-  const savings = naturalMax - (paidSoFar + earlyPay)
+  const tier = TIERS.find((t) => t.label === selectedTier)
+  const qualified = tier && tier.multiplier !== null
 
-  const handleDrawChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value)
-    if (!isNaN(value)) {
-      setDrawAmount(value)
-    }
-  }
+  const fundingAmount = qualified
+    ? round100((annualSales / 12) * tier.multiplier)
+    : null
+  const monthlyPayment = qualified && fundingAmount
+    ? round10(fundingAmount / tier.term)
+    : null
 
-  const handlePaymentsIncrease = () => {
-    const maxPayments = N
-    if (paymentsMade < maxPayments) {
-      setPaymentsMade(paymentsMade + 1)
-    }
-  }
-
-  const handlePaymentsDecrease = () => {
-    if (paymentsMade > 0) {
-      setPaymentsMade(paymentsMade - 1)
-    }
-  }
-
-  const handlePaymentsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value) || 0
-    const maxPayments = N
-    setPaymentsMade(Math.min(Math.max(value, 0), maxPayments))
-  }
-
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(value)
-  }
-
-  const drawProgress = (drawAmount / 1000000) * 100
-  const paymentProgress = (paymentsMade / N) * 100
+  const sliderPct = ((annualSales - MIN_SALES) / (MAX_SALES - MIN_SALES)) * 100
 
   return (
-    <section className="w-full py-8 md:py-16 lg:py-20 bg-gradient-to-b from-blue-50 via-white to-gray-50">
-      <div className="container px-4 md:px-6 mx-auto">
-        <div className="max-w-full md:max-w-lg mx-auto">
-          {/* Calculator Icon */}
-          <div className="flex justify-center mb-4">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="56"
-              height="56"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="#2460e3"
-              strokeWidth="1.2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-blue-600"
-            >
-              {/* Calculator body */}
-              <rect x="3" y="1" width="18" height="22" rx="2" ry="2" fill="#E8F0FE" stroke="#2460e3" strokeWidth="1.2" />
-              {/* Display screen */}
-              <rect x="5" y="3" width="14" height="4" rx="1" ry="1" fill="white" stroke="#2460e3" strokeWidth="1" />
-              {/* Number buttons grid */}
-              <g>
-                {/* Row 1 */}
-                <rect className="calc-btn-1" x="6" y="8" width="2.8" height="2.5" rx="0.3" fill="white" stroke="#2460e3" strokeWidth="0.8" />
-                <rect className="calc-btn-2" x="9.2" y="8" width="2.8" height="2.5" rx="0.3" fill="white" stroke="#2460e3" strokeWidth="0.8" />
-                <rect className="calc-btn-3" x="12.4" y="8" width="2.8" height="2.5" rx="0.3" fill="white" stroke="#2460e3" strokeWidth="0.8" />
-                <rect className="calc-btn-equals" x="15.6" y="8" width="2.8" height="2.5" rx="0.3" fill="#E8F0FE" stroke="#2460e3" strokeWidth="0.8" />
-                {/* Row 2 */}
-                <rect className="calc-btn-1" x="6" y="11" width="2.8" height="2.5" rx="0.3" fill="white" stroke="#2460e3" strokeWidth="0.8" />
-                <rect className="calc-btn-2" x="9.2" y="11" width="2.8" height="2.5" rx="0.3" fill="white" stroke="#2460e3" strokeWidth="0.8" />
-                <rect className="calc-btn-3" x="12.4" y="11" width="2.8" height="2.5" rx="0.3" fill="white" stroke="#2460e3" strokeWidth="0.8" />
-                <rect className="calc-btn-equals" x="15.6" y="11" width="2.8" height="2.5" rx="0.3" fill="#E8F0FE" stroke="#2460e3" strokeWidth="0.8" />
-                {/* Row 3 */}
-                <rect className="calc-btn-1" x="6" y="14" width="2.8" height="2.5" rx="0.3" fill="white" stroke="#2460e3" strokeWidth="0.8" />
-                <rect className="calc-btn-2" x="9.2" y="14" width="2.8" height="2.5" rx="0.3" fill="white" stroke="#2460e3" strokeWidth="0.8" />
-                <rect className="calc-btn-3" x="12.4" y="14" width="2.8" height="2.5" rx="0.3" fill="white" stroke="#2460e3" strokeWidth="0.8" />
-                <rect className="calc-btn-equals" x="15.6" y="14" width="2.8" height="2.5" rx="0.3" fill="#E8F0FE" stroke="#2460e3" strokeWidth="0.8" />
-                {/* Row 4 */}
-                <rect x="6" y="17" width="12.4" height="2.5" rx="0.3" fill="white" stroke="#2460e3" strokeWidth="0.8" />
-                <rect className="calc-btn-equals" x="15.6" y="17" width="2.8" height="2.5" rx="0.3" fill="#2460e3" stroke="#2460e3" strokeWidth="0.8" />
-              </g>
-            </svg>
-          </div>
+    <div className="w-full">
+      <div
+        className="bg-white rounded-2xl md:rounded-3xl shadow-xl max-w-[960px] w-full mx-auto p-6 sm:p-8 md:p-12 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-start"
+        style={{ border: "1px solid rgba(36, 96, 227, 0.08)" }}
+      >
+        {/* LEFT SIDE — Inputs */}
+        <div>
           {/* Header */}
-          <div className="text-center mb-2 md:mb-2.5">
-            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-0.5" style={{ fontFamily: 'var(--font-space-grotesk)' }}>
-              TurboFunding Platinum Calculator
+          <div className="mb-6 md:mb-8">
+            <div
+              className="text-[11px] font-bold tracking-[0.12em] uppercase mb-2"
+              style={{ color: "#2460e3", fontFamily: "var(--font-space-grotesk), sans-serif" }}
+            >
+              Business Loan Estimator
+            </div>
+            <h2
+              className="text-2xl sm:text-3xl font-extrabold leading-tight"
+              style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}
+            >
+              See how much<br />you qualify for
             </h2>
-            <p className="text-gray-600 text-xs md:text-sm">
-              Enter an amount to see your savings potential
-            </p>
           </div>
 
-          {/* Payment Frequency Toggle */}
-          <div className="flex justify-center gap-1.5 mb-3">
-            <button
-              onClick={() => setPaymentFrequency("monthly")}
-              className={`px-3 md:px-4 py-1 text-xs md:text-sm rounded-full font-semibold transition-all ${
-                paymentFrequency === "monthly"
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-              }`}
+          {/* Time in Business */}
+          <div className="mb-6 md:mb-8">
+            <label
+              className="block text-sm font-semibold mb-3"
+              style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}
             >
-              Monthly (12)
-            </button>
-            <button
-              onClick={() => setPaymentFrequency("biweekly")}
-              className={`px-3 md:px-4 py-1 text-xs md:text-sm rounded-full font-semibold transition-all ${
-                paymentFrequency === "biweekly"
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-              }`}
-            >
-              Bi-Weekly (26)
-            </button>
+              Time in Business
+            </label>
+            <div className="grid grid-cols-3 gap-2.5">
+              {TIERS.map((t) => {
+                const active = selectedTier === t.label
+                const colSpan =
+                  t.label === "2 – 5 Years" ? "col-span-2" : ""
+                return (
+                  <button
+                    key={t.label}
+                    onClick={() => setSelectedTier(t.label)}
+                    className={`px-3 py-3 rounded-xl text-[13px] font-semibold transition-all duration-200 ${colSpan} ${
+                      active
+                        ? "bg-[#2460e3] text-white border-2 border-[#2460e3] shadow-md"
+                        : "bg-white text-[#0D1B2A] border-2 border-gray-200 hover:border-[#2460e3]/40"
+                    }`}
+                  >
+                    {t.label}
+                  </button>
+                )
+              })}
+            </div>
           </div>
 
-          <Card className="border-2 border-orange-200 shadow-lg">
-            <CardContent className="p-3 md:p-3.5">
-              {/* Funding Amount Section */}
-              <div className="mb-3">
-                <div className="flex items-center justify-between mb-1.5">
-                  <label className="text-sm md:text-base font-semibold text-gray-900" style={{ fontFamily: 'var(--font-space-grotesk)' }}>
-                    Funding Amount: $<CountUp end={drawAmount} duration={0.3} preserveValue={true} useEasing={true} />
-                  </label>
-                </div>
-                <input
-                  type="range"
-                  min="1000"
-                  max="1000000"
-                  step="1000"
-                  value={drawAmount}
-                  onChange={handleDrawChange}
-                  className="w-full h-2 bg-gray-300 rounded-lg appearance-none cursor-pointer"
-                  style={{
-                    background: `linear-gradient(to right, #f97316 0%, #f97316 ${drawProgress}%, #d1d5db ${drawProgress}%, #d1d5db 100%)`,
-                  }}
-                />
-                <div className="flex justify-between items-start mt-0.5">
-                  <p className="text-xs text-gray-600">
-                    Request additional funding anytime
-                  </p>
-                  <p className="text-xs text-orange-600 font-semibold">
-                    Minimum: $1,000
-                  </p>
-                </div>
-              </div>
+          {/* Sales Slider */}
+          <div>
+            <label
+              className="block text-sm font-semibold mb-3"
+              style={{ color: "#0D1B2A", fontFamily: "var(--font-space-grotesk), sans-serif" }}
+            >
+              My annual sales volume is around...
+            </label>
 
-              {/* Payments Made Section */}
-              <div className="mb-3 pb-3 border-b border-gray-200">
-                <div className="flex items-center justify-between mb-2">
-                  <label className="text-sm md:text-base font-semibold text-gray-900" style={{ fontFamily: 'var(--font-space-grotesk)' }}>Payments: {paymentsMade}</label>
-                  <div className="flex gap-1">
-                    <button
-                      onClick={handlePaymentsDecrease}
-                      className="px-2 md:px-2.5 py-0.5 md:py-1 text-xs bg-orange-100 hover:bg-orange-200 text-orange-600 font-semibold rounded-lg transition-colors"
-                    >
-                      −
-                    </button>
-                    <input
-                      type="number"
-                      min="0"
-                      max={N}
-                      value={paymentsMade}
-                      onChange={handlePaymentsChange}
-                      className="w-10 md:w-12 px-1.5 md:px-2 py-0.5 md:py-1 border border-orange-300 rounded-lg text-center text-xs font-medium text-orange-600"
-                    />
-                    <button
-                      onClick={handlePaymentsIncrease}
-                      className="px-2 md:px-2.5 py-0.5 md:py-1 text-xs bg-orange-100 hover:bg-orange-200 text-orange-600 font-semibold rounded-lg transition-colors"
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-                <div className="mb-1.5">
-                  <div className="w-full h-1.5 bg-gray-300 rounded-full overflow-hidden">
-                    <div
-                      className="h-full bg-orange-500 transition-all duration-300"
-                      style={{ width: `${paymentProgress}%` }}
-                    />
-                  </div>
-                </div>
-                <p className="text-xs text-gray-600">0 of {N}</p>
-              </div>
+            <div
+              className="rounded-xl p-5 text-center mb-4"
+              style={{
+                background: "#f0f4ff",
+                border: "1px solid #d6dfff",
+              }}
+            >
+              <span
+                className="text-3xl sm:text-4xl font-extrabold tracking-tight"
+                style={{ color: "#0D1B2A" }}
+              >
+                {formatCurrency(annualSales)}
+              </span>
+            </div>
 
-              {/* Months Elapsed - Hidden on Desktop */}
-              <div className="mb-3 hidden md:block">
-                <div className="bg-gray-50 rounded-lg p-2">
-                  <p className="text-xs text-gray-600">Months: {monthsElapsed.toFixed(2)}</p>
-                </div>
-              </div>
+            <div className="relative py-1.5">
+              <input
+                type="range"
+                min={MIN_SALES}
+                max={MAX_SALES}
+                step={1000}
+                value={annualSales}
+                onChange={(e) => setAnnualSales(Number(e.target.value))}
+                className="w-full h-1.5 rounded-full appearance-none cursor-pointer outline-none calc-slider"
+                style={{
+                  background: `linear-gradient(to right, #2460e3 ${sliderPct}%, #d0d7e8 ${sliderPct}%)`,
+                }}
+              />
+              <style>{`
+                .calc-slider::-webkit-slider-thumb {
+                  -webkit-appearance: none;
+                  appearance: none;
+                  width: 22px;
+                  height: 22px;
+                  border-radius: 50%;
+                  background: #2460e3;
+                  border: 3px solid #fff;
+                  box-shadow: 0 2px 8px rgba(36, 96, 227, 0.35);
+                  cursor: pointer;
+                }
+                .calc-slider::-moz-range-thumb {
+                  width: 22px;
+                  height: 22px;
+                  border-radius: 50%;
+                  background: #2460e3;
+                  border: 3px solid #fff;
+                  box-shadow: 0 2px 8px rgba(36, 96, 227, 0.35);
+                  cursor: pointer;
+                }
+              `}</style>
+            </div>
 
-              {/* Grid of Metrics */}
-              <div className="grid grid-cols-2 gap-2 mb-3">
-                {/* Natural Max */}
-                <div className="bg-orange-50 border border-orange-200 rounded-lg p-2">
-                  <p className="text-xs text-gray-600 mb-0.5">Natural Max</p>
-                  <p className="text-base md:text-lg font-bold text-gray-900">
-                    $<CountUp end={naturalMax} duration={0.3} decimals={2} preserveValue={true} useEasing={true} />
-                  </p>
-                </div>
-
-                {/* Scheduled Payment */}
-                <div className="bg-orange-50 border border-orange-200 rounded-lg p-2">
-                  <p className="text-xs text-gray-600 mb-0.5">Payment ({N}x)</p>
-                  <p className="text-base md:text-lg font-bold text-gray-900">
-                    $<CountUp end={payment} duration={0.3} decimals={2} preserveValue={true} useEasing={true} />
-                  </p>
-                </div>
-
-                {/* Paid So Far */}
-                <div className="bg-white border border-gray-300 rounded-lg p-2">
-                  <p className="text-xs text-gray-600 mb-0.5">Paid So Far</p>
-                  <p className="text-base md:text-lg font-bold text-gray-900">
-                    $<CountUp end={paidSoFar} duration={0.3} decimals={2} preserveValue={true} useEasing={true} />
-                  </p>
-                </div>
-
-                {/* Payoff Before Next Payment */}
-                <div className="bg-white border border-gray-300 rounded-lg p-2">
-                  <p className="text-xs text-gray-600 mb-0.5">Payoff Next</p>
-                  <p className="text-base md:text-lg font-bold text-gray-900">
-                    $<CountUp end={payoffBeforeNext} duration={0.3} decimals={2} preserveValue={true} useEasing={true} />
-                  </p>
-                </div>
-              </div>
-
-              {/* Highlighted Benefits */}
-              <div className="grid grid-cols-2 gap-2 mb-2">
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-2">
-                  <p className="text-xs text-gray-600 mb-0.5">Early Payoff</p>
-                  <p className="text-base md:text-lg font-bold text-blue-700">
-                    $<CountUp end={earlyPay} duration={0.3} decimals={2} preserveValue={true} useEasing={true} />
-                  </p>
-                </div>
-
-                <div className="bg-blue-50 border border-blue-200 rounded-lg p-2">
-                  <p className="text-xs text-gray-600 mb-0.5">Your Savings</p>
-                  <p className="text-base md:text-lg font-bold text-blue-700">
-                    $<CountUp end={Math.max(savings, 0)} duration={0.3} decimals={2} preserveValue={true} useEasing={true} />
-                  </p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-
-          {/* CTA */}
-          <div className="text-center mt-2.5">
-            <Button asChild size="sm" className="btn-blue-elite text-white text-sm md:text-base px-8 md:px-12 py-3 md:py-4 font-bold tracking-wide uppercase">
-              <a href="/apply">Get Funded</a>
-            </Button>
+            <div className="flex justify-between mt-2 text-xs font-semibold text-gray-400">
+              <span>{formatCurrency(MIN_SALES)}</span>
+              <span>{formatCurrency(MAX_SALES)}</span>
+            </div>
           </div>
         </div>
+
+        {/* RIGHT SIDE — Results */}
+        <div className="flex flex-col gap-4">
+          {/* Funding Amount Card */}
+          <div
+            className="rounded-2xl p-6 md:p-7 transition-all duration-300"
+            style={{
+              background: fundingAmount ? "#f0f4ff" : "#fafafa",
+              border: `1px solid ${fundingAmount ? "#c7d4ff" : "#e8ecf2"}`,
+            }}
+          >
+            <div className="text-[11px] font-bold tracking-[0.1em] uppercase text-gray-400 mb-2.5">
+              * Estimated Funding Amount
+            </div>
+            <div
+              className={`font-extrabold tracking-tight leading-none transition-all duration-300 ${
+                fundingAmount ? "text-4xl sm:text-[44px]" : "text-3xl"
+              }`}
+              style={{ color: fundingAmount ? "#0D1B2A" : "#c0c8d8" }}
+            >
+              {fundingAmount ? formatCurrency(fundingAmount) : "—"}
+            </div>
+          </div>
+
+          {/* Monthly Payment Card */}
+          <div
+            className="rounded-2xl p-6 md:p-7 transition-all duration-300"
+            style={{
+              background: monthlyPayment ? "#f0f4ff" : "#fafafa",
+              border: `1px solid ${monthlyPayment ? "#c7d4ff" : "#e8ecf2"}`,
+            }}
+          >
+            <div className="text-[11px] font-bold tracking-[0.1em] uppercase text-gray-400 mb-2.5">
+              * Estimated Monthly Payment
+            </div>
+            <div
+              className={`font-extrabold tracking-tight leading-none transition-all duration-300 ${
+                monthlyPayment ? "text-4xl sm:text-[44px]" : "text-3xl"
+              }`}
+              style={{ color: monthlyPayment ? "#0D1B2A" : "#c0c8d8" }}
+            >
+              {monthlyPayment ? formatCurrency(monthlyPayment) : "—"}
+            </div>
+          </div>
+
+          {/* Tier Summary */}
+          {qualified && tier && (
+            <div
+              className="rounded-xl p-4 grid grid-cols-3 gap-2 text-center"
+              style={{ border: "1px solid #e0e8ff" }}
+            >
+              {[
+                { label: "Multiplier", value: `${tier.multiplier}×` },
+                { label: "Term", value: `${tier.term} mo` },
+                { label: "Total Repaid", value: fundingAmount ? formatCurrency(fundingAmount) : "—" },
+              ].map(({ label, value }) => (
+                <div key={label}>
+                  <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1">
+                    {label}
+                  </div>
+                  <div className="text-base font-extrabold" style={{ color: "#0D1B2A" }}>
+                    {value}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Not qualified message */}
+          {selectedTier === "Not Open Yet" && (
+            <div
+              className="rounded-xl p-4 text-sm font-semibold leading-relaxed"
+              style={{ color: "#dc2626", background: "#fef2f2", border: "1px solid #fecaca" }}
+            >
+              Sorry, you currently do not qualify for a loan at this time. The minimum time in business is 6+ months.
+            </div>
+          )}
+
+          {/* Disclaimer */}
+          <p className="text-[11px] text-gray-400 leading-relaxed m-0">
+            * Calculator is for display purposes only and is based on self-reported information. Estimated loan amount and monthly payment are subject to a credit check and review of required financial information.
+          </p>
+
+          {/* CTA */}
+          <Button
+            asChild
+            className="btn-blue-elite text-white text-base font-bold tracking-wide rounded-full py-5 px-8 shadow-lg mt-1"
+          >
+            <Link href="/apply">Get Funded Today!</Link>
+          </Button>
+        </div>
       </div>
-    </section>
+    </div>
   )
 }
