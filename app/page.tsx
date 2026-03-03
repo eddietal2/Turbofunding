@@ -1039,8 +1039,9 @@ export default function Home() {
           <div className="container px-4 md:px-6 relative z-10 max-w-7xl mx-auto">
             <div className="w-full">
               <div className="w-full text-center mb-12 fs-header">
-                <div className="flex justify-center mb-6">
-                  <div className="flex-shrink-0 p-3 rounded-lg" style={{ background: "rgba(16, 185, 129, 0.1)", color: "#10b981" }}>
+                <div className="rounded-lg p-8 md:p-10 lg:p-12 w-fit mx-auto" style={{ backgroundColor: "rgba(255, 255, 255, 0.92)" }}>
+                  <div className="flex justify-center mb-6">
+                    <div className="flex-shrink-0 p-3 rounded-lg" style={{ background: "rgba(16, 185, 129, 0.1)", color: "#10b981" }}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="48"
@@ -1055,11 +1056,12 @@ export default function Home() {
                       <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
                     </svg>
                   </div>
+                  </div>
+                  <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4" style={{ fontFamily: "var(--font-space-grotesk), sans-serif", color: "#0D1B2A" }}>
+                    Funding Solutions
+                  </h2>
+                  <p className="text-base md:text-lg leading-relaxed max-w-3xl mx-auto" style={{ color: "#0D1B2A", opacity: 0.85 }}>Explore our range of business financing options tailored to your company's unique needs</p>
                 </div>
-                <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight mb-4" style={{ fontFamily: "var(--font-space-grotesk), sans-serif", color: "#0D1B2A" }}>
-                  Funding Solutions
-                </h2>
-                <p className="text-base md:text-lg leading-relaxed max-w-3xl mx-auto px-4 md:px-6 py-3 rounded-lg" style={{ color: "#0D1B2A", opacity: 0.85, backgroundColor: "rgba(255, 255, 255, 0.92)" }}>Explore our range of business financing options tailored to your company's unique needs</p>
               </div>
 
               {/* Cards Grid */}
