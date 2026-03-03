@@ -68,29 +68,45 @@ export default function Home() {
       // Enhanced parallax effect on hero section
       const parallaxBg = document.querySelector('.hero-parallax-bg') as HTMLElement;
       const gradientOverlay = document.querySelector('.hero-gradient-overlay') as HTMLElement;
+      const heroSection = document.querySelector('.hero-bg-responsive') as HTMLElement;
       
-      if (parallaxBg || gradientOverlay) {
+      if (parallaxBg || gradientOverlay || heroSection) {
         let ticking = false;
+        
+        // Set initial background position pushed upwards 40%
+        if (heroSection) {
+          const heroHeight = heroSection.offsetHeight;
+          const initialOffset = heroHeight * 0.4;
+          heroSection.style.backgroundPositionY = `${-initialOffset}px`;
+        }
         
         const updateParallax = () => {
           const scrollY = window.scrollY;
-          const heroSection = parallaxBg?.parentElement;
-          if (!heroSection) return;
+          const hero = heroSection || parallaxBg?.parentElement;
+          if (!hero) return;
           
-          const heroHeight = heroSection.offsetHeight;
+          const heroHeight = hero.offsetHeight;
+          const initialOffset = heroHeight * 0.4;
           
-          // Only run parallax while hero is in viewport
-          if (scrollY < heroHeight * 2) {
-            // Background image parallax at 50% scroll speed
-            if (parallaxBg) {
+          // Only run parallax while hero is in viewport and beyond
+          if (scrollY < heroHeight * 3) {
+            // Mobile parallax image at 50% scroll speed
+            if (parallaxBg && parallaxBg.offsetParent !== null) {
               const bgOffset = scrollY * 0.5;
               parallaxBg.style.transform = `translate3d(0, ${bgOffset}px, 0)`;
             }
             
-            // Gradient overlay parallax at 35% scroll speed (faster effect)
+            // Gradient overlay parallax at 35% scroll speed (layered effect)
             if (gradientOverlay) {
               const gradientOffset = scrollY * 0.35;
               gradientOverlay.style.transform = `scaleX(-1) translate3d(0, ${gradientOffset}px, 0)`;
+            }
+            
+            // Desktop: Hero background parallax - move background image up as user scrolls down
+            if (heroSection) {
+              const parallaxOffset = Math.floor(scrollY * 0.4);
+              // Start from initial 40% offset + parallax effect
+              heroSection.style.backgroundPositionY = `${-(initialOffset + parallaxOffset)}px`;
             }
           }
           ticking = false;
@@ -231,13 +247,15 @@ export default function Home() {
         className="hero-bg-responsive relative w-full h-screen md:h-[55vh] lg:h-[65vh] overflow-hidden"
         style={{
           backgroundImage: `url('${heroImage}')`,
-          backgroundAttachment: "fixed",
-          backgroundSize: "110%",
-          backgroundPosition: "100% center",
+          backgroundSize: "100%",
+          backgroundPosition: "120% center",
           backgroundRepeat: "no-repeat",
           minHeight: "auto",
           "--hero-image-mobile": "url('/images/hero-bg-xs.png')",
           transform: "scaleX(-1)",
+          willChange: "background-position",
+          WebkitBackfaceVisibility: "hidden",
+          backfaceVisibility: "hidden",
         } as any}
       >
         {/* Mobile Parallax Background Image */}
@@ -246,7 +264,12 @@ export default function Home() {
           alt=""
           className="hero-parallax-bg"
           aria-hidden="true"
-          style={{ transform: "scaleX(-1)" }}
+          style={{ 
+            transform: "scaleX(-1)",
+            willChange: "transform",
+            WebkitBackfaceVisibility: "hidden",
+            backfaceVisibility: "hidden",
+          }}
         />
         {/* Background Filter/Blur Overlay */}
         <div
