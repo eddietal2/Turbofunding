@@ -9,8 +9,6 @@ import { MenuIcon, XIcon, ChevronDownIcon, Phone } from "lucide-react"
 
 const navItems = [
   { href: "/", label: "Home" },
-  { href: "/team", label: "About Us" },
-  // { href: "/apply", label: "Apply" },
 ]
 
 const industries = [
@@ -112,7 +110,7 @@ export function Navbar() {
 
           {/* Products Dropdown */}
           <div
-            className="relative group"
+            className="relative group inline-flex items-center"
             onMouseEnter={() => setIsProductsDropdownOpen(true)}
             onMouseLeave={() => setIsProductsDropdownOpen(false)}
           >
@@ -150,7 +148,7 @@ export function Navbar() {
 
           {/* Industries Dropdown */}
           <div
-            className="relative group"
+            className="relative group inline-flex items-center"
             onMouseEnter={() => setIsIndustriesDropdownOpen(true)}
             onMouseLeave={() => setIsIndustriesDropdownOpen(false)}
           >
@@ -188,7 +186,7 @@ export function Navbar() {
 
           {/* Resources Dropdown */}
           <div
-            className="relative group"
+            className="relative group inline-flex items-center"
             onMouseEnter={() => setIsResourcesDropdownOpen(true)}
             onMouseLeave={() => setIsResourcesDropdownOpen(false)}
           >
@@ -223,6 +221,19 @@ export function Navbar() {
               ))}
             </div>
           </div>
+
+          {/* About Us Link */}
+          <Link
+            href="/team"
+            className={`text-sm tracking-wide transition-colors whitespace-nowrap leading-tight font-semibold ${
+              isActive("/team")
+                ? "text-orange-500"
+                : "text-white hover:text-orange-500"
+            }`}
+            aria-current={isActive("/team") ? "page" : undefined}
+          >
+            About Us
+          </Link>
 
           {/* Contact Link */}
           <Link
