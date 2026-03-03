@@ -235,6 +235,9 @@ export function Navbar() {
             <Button asChild className="btn-gold-elite text-white font-semibold">
               <Link href="/apply">Apply Now</Link>
             </Button>
+            <Button asChild className="btn-blue-elite text-white font-semibold">
+              <Link href="/resources#calculator">Loan Calculator</Link>
+            </Button>
           </div>
         )}
 
@@ -426,6 +429,9 @@ export function Navbar() {
             <div className="p-4 space-y-2">
               <Button asChild className="w-full btn-gold-elite text-white font-semibold" onClick={closeMenu}>
                 <Link href="/apply">Apply Now</Link>
+              </Button>
+              <Button asChild className="w-full btn-blue-elite text-white font-semibold" onClick={closeMenu}>
+                <Link href="/resources#calculator">Loan Calculator</Link>
               </Button>
             </div>
           )}
