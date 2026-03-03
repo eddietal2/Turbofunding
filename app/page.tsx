@@ -902,6 +902,7 @@ export default function Home() {
               box-shadow: 0 4px 20px rgba(36, 96, 227, 0.08);
               background: rgba(255, 255, 255, 0.92);
               border: 1px solid rgba(36, 96, 227, 0.08);
+              width: 280px;
             }
             
             .fs-card.scroll-visible {
@@ -1062,7 +1063,7 @@ export default function Home() {
               </div>
 
               {/* Cards Grid */}
-              <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div className="flex flex-wrap justify-center gap-4">
                 {/* Working Capital */}
                 <div className="fs-card">
                   <div className="flex flex-col h-full">
