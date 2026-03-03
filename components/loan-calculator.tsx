@@ -29,6 +29,7 @@ function round10(n: number) { return Math.round(n / 10) * 10 }
 export function LoanCalculator() {
   const [selectedTier, setSelectedTier] = useState<string | null>(null)
   const [annualSales, setAnnualSales] = useState(465000)
+  const [inputValue, setInputValue] = useState("$465,000")
 
   const tier = TIERS.find((t) => t.label === selectedTier)
   const qualified = tier && tier.multiplier !== null
@@ -105,20 +106,45 @@ export function LoanCalculator() {
               My annual sales volume is around...
             </label>
 
-            <div
-              className="rounded-xl p-5 text-center mb-4"
-              style={{
-                background: "#f0f4ff",
-                border: "1px solid #d6dfff",
+            <input
+              type="text"
+              inputMode="numeric"
+              value={inputValue}
+              onChange={(e) => {
+                let value = e.target.value
+                // Remove $ and any non-digits
+                let numericOnly = value.replace(/[^\d]/g, "")
+                
+                // Add commas
+                let withCommas = numericOnly.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+                
+                // Add $ prefix
+                let formatted = withCommas ? `$${withCommas}` : "$"
+                setInputValue(formatted)
+                
+                // Update annualSales with numeric value only
+                if (numericOnly === "") return
+                setAnnualSales(Number(numericOnly))
               }}
-            >
-              <span
-                className="text-3xl sm:text-4xl font-extrabold tracking-tight"
-                style={{ color: "#0D1B2A" }}
-              >
-                {formatCurrency(annualSales)}
-              </span>
-            </div>
+              onBlur={(e) => {
+                const rawValue = e.target.value.replace(/[^\d]/g, "")
+                const numValue = rawValue === "" ? MIN_SALES : Math.min(Math.max(Number(rawValue) || MIN_SALES, MIN_SALES), MAX_SALES)
+                setAnnualSales(numValue)
+                setInputValue(`$${numValue.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`)
+              }}
+              className="w-full rounded-xl p-5 text-center mb-4 text-3xl sm:text-4xl font-extrabold tracking-tight border-2 outline-none transition-all"
+              style={{
+                color: "#0D1B2A",
+                background: "#f0f4ff",
+                borderColor: "#d6dfff",
+              }}
+              onFocus={(e) => {
+                e.target.style.borderColor = "#2460e3"
+              }}
+              onBlur={(e) => {
+                e.target.style.borderColor = "#d6dfff"
+              }}
+            />
 
             <div className="relative py-1.5">
               <input
@@ -127,7 +153,11 @@ export function LoanCalculator() {
                 max={MAX_SALES}
                 step={1000}
                 value={annualSales}
-                onChange={(e) => setAnnualSales(Number(e.target.value))}
+                onChange={(e) => {
+                  const newValue = Number(e.target.value)
+                  setAnnualSales(newValue)
+                  setInputValue(formatCurrency(newValue))
+                }}
                 className="w-full h-1.5 rounded-full appearance-none cursor-pointer outline-none calc-slider"
                 style={{
                   background: `linear-gradient(to right, #2460e3 ${sliderPct}%, #d0d7e8 ${sliderPct}%)`,
