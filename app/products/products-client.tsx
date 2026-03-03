@@ -8,7 +8,7 @@ import { useState, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 
 const products = [
-  { id: "working-capital", name: "Term Loan" },
+  { id: "term-loan", name: "Term Loan" },
   { id: "line-of-credit", name: "Business Line of Credit" },
   { id: "sba-7a", name: "SBA 7a Loans" },
   { id: "sba-504", name: "SBA 504" },
@@ -19,11 +19,11 @@ const products = [
 
 export default function ProductsClient() {
   const searchParams = useSearchParams()
-  const [selectedProduct, setSelectedProduct] = useState("working-capital")
+  const [selectedProduct, setSelectedProduct] = useState("term-loan")
 
   // Map navbar product slugs to component product IDs
   const productSlugMap: { [key: string]: string } = {
-    "working-capital": "working-capital",
+    "term-loan": "term-loan",
     "merchant-cash-advance": "merchant-cash",
     "business-line-of-credit": "line-of-credit",
     "sba-7a-loans": "sba-7a",
@@ -83,7 +83,7 @@ export default function ProductsClient() {
 
         {/* Main Content Area */}
         <div className="flex-1">
-          {selectedProduct === "working-capital" && (
+          {selectedProduct === "term-loan" && (
             <section className="w-full py-8 md:py-12 bg-[#F5F7FA]">
               <div className="container px-4 md:px-6">
                 <div className="grid gap-6 md:grid-cols-2">

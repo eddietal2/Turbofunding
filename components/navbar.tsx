@@ -23,7 +23,7 @@ const industries = [
 ]
 
 const products = [
-  { name: "Working Capital", slug: "working-capital" },
+  { name: "Term Loans", slug: "term-loan" },
   { name: "Bridge Loan", slug: "bridge-loan" },
   { name: "Business Line of Credit", slug: "business-line-of-credit" },
   { name: "SBA 7a Loans", slug: "sba-7a-loans" },
@@ -118,7 +118,11 @@ export function Navbar() {
           >
             <Link
               href={`/products?product=${products[0].slug}`}
-              className="text-sm tracking-wide transition-colors whitespace-nowrap leading-tight font-semibold text-white hover:text-orange-500"
+              className={`text-sm tracking-wide transition-colors whitespace-nowrap leading-tight font-semibold ${
+                isActive("/products")
+                  ? "text-orange-500"
+                  : "text-white hover:text-orange-500"
+              }`}
             >
               Products
             </Link>
@@ -151,7 +155,11 @@ export function Navbar() {
             onMouseLeave={() => setIsIndustriesDropdownOpen(false)}
           >
             <button
-              className="text-sm tracking-wide transition-colors whitespace-nowrap leading-tight font-semibold text-white hover:text-orange-500"
+              className={`text-sm tracking-wide transition-colors whitespace-nowrap leading-tight font-semibold ${
+                isActive("/industries")
+                  ? "text-orange-500"
+                  : "text-white hover:text-orange-500"
+              }`}
               aria-haspopup="true"
               aria-expanded={isIndustriesDropdownOpen}
             >
@@ -186,7 +194,11 @@ export function Navbar() {
             onMouseLeave={() => setIsResourcesDropdownOpen(false)}
           >
             <button
-              className="text-sm tracking-wide transition-colors whitespace-nowrap leading-tight font-semibold text-white hover:text-orange-500"
+              className={`text-sm tracking-wide transition-colors whitespace-nowrap leading-tight font-semibold ${
+                isActive("/resources")
+                  ? "text-orange-500"
+                  : "text-white hover:text-orange-500"
+              }`}
               aria-haspopup="true"
               aria-expanded={isResourcesDropdownOpen}
             >
@@ -319,7 +331,11 @@ export function Navbar() {
                   <Link
                     href={`/products?product=${products[0].slug}`}
                     onClick={closeMenu}
-                    className="flex-1 text-lg tracking-wide transition-colors text-gray-300 font-normal hover:text-white"
+                    className={`flex-1 text-lg tracking-wide transition-colors font-normal ${
+                      isActive("/products")
+                        ? "text-orange-500"
+                        : "text-gray-300 hover:text-white"
+                    }`}
                   >
                     Products
                   </Link>
@@ -358,7 +374,11 @@ export function Navbar() {
               <li>
                 <button
                   onClick={() => setIsMobileIndustriesOpen(!isMobileIndustriesOpen)}
-                  className="w-full flex items-center justify-between py-3 px-4 rounded-lg text-lg tracking-wide transition-colors text-gray-300 font-normal hover:text-white hover:bg-gray-800"
+                  className={`w-full flex items-center justify-between py-3 px-4 rounded-lg text-lg tracking-wide transition-colors font-normal ${
+                    isActive("/industries")
+                      ? "text-orange-500"
+                      : "text-gray-300 hover:text-white hover:bg-gray-800"
+                  }`}
                 >
                   <span>Industries</span>
                   <ChevronDownIcon 
@@ -390,7 +410,11 @@ export function Navbar() {
               <li>
                 <button
                   onClick={() => setIsMobileResourcesOpen(!isMobileResourcesOpen)}
-                  className="w-full flex items-center justify-between py-3 px-4 rounded-lg text-lg tracking-wide transition-colors text-gray-300 font-normal hover:text-white hover:bg-gray-800"
+                  className={`w-full flex items-center justify-between py-3 px-4 rounded-lg text-lg tracking-wide transition-colors font-normal ${
+                    isActive("/resources")
+                      ? "text-orange-500"
+                      : "text-gray-300 hover:text-white hover:bg-gray-800"
+                  }`}
                 >
                   <span>Resources</span>
                   <ChevronDownIcon 

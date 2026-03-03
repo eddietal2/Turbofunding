@@ -1096,7 +1096,7 @@ export default function Home() {
                       </p>
                     </div>
                     <Button asChild className="mt-auto btn-blue-elite text-sm px-4 py-2 font-semibold text-white w-full">
-                      <Link href="/products?product=working-capital">Learn More</Link>
+                      <Link href="/products?product=term-loan">Learn More</Link>
                     </Button>
                   </div>
                 </div>

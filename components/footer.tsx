@@ -60,8 +60,8 @@ export function Footer() {
             </h3>
             <ul className="space-y-3 text-sm font-space-grotesk tracking-wide">
               <li>
-                <Link href="/products?product=working-capital" className="hover:text-orange-400 transition-colors">
-                  Working Capital
+                <Link href="/products?product=term-loan" className="hover:text-orange-400 transition-colors">
+                  Term Loans
                 </Link>
               </li>
               <li>
