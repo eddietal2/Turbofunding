@@ -60,23 +60,38 @@ export function Footer() {
             </h3>
             <ul className="space-y-3 text-sm font-space-grotesk tracking-wide">
               <li>
-                <Link href="/products" className="hover:text-orange-400 transition-colors">
+                <Link href="/products?product=working-capital" className="hover:text-orange-400 transition-colors">
                   Working Capital
                 </Link>
               </li>
               <li>
-                <Link href="/products" className="hover:text-orange-400 transition-colors">
-                  Merchant Cash Advances
+                <Link href="/products?product=bridge-loan" className="hover:text-orange-400 transition-colors">
+                  Bridge Loan
                 </Link>
               </li>
               <li>
-                <Link href="/products" className="hover:text-orange-400 transition-colors">
+                <Link href="/products?product=business-line-of-credit" className="hover:text-orange-400 transition-colors">
                   Business Line of Credit
                 </Link>
               </li>
               <li>
-                <Link href="/products" className="hover:text-orange-400 transition-colors">
-                  SBA Loans
+                <Link href="/products?product=sba-7a-loans" className="hover:text-orange-400 transition-colors">
+                  SBA 7a Loans
+                </Link>
+              </li>
+              <li>
+                <Link href="/products?product=merchant-cash-advance" className="hover:text-orange-400 transition-colors">
+                  Merchant Cash Advance
+                </Link>
+              </li>
+              <li>
+                <Link href="/products?product=sba-504" className="hover:text-orange-400 transition-colors">
+                  SBA 504
+                </Link>
+              </li>
+              <li>
+                <Link href="/products?product=equipment-financing" className="hover:text-orange-400 transition-colors">
+                  Equipment Financing
                 </Link>
               </li>
             </ul>
