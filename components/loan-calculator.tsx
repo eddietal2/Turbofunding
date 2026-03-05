@@ -6,8 +6,8 @@ import Link from "next/link"
 
 const TIERS = [
   { label: "Not Open Yet", multiplier: null, term: null },
-  { label: "3 – 9 Months", multiplier: 1.49, term: 12 },
-  { label: "10 – 24 Months", multiplier: 1.79, term: 18 },
+  { label: "3 – 8 Months", multiplier: 1.49, term: 12 },
+  { label: "9 – 24 Months", multiplier: 1.79, term: 18 },
   { label: "2 – 5 Years", multiplier: 1.99, term: 24 },
   { label: "5 Years+", multiplier: 2.4, term: 36 },
 ] as const
@@ -37,8 +37,11 @@ export function LoanCalculator() {
   const fundingAmount = qualified
     ? round100((annualSales / 12) * tier.multiplier)
     : null
+  
+  // Monthly Payment = (Funding ÷ Term) + (Funding × 6.5% ÷ 12)
+  const PRIME_RATE = 0.065
   const monthlyPayment = qualified && fundingAmount
-    ? round10(fundingAmount / tier.term)
+    ? round10((fundingAmount / tier.term) + (fundingAmount * PRIME_RATE / 12))
     : null
 
   const sliderPct = ((annualSales - MIN_SALES) / (MAX_SALES - MIN_SALES)) * 100
@@ -147,6 +150,35 @@ export function LoanCalculator() {
               </div>
             </div>
 
+            {/* Time in Business - Button Grid */}
+            <div>
+              <label className="block text-xs font-semibold text-gray-800 mb-2">
+                Time in Business
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                {TIERS.map((t) => {
+                  const active = selectedTier === t.label
+                  return (
+                    <button
+                      key={t.label}
+                      onClick={() => setSelectedTier(t.label)}
+                      className={`py-2 px-3 rounded-lg font-semibold text-xs transition-all duration-200 transform hover:scale-105 active:scale-95 ${
+                        active
+                          ? "text-white shadow-lg"
+                          : "text-gray-700 hover:text-gray-900"
+                      }`}
+                      style={{
+                        background: active ? "#D97706" : "rgba(36, 96, 227, 0.08)",
+                        border: active ? "2px solid #F59E0B" : "2px solid rgba(36, 96, 227, 0.2)",
+                      }}
+                    >
+                      {t.label}
+                    </button>
+                  )
+                })}
+              </div>
+            </div>
+
             {/* Display Screen */}
             <div className="p-4 sm:p-5 border-t border-gray-200 -mx-4 sm:-mx-6">
               <div className="mb-3">
@@ -172,34 +204,6 @@ export function LoanCalculator() {
               </div>
             </div>
 
-            {/* Time in Business - Button Grid */}
-            <div>
-              <label className="block text-xs font-semibold text-gray-800 mb-2">
-                Time in Business
-              </label>
-              <div className="grid grid-cols-2 gap-2">
-                {TIERS.map((t) => {
-                  const active = selectedTier === t.label
-                  return (
-                    <button
-                      key={t.label}
-                      onClick={() => setSelectedTier(t.label)}
-                      className={`py-2 px-3 rounded-lg font-semibold text-xs transition-all duration-200 transform hover:scale-105 active:scale-95 ${
-                        active
-                          ? "text-white shadow-lg"
-                          : "text-gray-700 hover:text-gray-900"
-                      }`}
-                      style={{
-                        background: active ? "#FF9500" : "rgba(36, 96, 227, 0.08)",
-                        border: active ? "2px solid #FFB84D" : "2px solid rgba(36, 96, 227, 0.2)",
-                      }}
-                    >
-                      {t.label}
-                    </button>
-                  )
-                })}
-              </div>
-            </div>
 
             {/* Not qualified message */}
             {selectedTier === "Not Open Yet" && (
