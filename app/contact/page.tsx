@@ -257,12 +257,14 @@ export default function ContactPage() {
                     If you need immediate assistance or want to fast-track your funding application, call our dedicated
                     funding hotline.
                   </p>
-                  <div className="flex items-center justify-between bg-gray-800 p-3 rounded-lg">
-                    <div>
-                      <p className="text-sm text-gray-300">Funding Hotline</p>
-                      <p className="text-xl font-bold text-white">(937) 751-6937</p>
-                    </div>
-                    <Button className="bg-orange-500 hover:bg-orange-600 text-white">Call Now</Button>
+                  <div className="bg-gray-800 p-3 rounded-lg">
+                    <p className="text-sm text-gray-300 mb-2">Funding Hotline</p>
+                    <a 
+                      href="tel:(937)-751-6937"
+                      className="text-xl font-bold text-white hover:text-orange-500 transition-colors"
+                    >
+                      (937) 751-6937
+                    </a>
                   </div>
                 </div>
               </div>
