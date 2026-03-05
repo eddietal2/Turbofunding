@@ -84,20 +84,12 @@ export default function Home() {
       if (parallaxBg || gradientOverlay || heroSection) {
         let ticking = false;
         
-        // Set initial background position pushed upwards 40%
-        if (heroSection) {
-          const heroHeight = heroSection.offsetHeight;
-          const initialOffset = heroHeight * 0.4;
-          heroSection.style.backgroundPositionY = `${-initialOffset}px`;
-        }
-        
         const updateParallax = () => {
           const scrollY = window.scrollY;
           const hero = heroSection || parallaxBg?.parentElement;
           if (!hero) return;
           
           const heroHeight = hero.offsetHeight;
-          const initialOffset = heroHeight * 0.4;
           
           // Only run parallax while hero is in viewport and beyond
           if (scrollY < heroHeight * 3) {
@@ -111,13 +103,6 @@ export default function Home() {
             if (gradientOverlay) {
               const gradientOffset = scrollY * 0.35;
               gradientOverlay.style.transform = `scaleX(-1) translate3d(0, ${gradientOffset}px, 0)`;
-            }
-            
-            // Desktop: Hero background parallax - move background image up as user scrolls down
-            if (heroSection) {
-              const parallaxOffset = Math.floor(scrollY * 0.4);
-              // Start from initial 40% offset + parallax effect
-              heroSection.style.backgroundPositionY = `${-(initialOffset + parallaxOffset)}px`;
             }
           }
           ticking = false;
@@ -412,7 +397,7 @@ export default function Home() {
                   />
                 </h1>
                 <p 
-                  className="text-base md:text-sm lg:text-sm xl:text-base font-medium tracking-wide bg-white/70 backdrop-blur-sm rounded-lg px-3 py-2 w-fit" 
+                  className="text-base md:text-sm lg:text-sm xl:text-base font-medium tracking-wide w-fit" 
                   style={{ 
                     color: "#1F2937", 
                     marginTop: "0.4em",

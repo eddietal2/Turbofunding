@@ -60,40 +60,6 @@ const products = [
     ],
   },
   {
-    id: "merchant-cash",
-    name: "Merchant Cash Advances",
-    icon: CreditCardIcon,
-    tagline: "Revenue-based funding that flexes with your sales",
-    description: "Provide immediate funding in exchange for a percentage of your future receivables. Perfect for businesses with recurring revenue.",
-    benefits: [
-      "Fast approval and funding, often within 24 hours",
-      "Repayment automatically adjusts with your sales volume",
-      "No fixed monthly payments - pay as you earn",
-      "Minimal paperwork and quick application process",
-      "Pre-Payment Discount",
-    ],
-    details: {
-      title: "MCA Details",
-      stats: [
-        { label: "Amount", value: "$5,000 - $500,000", icon: DollarSignIcon },
-        { label: "Repayment", value: "6-36 months", icon: ClockIcon },
-        { label: "Funding Speed", value: "24-48 hours", icon: ZapIcon },
-        { label: "Rate", value: "1%-3% per month", icon: PercentIcon },
-      ],
-    },
-    eligibility: [
-      { icon: DollarSignIcon, label: "Monthly Card Sales", value: "$10,000+ monthly" },
-      { icon: ClockIcon, label: "Time in Business", value: "6+ months" },
-      { icon: PercentIcon, label: "Credit Score", value: "500+" },
-    ],
-    bestFor: [
-      "General Working Capital",
-      "Fast-Growing Businesses",
-      "Bridge Financing",
-      "Same Day Funding",
-    ],
-  },
-  {
     id: "line-of-credit",
     name: "Business Line of Credit",
     icon: TrendingUpIcon,
@@ -223,6 +189,40 @@ const products = [
       "Business acquisitions",
       "Time-sensitive deals",
       "Financing gaps",
+    ],
+  },
+  {
+    id: "merchant-cash",
+    name: "Merchant Cash Advances",
+    icon: CreditCardIcon,
+    tagline: "Revenue-based funding that flexes with your sales",
+    description: "Provide immediate funding in exchange for a percentage of your future receivables. Perfect for businesses with recurring revenue.",
+    benefits: [
+      "Fast approval and funding, often within 24 hours",
+      "Repayment automatically adjusts with your sales volume",
+      "No fixed monthly payments - pay as you earn",
+      "Minimal paperwork and quick application process",
+      "Pre-Payment Discount",
+    ],
+    details: {
+      title: "MCA Details",
+      stats: [
+        { label: "Amount", value: "$5,000 - $500,000", icon: DollarSignIcon },
+        { label: "Repayment", value: "6-36 months", icon: ClockIcon },
+        { label: "Funding Speed", value: "24-48 hours", icon: ZapIcon },
+        { label: "Rate", value: "1%-3% per month", icon: PercentIcon },
+      ],
+    },
+    eligibility: [
+      { icon: DollarSignIcon, label: "Monthly Card Sales", value: "$10,000+ monthly" },
+      { icon: ClockIcon, label: "Time in Business", value: "6+ months" },
+      { icon: PercentIcon, label: "Credit Score", value: "500+" },
+    ],
+    bestFor: [
+      "General Working Capital",
+      "Fast-Growing Businesses",
+      "Bridge Financing",
+      "Same Day Funding",
     ],
   },
   {
