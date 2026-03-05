@@ -1,7 +1,6 @@
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import {
   ShoppingBagIcon,
   TruckIcon,
@@ -9,289 +8,245 @@ import {
   UtensilsIcon,
   ConstructionIcon,
   WrenchIcon,
+  CheckIcon,
+  ArrowRightIcon,
+  SparklesIcon,
+  ImageIcon,
+  BuildingIcon,
 } from "lucide-react"
+
+const industries = [
+  {
+    id: "retail",
+    name: "Retail",
+    subtitle: "Inventory & expansion financing",
+    icon: ShoppingBagIcon,
+    color: "blue",
+    description:
+      "Specialized funding solutions for retailers to manage inventory, expand locations, and upgrade technology.",
+    features: [
+      "Seasonal inventory financing",
+      "Store expansion funding",
+      "POS system upgrades",
+      "E-commerce integration",
+    ],
+  },
+  {
+    id: "manufacturing",
+    name: "Manufacturing",
+    subtitle: "Equipment & production financing",
+    icon: WrenchIcon,
+    color: "violet",
+    description:
+      "Funding solutions for manufacturers to upgrade equipment, expand production, and optimize operations.",
+    features: [
+      "Equipment financing",
+      "Facility expansion",
+      "Technology upgrades",
+      "Working capital for materials",
+    ],
+  },
+  {
+    id: "transportation",
+    name: "Transportation & Logistics",
+    subtitle: "Fleet & operations financing",
+    icon: TruckIcon,
+    color: "emerald",
+    description:
+      "Specialized funding for transportation companies to maintain and expand fleets, optimize logistics operations.",
+    features: [
+      "Vehicle financing",
+      "Fleet expansion",
+      "Logistics technology",
+      "Fuel & maintenance funding",
+    ],
+  },
+  {
+    id: "healthcare",
+    name: "Healthcare",
+    subtitle: "Medical equipment & practice financing",
+    icon: HeartPulseIcon,
+    color: "rose",
+    description:
+      "Funding solutions for healthcare providers to upgrade equipment, expand facilities, and improve patient care.",
+    features: [
+      "Medical equipment financing",
+      "Practice expansion",
+      "Electronic health records systems",
+      "Working capital for staffing",
+    ],
+  },
+  {
+    id: "hospitality",
+    name: "Hospitality & Food Service",
+    subtitle: "Restaurant & hotel financing",
+    icon: UtensilsIcon,
+    color: "amber",
+    description:
+      "Specialized funding for restaurants, hotels, and hospitality businesses to renovate, expand, and improve operations.",
+    features: [
+      "Kitchen equipment financing",
+      "Renovation funding",
+      "Franchise expansion",
+      "Seasonal working capital",
+    ],
+  },
+  {
+    id: "construction",
+    name: "Construction",
+    subtitle: "Project & equipment financing",
+    icon: ConstructionIcon,
+    color: "orange",
+    description:
+      "Funding solutions for construction companies to finance projects, purchase equipment, and manage cash flow.",
+    features: [
+      "Heavy equipment financing",
+      "Project bridge loans",
+      "Materials financing",
+      "Contractor lines of credit",
+    ],
+  },
+]
+
+const colorMap: Record<string, { iconBg: string; iconText: string; badge: string; checkBg: string; checkText: string; placeholderBg: string; placeholderIcon: string }> = {
+  blue:    { iconBg: "bg-blue-100",    iconText: "text-blue-600",    badge: "bg-blue-50 text-blue-700 border-blue-100",       checkBg: "bg-blue-50",    checkText: "text-blue-600",    placeholderBg: "bg-blue-50",    placeholderIcon: "text-blue-300" },
+  violet:  { iconBg: "bg-violet-100",  iconText: "text-violet-600",  badge: "bg-violet-50 text-violet-700 border-violet-100", checkBg: "bg-violet-50",  checkText: "text-violet-600",  placeholderBg: "bg-violet-50",  placeholderIcon: "text-violet-300" },
+  emerald: { iconBg: "bg-emerald-100", iconText: "text-emerald-600", badge: "bg-emerald-50 text-emerald-700 border-emerald-100", checkBg: "bg-emerald-50", checkText: "text-emerald-600", placeholderBg: "bg-emerald-50", placeholderIcon: "text-emerald-300" },
+  rose:    { iconBg: "bg-rose-100",    iconText: "text-rose-600",    badge: "bg-rose-50 text-rose-700 border-rose-100",       checkBg: "bg-rose-50",    checkText: "text-rose-600",    placeholderBg: "bg-rose-50",    placeholderIcon: "text-rose-300" },
+  amber:   { iconBg: "bg-amber-100",   iconText: "text-amber-600",   badge: "bg-amber-50 text-amber-700 border-amber-100",    checkBg: "bg-amber-50",   checkText: "text-amber-600",   placeholderBg: "bg-amber-50",   placeholderIcon: "text-amber-300" },
+  orange:  { iconBg: "bg-orange-100",  iconText: "text-orange-600",  badge: "bg-orange-50 text-orange-700 border-orange-100", checkBg: "bg-orange-50",  checkText: "text-orange-600",  placeholderBg: "bg-orange-50",  placeholderIcon: "text-orange-300" },
+}
 
 export default function IndustriesPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-[#F5F7FA] text-[#0D1B2A]">
+    <div className="flex min-h-screen flex-col" style={{ color: "#0D1B2A" }}>
       <main className="flex-1">
-        {/* Industries Section */}
-        <section className="w-full py-8 md:py-16 bg-[#F5F7FA]">
-          <div className="container px-4 md:px-6">
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {/* Retail */}
-              <Card className="bg-gray-800 border-gray-700 text-white">
-                <CardHeader className="pb-3">
-                  <div className="p-2 rounded-lg bg-blue-900 w-fit">
-                    <ShoppingBagIcon className="h-5 w-5 text-blue-300" />
-                  </div>
-                  <CardTitle className="mt-3 text-orange-500">Retail</CardTitle>
-                  <CardDescription className="text-gray-300">Inventory & expansion financing</CardDescription>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <div className="space-y-3">
-                    <p className="text-gray-300">
-                      Specialized funding solutions for retailers to manage inventory, expand locations, and upgrade
-                      technology.
-                    </p>
-                    <ul className="space-y-1 text-gray-300">
-                      <li className="flex items-start">
-                        <span className="mr-2">•</span>
-                        <span>Seasonal inventory financing</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="mr-2">•</span>
-                        <span>Store expansion funding</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="mr-2">•</span>
-                        <span>POS system upgrades</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="mr-2">•</span>
-                        <span>E-commerce integration</span>
-                      </li>
-                    </ul>
-                    <Button asChild className="w-full bg-white text-blue-600 hover:bg-gray-100">
-                      <Link href="/apply">Learn More</Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
 
-              {/* Manufacturing */}
-              <Card className="bg-gray-800 border-gray-700 text-white">
-                <CardHeader className="pb-3">
-                  <div className="p-2 rounded-lg bg-blue-900 w-fit">
-                    <WrenchIcon className="h-5 w-5 text-blue-300" />
-                  </div>
-                  <CardTitle className="mt-3 text-orange-500">Manufacturing</CardTitle>
-                  <CardDescription className="text-gray-300">Equipment & production financing</CardDescription>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <div className="space-y-3">
-                    <p className="text-gray-300">
-                      Funding solutions for manufacturers to upgrade equipment, expand production, and optimize
-                      operations.
-                    </p>
-                    <ul className="space-y-1 text-gray-300">
-                      <li className="flex items-start">
-                        <span className="mr-2">•</span>
-                        <span>Equipment financing</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="mr-2">•</span>
-                        <span>Facility expansion</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="mr-2">•</span>
-                        <span>Technology upgrades</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="mr-2">•</span>
-                        <span>Working capital for materials</span>
-                      </li>
-                    </ul>
-                    <Button asChild className="w-full bg-white text-blue-600 hover:bg-gray-100">
-                      <Link href="/apply">Learn More</Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
+        {/* ===== HERO ===== */}
+        <section className="relative w-full overflow-hidden bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#0F172A]">
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-blue-500/10 blur-3xl" />
+            <div className="absolute -bottom-32 -left-32 w-[500px] h-[500px] rounded-full bg-orange-500/5 blur-3xl" />
+          </div>
 
-              {/* Transportation & Logistics */}
-              <Card className="bg-gray-800 border-gray-700 text-white">
-                <CardHeader className="pb-3">
-                  <div className="p-2 rounded-lg bg-blue-900 w-fit">
-                    <TruckIcon className="h-5 w-5 text-blue-300" />
-                  </div>
-                  <CardTitle className="mt-3 text-orange-500">Transportation & Logistics</CardTitle>
-                  <CardDescription className="text-gray-300">Fleet & operations financing</CardDescription>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <div className="space-y-3">
-                    <p className="text-gray-300">
-                      Specialized funding for transportation companies to maintain and expand fleets, optimize logistics
-                      operations.
-                    </p>
-                    <ul className="space-y-1 text-gray-300">
-                      <li className="flex items-start">
-                        <span className="mr-2">•</span>
-                        <span>Vehicle financing</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="mr-2">•</span>
-                        <span>Fleet expansion</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="mr-2">•</span>
-                        <span>Logistics technology</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="mr-2">•</span>
-                        <span>Fuel & maintenance funding</span>
-                      </li>
-                    </ul>
-                    <Button asChild className="w-full bg-white text-blue-600 hover:bg-gray-100">
-                      <Link href="/apply">Learn More</Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Healthcare */}
-              <Card className="bg-gray-800 border-gray-700 text-white">
-                <CardHeader className="pb-3">
-                  <div className="p-2 rounded-lg bg-blue-900 w-fit">
-                    <HeartPulseIcon className="h-5 w-5 text-blue-300" />
-                  </div>
-                  <CardTitle className="mt-3 text-orange-500">Healthcare</CardTitle>
-                  <CardDescription className="text-gray-300">Medical equipment & practice financing</CardDescription>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <div className="space-y-3">
-                    <p className="text-gray-300">
-                      Funding solutions for healthcare providers to upgrade equipment, expand facilities, and improve
-                      patient care.
-                    </p>
-                    <ul className="space-y-1 text-gray-300">
-                      <li className="flex items-start">
-                        <span className="mr-2">•</span>
-                        <span>Medical equipment financing</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="mr-2">•</span>
-                        <span>Practice expansion</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="mr-2">•</span>
-                        <span>Electronic health records systems</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="mr-2">•</span>
-                        <span>Working capital for staffing</span>
-                      </li>
-                    </ul>
-                    <Button asChild className="w-full bg-white text-blue-600 hover:bg-gray-100">
-                      <Link href="/apply">Learn More</Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Hospitality & Food Service */}
-              <Card className="bg-gray-800 border-gray-700 text-white">
-                <CardHeader className="pb-3">
-                  <div className="p-2 rounded-lg bg-blue-900 w-fit">
-                    <UtensilsIcon className="h-5 w-5 text-blue-300" />
-                  </div>
-                  <CardTitle className="mt-3 text-orange-500">Hospitality & Food Service</CardTitle>
-                  <CardDescription className="text-gray-300">Restaurant & hotel financing</CardDescription>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <div className="space-y-3">
-                    <p className="text-gray-300">
-                      Specialized funding for restaurants, hotels, and hospitality businesses to renovate, expand, and
-                      improve operations.
-                    </p>
-                    <ul className="space-y-1 text-gray-300">
-                      <li className="flex items-start">
-                        <span className="mr-2">•</span>
-                        <span>Kitchen equipment financing</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="mr-2">•</span>
-                        <span>Renovation funding</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="mr-2">•</span>
-                        <span>Franchise expansion</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="mr-2">•</span>
-                        <span>Seasonal working capital</span>
-                      </li>
-                    </ul>
-                    <Button asChild className="w-full bg-white text-blue-600 hover:bg-gray-100">
-                      <Link href="/apply">Learn More</Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-
-              {/* Construction */}
-              <Card className="bg-gray-800 border-gray-700 text-white">
-                <CardHeader className="pb-3">
-                  <div className="p-2 rounded-lg bg-blue-900 w-fit">
-                    <ConstructionIcon className="h-5 w-5 text-blue-300" />
-                  </div>
-                  <CardTitle className="mt-3 text-orange-500">Construction</CardTitle>
-                  <CardDescription className="text-gray-300">Project & equipment financing</CardDescription>
-                </CardHeader>
-                <CardContent className="pt-0">
-                  <div className="space-y-3">
-                    <p className="text-gray-300">
-                      Funding solutions for construction companies to finance projects, purchase equipment, and manage
-                      cash flow.
-                    </p>
-                    <ul className="space-y-1 text-gray-300">
-                      <li className="flex items-start">
-                        <span className="mr-2">•</span>
-                        <span>Heavy equipment financing</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="mr-2">•</span>
-                        <span>Project bridge loans</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="mr-2">•</span>
-                        <span>Materials financing</span>
-                      </li>
-                      <li className="flex items-start">
-                        <span className="mr-2">•</span>
-                        <span>Contractor lines of credit</span>
-                      </li>
-                    </ul>
-                    <Button asChild className="w-full bg-white text-blue-600 hover:bg-gray-100">
-                      <Link href="/apply">Learn More</Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-
-            {/* And more... section */}
-            <div className="text-center mt-8">
-              <p className="text-2xl font-bold text-orange-500">And more...</p>
-              <p className="text-gray-700 mt-3 max-w-2xl mx-auto">
-                Our funding solutions extend beyond these industries. Whether you're in agriculture, education,
-                professional services, or any other field, TurboFunding.com has tailored financing options to meet your
-                specific business needs.
-              </p>
-              <div className="mt-6">
-                <Button asChild className="bg-blue-600 hover:bg-blue-700 text-white">
-                  <Link href="/contact">Discuss Your Industry Needs</Link>
-                </Button>
+          <div className="relative container px-4 md:px-6 py-12 md:py-20">
+            <div className="max-w-3xl mx-auto text-center">
+              <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 mb-5">
+                <BuildingIcon className="h-4 w-4 text-orange-400" />
+                <span className="text-sm text-gray-300 font-medium">Tailored Solutions for Every Sector</span>
               </div>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-4 font-space-grotesk">
+                Industries <span className="bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text text-transparent">We Serve</span>
+              </h1>
+              <p className="text-lg md:text-xl text-gray-400 max-w-xl mx-auto">
+                From retail storefronts to construction sites, we provide specialized funding that fits your industry.
+              </p>
             </div>
           </div>
         </section>
 
-        {/* CTA Section */}
-        <section className="w-full py-8 md:py-16 bg-gray-900 text-white">
-          <div className="container px-4 md:px-6 mx-auto">
-            <div className="flex flex-col items-center justify-center space-y-3 text-center max-w-3xl mx-auto">
-              <div className="space-y-2 w-full">
-                <h2 className="text-3xl font-bold tracking-tighter md:text-4xl text-orange-500">
-                  Need Funding for Your Industry?
-                </h2>
-                <p className="md:text-xl mx-auto text-orange-400">
-                  Our industry experts understand your unique challenges and opportunities.
-                </p>
-              </div>
-              <div className="flex flex-col gap-2 min-[400px]:flex-row justify-center">
-                <Button asChild className="bg-orange-500 hover:bg-orange-600 text-white">
-                  <Link href="/apply">Apply Now</Link>
+        {/* ===== INDUSTRY CARDS ===== */}
+        <section className="w-full py-10 md:py-16 bg-[#F5F7FA]">
+          <div className="container px-4 md:px-6 max-w-6xl mx-auto">
+            <div className="space-y-10">
+              {industries.map((industry, index) => {
+                const Icon = industry.icon
+                const colors = colorMap[industry.color]
+                const isReversed = index % 2 !== 0
+
+                return (
+                  <div
+                    key={industry.id}
+                    className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+                  >
+                    <div className={`grid md:grid-cols-2 ${isReversed ? "md:[direction:rtl]" : ""}`}>
+
+                      {/* Image Placeholder */}
+                      <div className={`relative ${colors.placeholderBg} flex flex-col items-center justify-center min-h-[220px] md:min-h-[320px] ${isReversed ? "md:[direction:ltr]" : ""}`}>
+                        <div className="flex flex-col items-center gap-3 text-center px-6">
+                          <div className={`w-16 h-16 rounded-2xl ${colors.iconBg} flex items-center justify-center`}>
+                            <ImageIcon className={`h-8 w-8 ${colors.placeholderIcon}`} />
+                          </div>
+                          <p className={`text-sm font-medium ${colors.placeholderIcon}`}>
+                            {industry.name} Image
+                          </p>
+                          <p className="text-xs text-gray-400">
+                            Replace with industry photo
+                          </p>
+                        </div>
+                      </div>
+
+                      {/* Content */}
+                      <div className={`p-6 md:p-8 lg:p-10 flex flex-col justify-center ${isReversed ? "md:[direction:ltr]" : ""}`}>
+                        {/* Badge */}
+                        <div className={`inline-flex items-center gap-1.5 border rounded-full px-3 py-1 w-fit text-xs font-semibold mb-4 ${colors.badge}`}>
+                          <Icon className="h-3.5 w-3.5" />
+                          {industry.subtitle}
+                        </div>
+
+                        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3 font-space-grotesk">
+                          {industry.name}
+                        </h2>
+
+                        <p className="text-gray-600 leading-relaxed mb-5">
+                          {industry.description}
+                        </p>
+
+                        {/* Features */}
+                        <ul className="space-y-2.5 mb-6">
+                          {industry.features.map((feature, i) => (
+                            <li key={i} className="flex items-center gap-2.5">
+                              <div className={`w-5 h-5 rounded-full ${colors.checkBg} flex items-center justify-center flex-shrink-0`}>
+                                <CheckIcon className={`h-3 w-3 ${colors.checkText}`} />
+                              </div>
+                              <span className="text-sm text-gray-700">{feature}</span>
+                            </li>
+                          ))}
+                        </ul>
+
+                        <div>
+                          <Button asChild className="btn-blue-elite text-white font-semibold rounded-xl h-11 px-6 group">
+                            <Link href="/apply">
+                              Learn More
+                              <ArrowRightIcon className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                            </Link>
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+
+
+          </div>
+        </section>
+
+        {/* ===== CTA SECTION ===== */}
+        <section className="relative w-full overflow-hidden bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#0F172A]">
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute top-0 right-1/4 w-72 h-72 rounded-full bg-orange-500/10 blur-3xl" />
+            <div className="absolute bottom-0 left-1/4 w-60 h-60 rounded-full bg-blue-500/10 blur-3xl" />
+          </div>
+
+          <div className="relative container px-4 md:px-6 py-14 md:py-20">
+            <div className="max-w-3xl mx-auto text-center">
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white mb-4 font-space-grotesk">
+                Need Funding for <span className="bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text text-transparent">Your Industry?</span>
+              </h2>
+              <p className="text-lg text-gray-400 mb-8 max-w-xl mx-auto">
+                Our industry experts understand your unique challenges and opportunities.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                <Button asChild className="btn-gold-elite text-white font-semibold rounded-xl h-12 px-8 text-base group">
+                  <Link href="/apply">
+                    Apply Now
+                    <ArrowRightIcon className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                  </Link>
+                </Button>
+                <Button asChild className="bg-white/10 border border-white/20 text-white hover:bg-white/20 font-semibold rounded-xl h-12 px-8 text-base">
+                  <Link href="/contact">Talk to an Expert</Link>
                 </Button>
               </div>
             </div>
