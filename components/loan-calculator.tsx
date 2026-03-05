@@ -236,29 +236,6 @@ export function LoanCalculator() {
             </div>
           </div>
 
-          {/* Tier Summary */}
-          {qualified && tier && (
-            <div
-              className="rounded-xl p-4 grid grid-cols-3 gap-2 text-center"
-              style={{ border: "1px solid #e0e8ff" }}
-            >
-              {[
-                { label: "Multiplier", value: `${tier.multiplier}×` },
-                { label: "Term", value: `${tier.term} mo` },
-                { label: "Total Repaid", value: fundingAmount ? formatCurrency(fundingAmount) : "—" },
-              ].map(({ label, value }) => (
-                <div key={label}>
-                  <div className="text-[10px] font-bold uppercase tracking-wider text-gray-400 mb-1">
-                    {label}
-                  </div>
-                  <div className="text-base font-extrabold" style={{ color: "#0D1B2A" }}>
-                    {value}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-
           {/* Not qualified message */}
           {selectedTier === "Not Open Yet" && (
             <div
