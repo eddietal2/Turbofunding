@@ -5,7 +5,7 @@ import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
-import { MenuIcon, XIcon, ChevronDownIcon, Phone } from "lucide-react"
+import { MenuIcon, XIcon, ChevronDownIcon, PhoneCall } from "lucide-react"
 
 const navItems = [
   { href: "/", label: "Home" },
@@ -254,7 +254,7 @@ export function Navbar() {
           <div className="hidden lg:flex items-center gap-4">
             <Button asChild className="bg-transparent border border-blue-500 text-blue-500 hover:bg-blue-50 font-semibold flex items-center gap-2">
               <a href="tel:(937)-751-6937">
-                <Phone className="w-4 h-4" />
+                <PhoneCall className="w-4 h-4" />
                 (937)-751-6937
               </a>
             </Button>
@@ -492,7 +492,7 @@ export function Navbar() {
             <div className="p-4 space-y-2">
               <Button asChild className="w-full bg-transparent border border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold flex items-center justify-center gap-2" onClick={closeMenu}>
                 <a href="tel:(937)-751-6937" className="flex items-center justify-center gap-2 w-full">
-                  <Phone className="w-4 h-4" />
+                  <PhoneCall className="w-4 h-4" />
                   (937)-751-6937
                 </a>
               </Button>
