@@ -8,12 +8,22 @@ import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/
 import { RotatingText } from "@/components/rotating-text"
 import { LoanCalculator } from "@/components/loan-calculator"
 import { AwardIcon } from "lucide-react"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 
 export default function Home() {
   const productNames = ["Term Loans", "Bridge Loans", "SBA Loans", "Business Lines of Credit", "Equipment Financing"]
   const heroImage = '/images/hero-bg.jpg'
   const heroGradient = 'linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0.50), rgba(255, 255, 255, 0.0))'
+  const [imageLoaded, setImageLoaded] = useState(false)
+
+  // Monitor hero background image loading
+  useEffect(() => {
+    const img = new window.Image()
+    img.onload = () => {
+      setImageLoaded(true)
+    }
+    img.src = heroImage
+  }, [])
 
   // Setup Intersection Observer for scroll animations
   useEffect(() => {
@@ -311,6 +321,25 @@ export default function Home() {
             }
           }
         `}</style>
+
+        {/* Hero Image Loading Shimmer Overlay */}
+        <div
+          className="absolute inset-0 z-[1.5] transition-opacity duration-500 ease-out pointer-events-none"
+          style={{
+            opacity: imageLoaded ? 0 : 1,
+            background: 'linear-gradient(90deg, rgba(255,255,255,0.7) 0%, rgba(255,255,255,0.4) 25%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0.4) 75%, rgba(255,255,255,0.7) 100%)',
+            backgroundSize: '200% 100%',
+            animation: imageLoaded ? 'none' : 'shimmer 2s infinite',
+            transform: "scaleX(-1)"
+          }}
+        >
+          <style>{`
+            @keyframes shimmer {
+              0% { background-position: 200% 0; }
+              100% { background-position: -200% 0; }
+            }
+          `}</style>
+        </div>
         
         {/* Subtle Animated Overlay Elements */}
         <div className="absolute inset-0 z-[2] pointer-events-none overflow-hidden" style={{ transform: "scaleX(-1)" }}>
