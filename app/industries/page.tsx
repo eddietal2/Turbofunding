@@ -22,6 +22,7 @@ const industries = [
     subtitle: "Inventory & expansion financing",
     icon: ShoppingBagIcon,
     color: "blue",
+    image: "/images/retail-store.jpg",
     description:
       "Specialized funding solutions for retailers to manage inventory, expand locations, and upgrade technology.",
     features: [
@@ -37,6 +38,7 @@ const industries = [
     subtitle: "Equipment & production financing",
     icon: WrenchIcon,
     color: "violet",
+    image: "/images/manufacturing.jpg",
     description:
       "Funding solutions for manufacturers to upgrade equipment, expand production, and optimize operations.",
     features: [
@@ -52,6 +54,7 @@ const industries = [
     subtitle: "Fleet & operations financing",
     icon: TruckIcon,
     color: "emerald",
+    image: "/images/transportation-logistics.jpg",
     description:
       "Specialized funding for transportation companies to maintain and expand fleets, optimize logistics operations.",
     features: [
@@ -67,6 +70,7 @@ const industries = [
     subtitle: "Medical equipment & practice financing",
     icon: HeartPulseIcon,
     color: "rose",
+    image: "/images/healthcare.jpg",
     description:
       "Funding solutions for healthcare providers to upgrade equipment, expand facilities, and improve patient care.",
     features: [
@@ -82,6 +86,7 @@ const industries = [
     subtitle: "Restaurant & hotel financing",
     icon: UtensilsIcon,
     color: "amber",
+    image: "/images/hospitality-food-service.jpg",
     description:
       "Specialized funding for restaurants, hotels, and hospitality businesses to renovate, expand, and improve operations.",
     features: [
@@ -97,6 +102,7 @@ const industries = [
     subtitle: "Project & equipment financing",
     icon: ConstructionIcon,
     color: "orange",
+    image: "/images/construction.jpg",
     description:
       "Funding solutions for construction companies to finance projects, purchase equipment, and manage cash flow.",
     features: [
@@ -161,19 +167,14 @@ export default function IndustriesPage() {
                   >
                     <div className={`grid md:grid-cols-2 ${isReversed ? "md:[direction:rtl]" : ""}`}>
 
-                      {/* Image Placeholder */}
-                      <div className={`relative ${colors.placeholderBg} flex flex-col items-center justify-center min-h-[220px] md:min-h-[320px] ${isReversed ? "md:[direction:ltr]" : ""}`}>
-                        <div className="flex flex-col items-center gap-3 text-center px-6">
-                          <div className={`w-16 h-16 rounded-2xl ${colors.iconBg} flex items-center justify-center`}>
-                            <ImageIcon className={`h-8 w-8 ${colors.placeholderIcon}`} />
-                          </div>
-                          <p className={`text-sm font-medium ${colors.placeholderIcon}`}>
-                            {industry.name} Image
-                          </p>
-                          <p className="text-xs text-gray-400">
-                            Replace with industry photo
-                          </p>
-                        </div>
+                      {/* Image */}
+                      <div className={`relative w-full min-h-[220px] md:min-h-[320px] overflow-hidden ${isReversed ? "md:[direction:ltr]" : ""}`}>
+                        <Image
+                          src={industry.image}
+                          alt={industry.name}
+                          fill
+                          className="object-cover"
+                        />
                       </div>
 
                       {/* Content */}
