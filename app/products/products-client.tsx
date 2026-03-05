@@ -3,34 +3,277 @@
 import Image from "next/image"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
-import { CheckIcon, DollarSignIcon, ClockIcon, PercentIcon } from "lucide-react"
+import {
+  CheckIcon,
+  DollarSignIcon,
+  ClockIcon,
+  PercentIcon,
+  ArrowRightIcon,
+  SparklesIcon,
+  BanknoteIcon,
+  CreditCardIcon,
+  LandmarkIcon,
+  BuildingIcon,
+  BriefcaseIcon,
+  WrenchIcon,
+  HandshakeIcon,
+  ZapIcon,
+  ShieldCheckIcon,
+  TrendingUpIcon,
+} from "lucide-react"
 import { useState, useEffect } from "react"
 import { useSearchParams } from "next/navigation"
 
+// ===== PRODUCT DATA =====
 const products = [
-  { id: "term-loan", name: "Term Loan" },
-  { id: "line-of-credit", name: "Business Line of Credit" },
-  { id: "sba-7a", name: "SBA 7a Loans" },
-  { id: "sba-504", name: "SBA 504" },
-  { id: "bridge-loan", name: "Bridge Loan" },
-  { id: "merchant-cash", name: "Merchant Cash Advances" },
-  { id: "equipment-financing", name: "Equipment Financing" },
+  {
+    id: "term-loan",
+    name: "Term Loan",
+    icon: BanknoteIcon,
+    tagline: "Fuel your growth with predictable payments",
+    description: "Term loans provide the financial resources your business needs to cover operational expenses, manage cash flow gaps, and take advantage of growth opportunities without disrupting your daily operations.",
+    benefits: [
+      "Quick access to funds for immediate business needs",
+      "Flexible repayment terms aligned with your cash flow",
+      "Use funds for inventory, payroll, marketing, or unexpected expenses",
+      "No collateral required for qualified businesses",
+    ],
+    details: {
+      title: "Term Loan Details",
+      stats: [
+        { label: "Amount", value: "$10,000 - $500,000", icon: DollarSignIcon },
+        { label: "Term Length", value: "6 Months to 5 Years", icon: ClockIcon },
+        { label: "Funding Speed", value: "As fast as 24 hours", icon: ZapIcon },
+        { label: "Interest Rate", value: "Starting at 8%", icon: PercentIcon },
+      ],
+    },
+    eligibility: [
+      { icon: DollarSignIcon, label: "Minimum Revenue", value: "$100,000+ annual revenue" },
+      { icon: ClockIcon, label: "Time in Business", value: "6+ months" },
+      { icon: PercentIcon, label: "Credit Score", value: "550+ for owners" },
+    ],
+    bestFor: [
+      "Businesses needing to cover short-term operating expenses",
+      "Managing seasonal cash flow fluctuations",
+      "Purchasing inventory or supplies",
+      "Handling unexpected costs",
+    ],
+  },
+  {
+    id: "merchant-cash",
+    name: "Merchant Cash Advances",
+    icon: CreditCardIcon,
+    tagline: "Revenue-based funding that flexes with your sales",
+    description: "Provide immediate funding in exchange for a percentage of your future receivables. Perfect for businesses with recurring revenue.",
+    benefits: [
+      "Fast approval and funding, often within 24 hours",
+      "Repayment automatically adjusts with your sales volume",
+      "No fixed monthly payments - pay as you earn",
+      "Minimal paperwork and quick application process",
+      "Pre-Payment Discount",
+    ],
+    details: {
+      title: "MCA Details",
+      stats: [
+        { label: "Amount", value: "$5,000 - $500,000", icon: DollarSignIcon },
+        { label: "Repayment", value: "6-36 months", icon: ClockIcon },
+        { label: "Funding Speed", value: "24-48 hours", icon: ZapIcon },
+        { label: "Rate", value: "1%-3% per month", icon: PercentIcon },
+      ],
+    },
+    eligibility: [
+      { icon: DollarSignIcon, label: "Monthly Card Sales", value: "$10,000+ monthly" },
+      { icon: ClockIcon, label: "Time in Business", value: "6+ months" },
+      { icon: PercentIcon, label: "Credit Score", value: "500+" },
+    ],
+    bestFor: [
+      "General Working Capital",
+      "Fast-Growing Businesses",
+      "Bridge Financing",
+      "Same Day Funding",
+    ],
+  },
+  {
+    id: "line-of-credit",
+    name: "Business Line of Credit",
+    icon: TrendingUpIcon,
+    tagline: "Draw funds on demand, pay only what you use",
+    description: "Revolving credit facility perfect for managing cash flow fluctuations and unexpected expenses.",
+    benefits: [
+      "Access funds instantly when opportunities arise",
+      "Only pay interest on the amount you draw",
+      "Revolving credit - repay and reuse",
+      "Perfect for seasonal businesses",
+    ],
+    details: {
+      title: "LOC Details",
+      stats: [
+        { label: "Credit Limit", value: "$10K - $250K", icon: DollarSignIcon },
+        { label: "Draw Period", value: "12-24 months", icon: ClockIcon },
+        { label: "Access Speed", value: "Same day", icon: ZapIcon },
+        { label: "Interest Rate", value: "As low as 1% per month", icon: PercentIcon },
+      ],
+    },
+    eligibility: [
+      { icon: DollarSignIcon, label: "Annual Revenue", value: "$150K+" },
+      { icon: ClockIcon, label: "Time in Business", value: "12+ months" },
+      { icon: PercentIcon, label: "Credit Score", value: "600+" },
+    ],
+    bestFor: [
+      "Seasonal cash flow management",
+      "Short-term working capital",
+      "Unexpected opportunities",
+      "Receivables/payables gaps",
+    ],
+  },
+  {
+    id: "sba-7a",
+    name: "SBA 7a Loans",
+    icon: LandmarkIcon,
+    tagline: "Government-backed loans with the best rates",
+    description: "Most popular SBA program for long-term financing with competitive rates and flexible terms.",
+    benefits: [
+      "Lower down payments (as low as 10%)",
+      "Competitive rates backed by SBA",
+      "Terms up to 25 years",
+      "Multiple business uses",
+    ],
+    details: {
+      title: "SBA 7a Details",
+      stats: [
+        { label: "Loan Amount", value: "Up to $5M", icon: DollarSignIcon },
+        { label: "Terms", value: "Up to 25 years", icon: ClockIcon },
+        { label: "Processing Time", value: "30-90 days", icon: ZapIcon },
+        { label: "Interest Rate", value: "Prime + 2.75-4.75%", icon: PercentIcon },
+      ],
+    },
+    eligibility: [
+      { icon: DollarSignIcon, label: "Business Size", value: "Meet SBA standards" },
+      { icon: ClockIcon, label: "Time in Business", value: "2+ years" },
+      { icon: PercentIcon, label: "Credit Score", value: "600+" },
+    ],
+    bestFor: [
+      "Business acquisitions",
+      "Real estate purchases",
+      "Long-term working capital",
+      "Equipment purchases",
+    ],
+  },
+  {
+    id: "sba-504",
+    name: "SBA 504",
+    icon: BuildingIcon,
+    tagline: "Fixed-rate financing for major assets",
+    description: "Long-term, fixed-rate financing for major fixed assets like real estate and heavy equipment.",
+    benefits: [
+      "Fixed rates for life of loan",
+      "Low down payment (typically 10%)",
+      "Terms up to 25 years",
+      "Below-market rates",
+    ],
+    details: {
+      title: "SBA 504 Details",
+      stats: [
+        { label: "Loan Amount", value: "Up to $5.5M", icon: DollarSignIcon },
+        { label: "Terms", value: "10, 20, 25 years", icon: ClockIcon },
+        { label: "Processing Time", value: "45-90 days", icon: ZapIcon },
+        { label: "Interest Rate", value: "Fixed below market", icon: PercentIcon },
+      ],
+    },
+    eligibility: [
+      { icon: DollarSignIcon, label: "Use of Funds", value: "Real estate, equipment" },
+      { icon: ClockIcon, label: "Job Creation", value: "Must create/retain jobs" },
+      { icon: PercentIcon, label: "Owner Occupancy", value: "51% requirement" },
+    ],
+    bestFor: [
+      "Commercial real estate",
+      "Facility building/renovation",
+      "Heavy machinery",
+      "Long-term investments",
+    ],
+  },
+  {
+    id: "bridge-loan",
+    name: "Bridge Loan",
+    icon: HandshakeIcon,
+    tagline: "Short-term capital to seize opportunities",
+    description: "Short-term financing to bridge gaps between purchasing new property and securing permanent funding.",
+    benefits: [
+      "Quick funding to close deals",
+      "Immediate capital available",
+      "Simple qualification process",
+      "No prepayment penalties",
+    ],
+    details: {
+      title: "Bridge Loan Details",
+      stats: [
+        { label: "Loan Amount", value: "$50K - $5M", icon: DollarSignIcon },
+        { label: "Term Length", value: "3 - 12 months", icon: ClockIcon },
+        { label: "Funding Speed", value: "5-10 business days", icon: ZapIcon },
+        { label: "Interest Rate", value: "7% - 12%", icon: PercentIcon },
+      ],
+    },
+    eligibility: [
+      { icon: DollarSignIcon, label: "Asset Value", value: "Sufficient collateral" },
+      { icon: ClockIcon, label: "Exit Strategy", value: "Clear repayment plan" },
+      { icon: PercentIcon, label: "Credit Score", value: "600+" },
+    ],
+    bestFor: [
+      "Real estate deals",
+      "Business acquisitions",
+      "Time-sensitive deals",
+      "Financing gaps",
+    ],
+  },
+  {
+    id: "equipment-financing",
+    name: "Equipment Financing",
+    icon: WrenchIcon,
+    tagline: "Get the equipment you need, preserve your capital",
+    description: "Capital for purchasing or leasing machinery, vehicles, technology, and business equipment.",
+    benefits: [
+      "Lower rates - equipment is collateral",
+      "Flexible terms aligned with lifespan",
+      "Finance 100% with minimal down",
+      "Preserve working capital",
+    ],
+    details: {
+      title: "Equipment Financing Details",
+      stats: [
+        { label: "Amount", value: "$2.5K - $2M", icon: DollarSignIcon },
+        { label: "Loan Term", value: "2 - 7 years", icon: ClockIcon },
+        { label: "Funding Speed", value: "5-15 business days", icon: ZapIcon },
+        { label: "Interest Rate", value: "Starting at 6.5%", icon: PercentIcon },
+      ],
+    },
+    eligibility: [
+      { icon: DollarSignIcon, label: "Equipment", value: "Commercial/industrial" },
+      { icon: ClockIcon, label: "Time in Business", value: "6+ months" },
+      { icon: PercentIcon, label: "Credit Score", value: "550+" },
+    ],
+    bestFor: [
+      "Machinery & industrial equipment",
+      "Fleet vehicles",
+      "IT infrastructure",
+      "Construction equipment",
+    ],
+  },
 ]
+
+// ===== PRODUCT SLUG MAP =====
+const productSlugMap: { [key: string]: string } = {
+  "term-loan": "term-loan",
+  "merchant-cash-advance": "merchant-cash",
+  "business-line-of-credit": "line-of-credit",
+  "sba-7a-loans": "sba-7a",
+  "sba-504": "sba-504",
+  "bridge-loan": "bridge-loan",
+  "equipment-financing": "equipment-financing",
+}
 
 export default function ProductsClient() {
   const searchParams = useSearchParams()
   const [selectedProduct, setSelectedProduct] = useState("term-loan")
-
-  // Map navbar product slugs to component product IDs
-  const productSlugMap: { [key: string]: string } = {
-    "term-loan": "term-loan",
-    "merchant-cash-advance": "merchant-cash",
-    "business-line-of-credit": "line-of-credit",
-    "sba-7a-loans": "sba-7a",
-    "sba-504": "sba-504",
-    "bridge-loan": "bridge-loan",
-    "equipment-financing": "equipment-financing",
-  }
 
   useEffect(() => {
     const productParam = searchParams.get("product")
@@ -39,749 +282,204 @@ export default function ProductsClient() {
     }
   }, [searchParams])
 
-  return (
-    <div className="flex min-h-screen flex-col bg-[#F5F7FA]">
-      <main className="flex-1 flex">
-        {/* Left Sidebar Navigation */}
-        <aside className="hidden lg:flex lg:w-64 flex-col border-r border-gray-300 bg-white sticky top-16 h-[calc(100vh-4rem)] overflow-y-auto">
-          <nav className="flex-1 px-6 py-8">
-            <div className="space-y-1">
-              {products.map((product) => (
-                <button
-                  key={product.id}
-                  onClick={() => setSelectedProduct(product.id)}
-                  className={`w-full text-left px-4 py-3 rounded-lg transition-colors text-sm font-medium ${
-                    selectedProduct === product.id
-                      ? "bg-blue-600 text-white"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                >
-                  {product.name}
-                </button>
-              ))}
-            </div>
-          </nav>
-        </aside>
+  const product = products.find((p) => p.id === selectedProduct) || products[0]
+  const ProductIcon = product.icon
 
-        {/* Mobile Dropdown */}
-        <div className="lg:hidden w-full bg-white border-b border-gray-300">
-          <div className="container px-4 md:px-6 py-4">
+  return (
+    <div className="flex min-h-screen flex-col" style={{ color: "#0D1B2A" }}>
+      <main className="flex-1">
+
+        {/* ===== HERO HEADER ===== */}
+        <section className="relative w-full overflow-hidden bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#0F172A]">
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-blue-500/10 blur-3xl" />
+            <div className="absolute -bottom-32 -left-32 w-[500px] h-[500px] rounded-full bg-orange-500/5 blur-3xl" />
+          </div>
+
+          <div className="relative container px-4 md:px-6 py-12 md:py-20">
+            <div className="max-w-3xl mx-auto text-center">
+              <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 mb-5">
+                <SparklesIcon className="h-4 w-4 text-orange-400" />
+                <span className="text-sm text-gray-300 font-medium">7 Funding Solutions for Every Business</span>
+              </div>
+              <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-4 font-space-grotesk">
+                Business Funding <span className="bg-gradient-to-r from-orange-400 to-amber-400 bg-clip-text text-transparent">Products</span>
+              </h1>
+              <p className="text-lg md:text-xl text-gray-400 max-w-xl mx-auto">
+                Compare rates, terms, and eligibility across our full suite of financing options.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* ===== PRODUCT TABS ===== */}
+        <section className="sticky top-16 z-30 bg-white border-b border-gray-200 shadow-sm">
+          {/* Desktop horizontal tabs */}
+          <div className="hidden lg:block container px-4 md:px-6">
+            <div className="flex gap-1 overflow-x-auto py-2 -mx-1">
+              {products.map((p) => {
+                const Icon = p.icon
+                const isActive = selectedProduct === p.id
+                return (
+                  <button
+                    key={p.id}
+                    onClick={() => setSelectedProduct(p.id)}
+                    className={`group flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium whitespace-nowrap transition-all ${
+                      isActive
+                        ? "bg-blue-600 text-white shadow-md shadow-blue-600/20"
+                        : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                    }`}
+                  >
+                    <Icon className={`h-4 w-4 flex-shrink-0 ${isActive ? "text-white" : "text-gray-400 group-hover:text-gray-600"}`} />
+                    {p.name}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Mobile dropdown */}
+          <div className="lg:hidden container px-4 md:px-6 py-3">
             <select
               value={selectedProduct}
               onChange={(e) => setSelectedProduct(e.target.value)}
-              className="w-full bg-white border border-gray-300 rounded-lg px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-blue-600"
+              className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
               style={{ color: "#0D1B2A" }}
             >
-              {products.map((product) => (
-                <option key={product.id} value={product.id}>
-                  {product.name}
+              {products.map((p) => (
+                <option key={p.id} value={p.id}>
+                  {p.name}
                 </option>
               ))}
             </select>
           </div>
-        </div>
+        </section>
 
-        {/* Main Content Area */}
-        <div className="flex-1">
-          {selectedProduct === "term-loan" && (
-            <section className="w-full py-8 md:py-12 bg-[#F5F7FA]">
-              <div className="container px-4 md:px-6">
-                <div className="grid gap-6 md:grid-cols-2">
-                  <div className="space-y-3">
-                    <h3 className="text-2xl font-bold text-orange-500">Term Loans</h3>
-                    <p style={{ color: "#0D1B2A" }}>
-                      Term loans provide the financial resources your business needs to cover operational
-                      expenses, manage cash flow gaps, and take advantage of growth opportunities without disrupting
-                      your daily operations.
-                    </p>
-                    <div className="space-y-2">
-                      <h3 className="text-xl font-semibold text-orange-500">Key Benefits</h3>
-                      <ul className="space-y-1" style={{ color: "#0D1B2A" }} role="list">
-                        <li className="flex items-start">
-                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Quick access to funds for immediate business needs</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Flexible repayment terms aligned with your cash flow</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Use funds for inventory, payroll, marketing, or unexpected expenses</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>No collateral required for qualified businesses</span>
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="pt-3">
-                      <Button asChild className="btn-blue-elite text-white text-lg font-semibold">
-                        <Link href="/apply">Apply for Financing</Link>
-                      </Button>
-                    </div>
+        {/* ===== PRODUCT CONTENT ===== */}
+        <section className="w-full py-8 md:py-14 bg-[#F5F7FA]">
+          <div className="container px-4 md:px-6 max-w-6xl mx-auto">
+
+            {/* Product Title Row */}
+            <div className="flex items-center gap-4 mb-8">
+              <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-blue-600 to-blue-700 flex items-center justify-center shadow-lg shadow-blue-600/20 flex-shrink-0">
+                <ProductIcon className="h-7 w-7 text-white" />
+              </div>
+              <div>
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 font-space-grotesk">{product.name}</h2>
+                <p className="text-gray-500 text-sm mt-0.5">{product.tagline}</p>
+              </div>
+            </div>
+
+            <div className="grid gap-6 lg:grid-cols-5">
+
+              {/* ===== LEFT COLUMN (3/5) ===== */}
+              <div className="lg:col-span-3 space-y-6">
+
+                {/* Description Card */}
+                <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 md:p-8">
+                  <p className="text-gray-600 leading-relaxed mb-6">{product.description}</p>
+
+                  <h3 className="text-lg font-bold text-gray-900 mb-4 font-space-grotesk">Key Benefits</h3>
+                  <ul className="space-y-3" role="list">
+                    {product.benefits.map((benefit, i) => (
+                      <li key={i} className="flex items-start gap-3">
+                        <div className="w-5 h-5 rounded-full bg-green-50 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <CheckIcon className="h-3 w-3 text-green-600" />
+                        </div>
+                        <span className="text-gray-700 text-sm leading-relaxed">{benefit}</span>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="mt-8">
+                    <Button asChild className="btn-blue-elite text-white text-base font-semibold rounded-xl h-12 px-8 group">
+                      <Link href="/apply">
+                        Apply for Financing
+                        <ArrowRightIcon className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                      </Link>
+                    </Button>
                   </div>
-                  <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-4">
-                    <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-orange-500">Term Loan Details</h3>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Amount</div>
-                          <div className="text-lg font-medium text-white">$10,000 - $500,000</div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Term Length</div>
-                          <div className="text-lg font-medium text-white">6 Months to 5 Years</div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Funding Speed</div>
-                          <div className="text-lg font-medium text-white">As fast as 24 hours</div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Interest Rate</div>
-                          <div className="text-lg font-medium text-white">Starting at 8%</div>
-                        </div>
+                </div>
+
+                {/* Best For Card */}
+                <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 md:p-8">
+                  <div className="flex items-center gap-2 mb-4">
+                    <ShieldCheckIcon className="h-5 w-5 text-orange-500" />
+                    <h3 className="text-lg font-bold text-gray-900 font-space-grotesk">Best For</h3>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {product.bestFor.map((item, i) => (
+                      <div key={i} className="flex items-center gap-2.5 bg-orange-50/60 border border-orange-100 rounded-xl px-4 py-3">
+                        <div className="w-1.5 h-1.5 rounded-full bg-orange-500 flex-shrink-0" />
+                        <span className="text-sm text-gray-700 font-medium">{item}</span>
                       </div>
-                    </div>
-                    <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-orange-500">Eligibility Requirements</h3>
-                      <ul className="space-y-1" role="list">
-                        <li className="flex items-start">
-                          <DollarSignIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <div>
-                            <span className="font-medium text-white">Minimum Revenue:</span>
-                            <p className="text-gray-300">$100,000+ annual revenue</p>
-                          </div>
-                        </li>
-                        <li className="flex items-start">
-                          <ClockIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <div>
-                            <span className="font-medium text-white">Time in Business:</span>
-                            <p className="text-gray-300">6+ months</p>
-                          </div>
-                        </li>
-                        <li className="flex items-start">
-                          <PercentIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <div>
-                            <span className="font-medium text-white">Credit Score:</span>
-                            <p className="text-gray-300">550+ for owners</p>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="bg-gray-900 border border-gray-700 rounded-lg p-4">
-                      <h4 className="font-medium text-orange-500 mb-2">Best For:</h4>
-                      <ul className="space-y-1 text-gray-300">
-                        <li>Businesses needing to cover short-term operating expenses</li>
-                        <li>Managing seasonal cash flow fluctuations</li>
-                        <li>Purchasing inventory or supplies</li>
-                        <li>Handling unexpected costs</li>
-                      </ul>
-                    </div>
+                    ))}
                   </div>
                 </div>
               </div>
-            </section>
-          )}
 
-          {selectedProduct === "merchant-cash" && (
-            <section className="w-full py-8 md:py-12 bg-[#F5F7FA]">
-              <div className="container px-4 md:px-6">
-                <div className="grid gap-6 md:grid-cols-2">
-                  <div className="space-y-3">
-                    <h3 className="text-2xl font-bold text-orange-500">Merchant Cash Advances</h3>
-                    <p style={{ color: "#0D1B2A" }}>
-                      Provide immediate funding in exchange for a percentage of your future receivables. Perfect for businesses with recurring revenue.
-                    </p>
-                    <div className="space-y-2">
-                      <h3 className="text-xl font-semibold text-orange-500">Key Benefits</h3>
-                      <ul className="space-y-1" style={{ color: "#0D1B2A" }} role="list">
-                        <li className="flex items-start">
-                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Fast approval and funding, often within 24 hours</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Repayment automatically adjusts with your sales volume</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>No fixed monthly payments - pay as you earn</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Minimal paperwork and quick application process</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Pre-Payment Discount</span>
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="pt-3">
-                      <Button asChild className="btn-blue-elite text-white text-lg font-semibold">
-                        <Link href="/apply">Apply for Financing</Link>
-                      </Button>
-                    </div>
-                  </div>
-                  <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-4">
-                    <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-orange-500">MCA Details</h3>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Amount</div>
-                          <div className="text-lg font-medium text-white">$5,000 - $500,000</div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Repayment</div>
-                          <div className="text-lg font-medium text-white">6-36 months</div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Funding Speed</div>
-                          <div className="text-lg font-medium text-white">24-48 hours</div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Rate</div>
-                          <div className="text-lg font-medium text-white">1%-3% per month</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-orange-500">Eligibility</h3>
-                      <ul className="space-y-1" role="list">
-                        <li className="flex items-start">
-                          <DollarSignIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <div>
-                            <span className="font-medium text-white">Monthly Card Sales:</span>
-                            <p className="text-gray-300">$10,000+ monthly</p>
+              {/* ===== RIGHT COLUMN (2/5) ===== */}
+              <div className="lg:col-span-2 space-y-6">
+
+                {/* Details Card */}
+                <div className="relative overflow-hidden bg-gradient-to-br from-[#0F172A] to-[#1E293B] rounded-2xl p-6 md:p-8">
+                  <div className="absolute -top-20 -right-20 w-40 h-40 rounded-full bg-blue-500/10 blur-3xl pointer-events-none" />
+
+                  <div className="relative">
+                    <h3 className="text-lg font-bold text-white mb-5 font-space-grotesk">{product.details.title}</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      {product.details.stats.map((stat, i) => {
+                        const StatIcon = stat.icon
+                        return (
+                          <div key={i} className="bg-white/5 border border-white/10 rounded-xl p-3.5">
+                            <div className="flex items-center gap-1.5 mb-1.5">
+                              <StatIcon className="h-3.5 w-3.5 text-gray-400" />
+                              <span className="text-xs text-gray-400 font-medium">{stat.label}</span>
+                            </div>
+                            <div className="text-white font-semibold text-sm leading-tight">{stat.value}</div>
                           </div>
-                        </li>
-                        <li className="flex items-start">
-                          <ClockIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <div>
-                            <span className="font-medium text-white">Time in Business:</span>
-                            <p className="text-gray-300">6+ months</p>
-                          </div>
-                        </li>
-                        <li className="flex items-start">
-                          <PercentIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <div>
-                            <span className="font-medium text-white">Credit Score:</span>
-                            <p className="text-gray-300">500+</p>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="bg-gray-900 border border-gray-700 rounded-lg p-4">
-                      <h4 className="font-medium text-orange-500 mb-2">Best For:</h4>
-                      <ul className="space-y-1 text-gray-300">
-                        <li>General Working Capital</li>
-                        <li>Fast-Growing Businesses</li>
-                        <li>Bridge Financing</li>
-                        <li>Same Day Funding</li>
-                      </ul>
+                        )
+                      })}
                     </div>
                   </div>
                 </div>
-              </div>
-            </section>
-          )}
 
-          {selectedProduct === "line-of-credit" && (
-            <section className="w-full py-8 md:py-12 bg-[#F5F7FA]">
-              <div className="container px-4 md:px-6">
-                <div className="grid gap-6 md:grid-cols-2">
-                  <div className="space-y-3">
-                    <h3 className="text-2xl font-bold text-orange-500">Business Line of Credit</h3>
-                    <p style={{ color: "#0D1B2A" }}>
-                      Revolving credit facility perfect for managing cash flow fluctuations and unexpected expenses.
-                    </p>
-                    <div className="space-y-2">
-                      <h3 className="text-xl font-semibold text-orange-500">Key Benefits</h3>
-                      <ul className="space-y-1" style={{ color: "#0D1B2A" }} role="list">
-                        <li className="flex items-start">
-                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Access funds instantly when opportunities arise</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Only pay interest on the amount you draw</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Revolving credit - repay and reuse</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Perfect for seasonal businesses</span>
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="pt-3">
-                      <Button asChild className="btn-blue-elite text-white text-lg font-semibold">
-                        <Link href="/apply">Apply for Financing</Link>
-                      </Button>
-                    </div>
-                  </div>
-                  <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-4">
-                    <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-orange-500">LOC Details</h3>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Credit Limit</div>
-                          <div className="text-lg font-medium text-white">$10K - $250K</div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Draw Period</div>
-                          <div className="text-lg font-medium text-white">12-24 months</div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Access Speed</div>
-                          <div className="text-lg font-medium text-white">Same day</div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Interest Rate</div>
-                          <div className="text-lg font-medium text-white">As low as 1% per month</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-orange-500">Eligibility</h3>
-                      <ul className="space-y-1" role="list">
-                        <li className="flex items-start">
-                          <DollarSignIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <div>
-                            <span className="font-medium text-white">Annual Revenue:</span>
-                            <p className="text-gray-300">$150K+</p>
+                {/* Eligibility Card */}
+                <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 md:p-8">
+                  <h3 className="text-lg font-bold text-gray-900 mb-5 font-space-grotesk">Eligibility Requirements</h3>
+                  <div className="space-y-4">
+                    {product.eligibility.map((req, i) => {
+                      const ReqIcon = req.icon
+                      return (
+                        <div key={i} className="flex items-start gap-3">
+                          <div className="w-9 h-9 rounded-xl bg-orange-50 flex items-center justify-center flex-shrink-0">
+                            <ReqIcon className="h-4 w-4 text-orange-600" />
                           </div>
-                        </li>
-                        <li className="flex items-start">
-                          <ClockIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
                           <div>
-                            <span className="font-medium text-white">Time in Business:</span>
-                            <p className="text-gray-300">12+ months</p>
+                            <p className="text-sm font-semibold text-gray-900">{req.label}</p>
+                            <p className="text-sm text-gray-500">{req.value}</p>
                           </div>
-                        </li>
-                        <li className="flex items-start">
-                          <PercentIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <div>
-                            <span className="font-medium text-white">Credit Score:</span>
-                            <p className="text-gray-300">600+</p>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="bg-gray-900 border border-gray-700 rounded-lg p-4">
-                      <h4 className="font-medium text-orange-500 mb-2">Best For:</h4>
-                      <ul className="space-y-1 text-gray-300">
-                        <li>Seasonal cash flow management</li>
-                        <li>Short-term working capital</li>
-                        <li>Unexpected opportunities</li>
-                        <li>Receivables/payables gaps</li>
-                      </ul>
-                    </div>
+                        </div>
+                      )
+                    })}
                   </div>
                 </div>
-              </div>
-            </section>
-          )}
 
-          {selectedProduct === "sba-7a" && (
-            <section className="w-full py-8 md:py-12 bg-[#F5F7FA]">
-              <div className="container px-4 md:px-6">
-                <div className="grid gap-6 md:grid-cols-2">
-                  <div className="space-y-3">
-                    <h3 className="text-2xl font-bold text-orange-500">SBA 7a Loans</h3>
-                    <p style={{ color: "#0D1B2A" }}>
-                      Most popular SBA program for long-term financing with competitive rates and flexible terms.
-                    </p>
-                    <div className="space-y-2">
-                      <h3 className="text-xl font-semibold text-orange-500">Key Benefits</h3>
-                      <ul className="space-y-1" style={{ color: "#0D1B2A" }} role="list">
-                        <li className="flex items-start">
-                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Lower down payments (as low as 10%)</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Competitive rates backed by SBA</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Terms up to 25 years</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Multiple business uses</span>
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="pt-3">
-                      <Button asChild className="btn-blue-elite text-white text-lg font-semibold">
-                        <Link href="/apply">Apply for Financing</Link>
-                      </Button>
-                    </div>
-                  </div>
-                  <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-4">
-                    <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-orange-500">SBA 7a Details</h3>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Loan Amount</div>
-                          <div className="text-lg font-medium text-white">Up to $5M</div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Terms</div>
-                          <div className="text-lg font-medium text-white">Up to 25 years</div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Processing Time</div>
-                          <div className="text-lg font-medium text-white">30-90 days</div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Interest Rate</div>
-                          <div className="text-lg font-medium text-white">Prime + 2.75-4.75%</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-orange-500">Eligibility</h3>
-                      <ul className="space-y-1" role="list">
-                        <li className="flex items-start">
-                          <DollarSignIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <div>
-                            <span className="font-medium text-white">Business Size:</span>
-                            <p className="text-gray-300">Meet SBA standards</p>
-                          </div>
-                        </li>
-                        <li className="flex items-start">
-                          <ClockIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <div>
-                            <span className="font-medium text-white">Time in Business:</span>
-                            <p className="text-gray-300">2+ years</p>
-                          </div>
-                        </li>
-                        <li className="flex items-start">
-                          <PercentIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <div>
-                            <span className="font-medium text-white">Credit Score:</span>
-                            <p className="text-gray-300">600+</p>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="bg-gray-900 border border-gray-700 rounded-lg p-4">
-                      <h4 className="font-medium text-orange-500 mb-2">Best For:</h4>
-                      <ul className="space-y-1 text-gray-300">
-                        <li>Business acquisitions</li>
-                        <li>Real estate purchases</li>
-                        <li>Long-term working capital</li>
-                        <li>Equipment purchases</li>
-                      </ul>
-                    </div>
-                  </div>
+                {/* CTA Card */}
+                <div className="bg-gradient-to-br from-orange-500 to-amber-500 rounded-2xl p-6 text-center">
+                  <h4 className="text-white font-bold text-lg mb-2 font-space-grotesk">Ready to Get Started?</h4>
+                  <p className="text-white/80 text-sm mb-4">Apply in minutes. Get funded as fast as 24 hours.</p>
+                  <Button asChild className="bg-white text-orange-600 hover:bg-gray-50 font-semibold rounded-xl h-11 px-6 w-full group">
+                    <Link href="/apply">
+                      Apply Now
+                      <ArrowRightIcon className="h-4 w-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </Link>
+                  </Button>
                 </div>
               </div>
-            </section>
-          )}
-
-          {selectedProduct === "sba-504" && (
-            <section className="w-full py-8 md:py-12 bg-[#F5F7FA]">
-              <div className="container px-4 md:px-6">
-                <div className="grid gap-6 md:grid-cols-2">
-                  <div className="space-y-3">
-                    <h3 className="text-2xl font-bold text-orange-500">SBA 504 Loans</h3>
-                    <p style={{ color: "#0D1B2A" }}>
-                      Long-term, fixed-rate financing for major fixed assets like real estate and heavy equipment.
-                    </p>
-                    <div className="space-y-2">
-                      <h3 className="text-xl font-semibold text-orange-500">Key Benefits</h3>
-                      <ul className="space-y-1" style={{ color: "#0D1B2A" }} role="list">
-                        <li className="flex items-start">
-                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Fixed rates for life of loan</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Low down payment (typically 10%)</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Terms up to 25 years</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Below-market rates</span>
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="pt-3">
-                      <Button asChild className="btn-blue-elite text-white text-lg font-semibold">
-                        <Link href="/apply">Apply for Financing</Link>
-                      </Button>
-                    </div>
-                  </div>
-                  <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-4">
-                    <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-orange-500">SBA 504 Details</h3>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Loan Amount</div>
-                          <div className="text-lg font-medium text-white">Up to $5.5M</div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Terms</div>
-                          <div className="text-lg font-medium text-white">10, 20, 25 years</div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Processing Time</div>
-                          <div className="text-lg font-medium text-white">45-90 days</div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Interest Rate</div>
-                          <div className="text-lg font-medium text-white">Fixed below market</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-orange-500">Eligibility</h3>
-                      <ul className="space-y-1" role="list">
-                        <li className="flex items-start">
-                          <DollarSignIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <div>
-                            <span className="font-medium text-white">Use of Funds:</span>
-                            <p className="text-gray-300">Real estate, equipment</p>
-                          </div>
-                        </li>
-                        <li className="flex items-start">
-                          <ClockIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <div>
-                            <span className="font-medium text-white">Job Creation:</span>
-                            <p className="text-gray-300">Must create/retain jobs</p>
-                          </div>
-                        </li>
-                        <li className="flex items-start">
-                          <PercentIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <div>
-                            <span className="font-medium text-white">Owner Occupancy:</span>
-                            <p className="text-gray-300">51% requirement</p>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="bg-gray-900 border border-gray-700 rounded-lg p-4">
-                      <h4 className="font-medium text-orange-500 mb-2">Best For:</h4>
-                      <ul className="space-y-1 text-gray-300">
-                        <li>Commercial real estate</li>
-                        <li>Facility building/renovation</li>
-                        <li>Heavy machinery</li>
-                        <li>Long-term investments</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-          )}
-
-          {selectedProduct === "bridge-loan" && (
-            <section className="w-full py-8 md:py-12 bg-[#F5F7FA]">
-              <div className="container px-4 md:px-6">
-                <div className="grid gap-6 md:grid-cols-2">
-                  <div className="space-y-3">
-                    <h3 className="text-2xl font-bold text-orange-500">Bridge Loans</h3>
-                    <p style={{ color: "#0D1B2A" }}>
-                      Short-term financing to bridge gaps between purchasing new property and securing permanent funding.
-                    </p>
-                    <div className="space-y-2">
-                      <h3 className="text-xl font-semibold text-orange-500">Key Benefits</h3>
-                      <ul className="space-y-1" style={{ color: "#0D1B2A" }} role="list">
-                        <li className="flex items-start">
-                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Quick funding to close deals</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Immediate capital available</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Simple qualification process</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>No prepayment penalties</span>
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="pt-3">
-                      <Button asChild className="btn-blue-elite text-white text-lg font-semibold">
-                        <Link href="/apply">Apply for Financing</Link>
-                      </Button>
-                    </div>
-                  </div>
-                  <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-4">
-                    <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-orange-500">Bridge Loan Details</h3>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Loan Amount</div>
-                          <div className="text-lg font-medium text-white">$50K - $5M</div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Term Length</div>
-                          <div className="text-lg font-medium text-white">3 - 12 months</div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Funding Speed</div>
-                          <div className="text-lg font-medium text-white">5-10 business days</div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Interest Rate</div>
-                          <div className="text-lg font-medium text-white">7% - 12%</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-orange-500">Eligibility</h3>
-                      <ul className="space-y-1" role="list">
-                        <li className="flex items-start">
-                          <DollarSignIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <div>
-                            <span className="font-medium text-white">Asset Value:</span>
-                            <p className="text-gray-300">Sufficient collateral</p>
-                          </div>
-                        </li>
-                        <li className="flex items-start">
-                          <ClockIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <div>
-                            <span className="font-medium text-white">Exit Strategy:</span>
-                            <p className="text-gray-300">Clear repayment plan</p>
-                          </div>
-                        </li>
-                        <li className="flex items-start">
-                          <PercentIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <div>
-                            <span className="font-medium text-white">Credit Score:</span>
-                            <p className="text-gray-300">600+</p>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="bg-gray-900 border border-gray-700 rounded-lg p-4">
-                      <h4 className="font-medium text-orange-500 mb-2">Best For:</h4>
-                      <ul className="space-y-1 text-gray-300">
-                        <li>Real estate deals</li>
-                        <li>Business acquisitions</li>
-                        <li>Time-sensitive deals</li>
-                        <li>Financing gaps</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-          )}
-
-          {selectedProduct === "equipment-financing" && (
-            <section className="w-full py-8 md:py-12 bg-[#F5F7FA]">
-              <div className="container px-4 md:px-6">
-                <div className="grid gap-6 md:grid-cols-2">
-                  <div className="space-y-3">
-                    <h3 className="text-2xl font-bold text-orange-500">Equipment Financing</h3>
-                    <p style={{ color: "#0D1B2A" }}>
-                      Capital for purchasing or leasing machinery, vehicles, technology, and business equipment.
-                    </p>
-                    <div className="space-y-2">
-                      <h3 className="text-xl font-semibold text-orange-500">Key Benefits</h3>
-                      <ul className="space-y-1" style={{ color: "#0D1B2A" }} role="list">
-                        <li className="flex items-start">
-                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Lower rates - equipment is collateral</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Flexible terms aligned with lifespan</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Finance 100% with minimal down</span>
-                        </li>
-                        <li className="flex items-start">
-                          <CheckIcon className="mr-2 h-5 w-5 text-green-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <span>Preserve working capital</span>
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="pt-3">
-                      <Button asChild className="btn-blue-elite text-white text-lg font-semibold">
-                        <Link href="/apply">Apply for Financing</Link>
-                      </Button>
-                    </div>
-                  </div>
-                  <div className="bg-gray-800 border border-gray-700 rounded-lg p-4 space-y-4">
-                    <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-orange-500">Equipment Financing Details</h3>
-                      <div className="grid grid-cols-2 gap-3">
-                        <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Amount</div>
-                          <div className="text-lg font-medium text-white">$2.5K - $2M</div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Loan Term</div>
-                          <div className="text-lg font-medium text-white">2 - 7 years</div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Funding Speed</div>
-                          <div className="text-lg font-medium text-white">5-15 business days</div>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="text-sm text-gray-400">Interest Rate</div>
-                          <div className="text-lg font-medium text-white">Starting at 6.5%</div>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="space-y-3">
-                      <h3 className="text-xl font-semibold text-orange-500">Eligibility</h3>
-                      <ul className="space-y-1" role="list">
-                        <li className="flex items-start">
-                          <DollarSignIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <div>
-                            <span className="font-medium text-white">Equipment:</span>
-                            <p className="text-gray-300">Commercial/industrial</p>
-                          </div>
-                        </li>
-                        <li className="flex items-start">
-                          <ClockIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <div>
-                            <span className="font-medium text-white">Time in Business:</span>
-                            <p className="text-gray-300">6+ months</p>
-                          </div>
-                        </li>
-                        <li className="flex items-start">
-                          <PercentIcon className="mr-2 h-5 w-5 text-orange-500 flex-shrink-0 mt-0.5" aria-hidden="true" />
-                          <div>
-                            <span className="font-medium text-white">Credit Score:</span>
-                            <p className="text-gray-300">550+</p>
-                          </div>
-                        </li>
-                      </ul>
-                    </div>
-                    <div className="bg-gray-900 border border-gray-700 rounded-lg p-4">
-                      <h4 className="font-medium text-orange-500 mb-2">Best For:</h4>
-                      <ul className="space-y-1 text-gray-300">
-                        <li>Machinery & industrial equipment</li>
-                        <li>Fleet vehicles</li>
-                        <li>IT infrastructure</li>
-                        <li>Construction equipment</li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-          )}
-        </div>
+            </div>
+          </div>
+        </section>
       </main>
     </div>
   )
