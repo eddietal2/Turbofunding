@@ -252,7 +252,7 @@ export function Navbar() {
         {/* Desktop CTA - hidden on /apply pages */}
         {!pathname.startsWith("/apply") && (
           <div className="hidden lg:flex items-center gap-4">
-            <Button asChild className="btn-blue-elite text-white font-semibold flex items-center gap-2">
+            <Button asChild className="bg-transparent border border-blue-500 text-blue-500 hover:bg-blue-50 font-semibold flex items-center gap-2">
               <a href="tel:(937)-751-6937">
                 <Phone className="w-4 h-4" />
                 (937)-751-6937
@@ -490,7 +490,7 @@ export function Navbar() {
           {/* CTA Button - hidden on /apply pages */}
           {!pathname.startsWith("/apply") && (
             <div className="p-4 space-y-2">
-              <Button asChild className="w-full btn-blue-elite text-white font-semibold flex items-center justify-center gap-2" onClick={closeMenu}>
+              <Button asChild className="w-full bg-transparent border border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold flex items-center justify-center gap-2" onClick={closeMenu}>
                 <a href="tel:(937)-751-6937" className="flex items-center justify-center gap-2 w-full">
                   <Phone className="w-4 h-4" />
                   (937)-751-6937
