@@ -895,6 +895,672 @@ export async function downloadApplicationPDF(formData: any) {
   }
 }
 
+export async function downloadBlankApplicationPDF() {
+  try {
+    console.log("[PDF] Generating blank application PDF...")
+
+    const pdfDoc = await PDFDocument.create()
+    pdfDoc.registerFontkit(fontkit)
+    
+    const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica)
+    const helveticaBold = await pdfDoc.embedFont(StandardFonts.HelveticaBold)
+    const cursiveFont = await pdfDoc.embedFont(StandardFonts.HelveticaOblique)
+
+    // TurboFunding brand colors
+    const brandBlue = rgb(30 / 255, 64 / 255, 175 / 255)
+    const darkGray = rgb(75 / 255, 85 / 255, 99 / 255)
+    const lightGray = rgb(107 / 255, 114 / 255, 128 / 255)
+    const black = rgb(0, 0, 0)
+    const lineGray = rgb(209 / 255, 213 / 255, 219 / 255)
+    const accentOrange = rgb(251 / 255, 146 / 255, 60 / 255)
+
+    const page = pdfDoc.addPage([612, 792])
+    const pageWidth = 612
+    const margin = 50
+    let yPosition = 760
+
+    // ========== TOP ACCENT BAR ==========
+    page.drawRectangle({
+      x: 0,
+      y: 792 - 4,
+      width: pageWidth,
+      height: 4,
+      color: brandBlue,
+    })
+
+    // ========== HEADER SECTION ==========
+    const logoHeight = 50
+    const logoWidth = 75
+    try {
+      const logoPath = path.join(process.cwd(), "public", "images", "tf-logo.png")
+      const logoBuffer = await fs.readFile(logoPath)
+      
+      if (logoBuffer.length === 0) {
+        throw new Error("Logo file is empty")
+      }
+      
+      const logoUint8Array = new Uint8Array(logoBuffer.buffer, logoBuffer.byteOffset, logoBuffer.length)
+      const logoImage = await pdfDoc.embedPng(logoUint8Array)
+      page.drawImage(logoImage, {
+        x: margin,
+        y: yPosition - logoHeight + 10,
+        width: logoWidth,
+        height: logoHeight,
+      })
+      console.log("[PDF] Logo embedded successfully")
+    } catch (error) {
+      const errorMsg = error instanceof Error ? error.message : String(error)
+      console.warn("[PDF] Logo load failed:", errorMsg)
+    }
+
+    // Contact info on right
+    const contactY = yPosition - 15
+    const contactText = "help@turbofunding.com    877.838.3919    646.695.6767"
+    page.drawText(contactText, {
+      x: pageWidth - margin - helveticaFont.widthOfTextAtSize(contactText, 9),
+      y: contactY,
+      size: 9,
+      font: helveticaFont,
+      color: darkGray,
+    })
+
+    yPosition -= 35
+    page.drawLine({
+      start: { x: margin, y: yPosition },
+      end: { x: pageWidth - margin, y: yPosition },
+      thickness: 0.75,
+      color: lineGray,
+    })
+
+    // ========== LOAN APPLICATION TITLE ==========
+    yPosition -= 30
+    page.drawText("TurboFunding Loan Application", {
+      x: margin,
+      y: yPosition,
+      size: 16,
+      font: helveticaBold,
+      color: black,
+    })
+    yPosition -= 45
+
+    // ========== TWO COLUMN LAYOUT ==========
+    const leftColX = margin
+    const columnGap = 40
+    const rightColX = pageWidth / 2 + columnGap / 2
+    const colWidth = (pageWidth - margin * 2 - columnGap) / 2
+
+    // Helper function to draw underlined field (blank)
+    const drawUnderlinedField = (label: string, x: number, y: number, width: number) => {
+      page.drawLine({
+        start: { x: x, y: y },
+        end: { x: x + width, y: y },
+        thickness: 0.5,
+        color: lineGray,
+      })
+      page.drawText(label.toUpperCase(), {
+        x: x,
+        y: y - 12,
+        size: 6,
+        font: helveticaFont,
+        color: lightGray,
+      })
+    }
+
+    // Helper function to draw section header
+    const drawSectionHeader = (title: string, x: number, y: number) => {
+      page.drawText(title, {
+        x: x,
+        y: y,
+        size: 12,
+        font: helveticaBold,
+        color: brandBlue,
+      })
+      page.drawLine({
+        start: { x: x, y: y - 4 },
+        end: { x: x + 60, y: y - 4 },
+        thickness: 1.5,
+        color: accentOrange,
+      })
+    }
+
+    // Helper function to draw checkbox (unchecked)
+    const drawCheckbox = (label: string, x: number, y: number) => {
+      page.drawRectangle({
+        x: x,
+        y: y - 2,
+        width: 11,
+        height: 11,
+        borderColor: lineGray,
+        borderWidth: 1,
+      })
+      page.drawText(label, {
+        x: x + 15,
+        y: y + 1,
+        size: 8,
+        font: helveticaFont,
+        color: darkGray,
+      })
+    }
+
+    // ========== BUSINESS DETAILS & CONTACT INFO ==========
+    drawSectionHeader("Business Details", leftColX, yPosition)
+    drawSectionHeader("Business Contact Info", rightColX, yPosition)
+
+    yPosition -= 35
+
+    // Row 1: Legal Business Name | Phone & Mobile
+    drawUnderlinedField("Legal Business Name", leftColX, yPosition, colWidth)
+    const phoneHalfWidth = (colWidth - 20) / 2
+    drawUnderlinedField("Phone", rightColX, yPosition, phoneHalfWidth)
+    drawUnderlinedField("Mobile", rightColX + phoneHalfWidth + 20, yPosition, phoneHalfWidth)
+
+    yPosition -= 35
+
+    // Row 2: DBA Name | Email
+    drawUnderlinedField("DBA Name", leftColX, yPosition, colWidth)
+    drawUnderlinedField("Email", rightColX, yPosition, colWidth)
+
+    yPosition -= 35
+
+    // Row 3: Federal Tax ID | Entity type checkboxes
+    drawUnderlinedField("Federal Tax ID", leftColX, yPosition, colWidth)
+    drawCheckbox("LLC", rightColX, yPosition + 5)
+    drawCheckbox("CORPORATION", rightColX + 70, yPosition + 5)
+    
+    yPosition -= 22
+    drawCheckbox("PARTNERSHIP", rightColX, yPosition + 5)
+    drawCheckbox("SOLE PROP", rightColX + 100, yPosition + 5)
+    
+    yPosition -= 22
+    drawCheckbox("NON-PROFIT", rightColX, yPosition + 5)
+
+    yPosition -= 28
+
+    // Row 4: Business Start Date | Website
+    drawUnderlinedField("Business Start Date", leftColX, yPosition, colWidth)
+    drawUnderlinedField("Website", rightColX, yPosition, colWidth)
+
+    yPosition -= 35
+
+    // Row 5: Industry & State Inc | Business Address
+    const halfWidth = (colWidth - 20) / 2
+    drawUnderlinedField("Industry", leftColX, yPosition, halfWidth)
+    drawUnderlinedField("State Incorporated", leftColX + halfWidth + 20, yPosition, halfWidth)
+    drawUnderlinedField("Business Address", rightColX, yPosition, colWidth)
+
+    yPosition -= 35
+
+    // Row 6: City, State, ZIP
+    const thirdWidth = (colWidth - 30) / 3
+    drawUnderlinedField("City", rightColX, yPosition, thirdWidth + 30)
+    drawUnderlinedField("State", rightColX + thirdWidth + 40, yPosition, 50)
+    drawUnderlinedField("ZIP", rightColX + thirdWidth + 100, yPosition, 50)
+
+    yPosition -= 40
+
+    // ========== PRIMARY OWNER SECTION ==========
+    drawSectionHeader("Primary Owner", leftColX, yPosition)
+
+    yPosition -= 30
+
+    // Row 1: First Name | Last Name
+    drawUnderlinedField("First Name", leftColX, yPosition, halfWidth + 30)
+    drawUnderlinedField("Last Name", leftColX + halfWidth + 50, yPosition, halfWidth + 30)
+
+    yPosition -= 30
+
+    // Row 2: Phone | Email
+    drawUnderlinedField("Phone", leftColX, yPosition, halfWidth + 30)
+    drawUnderlinedField("Email", leftColX + halfWidth + 50, yPosition, halfWidth + 30)
+
+    yPosition -= 30
+
+    // Row 3: DOB | SSN | % Ownership
+    const thirdWidthFull = (pageWidth - margin * 2 - 40) / 3
+    drawUnderlinedField("Date of Birth", leftColX, yPosition, thirdWidthFull)
+    drawUnderlinedField("SSN", leftColX + thirdWidthFull + 20, yPosition, thirdWidthFull)
+    drawUnderlinedField("% Ownership", leftColX + thirdWidthFull * 2 + 40, yPosition, thirdWidthFull - 40)
+
+    yPosition -= 30
+
+    // Row 4: Home Address
+    drawUnderlinedField("Home Address", leftColX, yPosition, pageWidth - margin * 2)
+
+    yPosition -= 30
+
+    // Row 5: City | State | ZIP
+    drawUnderlinedField("City", leftColX, yPosition, 200)
+    drawUnderlinedField("State", leftColX + 220, yPosition, 120)
+    drawUnderlinedField("ZIP", leftColX + 360, yPosition, 100)
+
+    yPosition -= 35
+
+    // ========== LEGAL DISCLAIMER ==========
+    const disclaimer = `By signing above, each of the above listed business and business owners/officers/members (individually and collectively, "you") authorize TurboFunding LLC ("TF") and each of its representatives, successors, assignees, affiliates and designees (collectively "Recipients") that may be involved with the acquiring of commercial loans and/or other products that have daily repayment features for the purchase of future receivables, including Merchant Cash Advance transactions, including without limitation the application therefore (collectively, "Transactions") to obtain consumer or personal business and investigative reports and other information about you, including without limitation credit card processor statements and bank statements, from one or more consumer reporting agencies, such as TransUnion, Experian and Equifax, and from other credit bureaus, banks, creditors and other third parties. You also authorize TF to transmit this application form, along with any of the foregoing information obtained in connection with this application, to any or all of the Recipients for the foregoing purposes; however TF shall not disclose information in your credit report to third parties. You also consent to the release, by any credit or financial institution, of any information relating to you, to TF and to each of the Recipients, on its own behalf.`
+    
+    const disclaimerLines = wrapText(disclaimer, helveticaFont, 7, pageWidth - margin * 2)
+    for (const line of disclaimerLines) {
+      if (yPosition < 100) break
+      page.drawText(line, {
+        x: leftColX,
+        y: yPosition,
+        size: 7,
+        font: helveticaFont,
+        color: darkGray,
+      })
+      yPosition -= 9
+    }
+
+    yPosition -= 15
+
+    // ========== ADVISOR FIELD ==========
+    page.drawLine({
+      start: { x: margin, y: yPosition + 8 },
+      end: { x: pageWidth - margin, y: yPosition + 8 },
+      thickness: 0.5,
+      color: lineGray,
+    })
+    
+    page.drawText("TurboFunding Advisor:", {
+      x: leftColX,
+      y: yPosition - 5,
+      size: 9,
+      font: helveticaBold,
+      color: brandBlue,
+    })
+    
+    page.drawLine({
+      start: { x: leftColX + 110, y: yPosition - 8 },
+      end: { x: leftColX + 280, y: yPosition - 8 },
+      thickness: 0.5,
+      color: lineGray,
+    })
+
+    // ========== PAGE 2: SIGNATURE PAGE ==========
+    const signaturePage = pdfDoc.addPage([612, 792])
+    let signaturePageY = 760
+
+    // Top accent bar
+    signaturePage.drawRectangle({
+      x: 0,
+      y: 792 - 4,
+      width: pageWidth,
+      height: 4,
+      color: brandBlue,
+    })
+
+    // Logo
+    try {
+      const logoPath = path.join(process.cwd(), "public", "images", "tf-logo.png")
+      const logoBuffer = await fs.readFile(logoPath)
+      if (logoBuffer.length > 0) {
+        const logoUint8Array = new Uint8Array(logoBuffer.buffer, logoBuffer.byteOffset, logoBuffer.length)
+        const logoImage = await pdfDoc.embedPng(logoUint8Array)
+        signaturePage.drawImage(logoImage, {
+          x: margin,
+          y: signaturePageY - 35,
+          width: 75,
+          height: 50,
+        })
+      }
+    } catch (error) {
+      console.warn("[PDF] Logo load failed on signature page")
+    }
+
+    // Contact info
+    const signatureContactText = "help@turbofunding.com    877.838.3919    646.695.6767"
+    signaturePage.drawText(signatureContactText, {
+      x: pageWidth - margin - helveticaFont.widthOfTextAtSize(signatureContactText, 9),
+      y: signaturePageY - 15,
+      size: 9,
+      font: helveticaFont,
+      color: darkGray,
+    })
+
+    signaturePageY -= 60
+
+    // ========== PRIMARY OWNER SIGNATURE ==========
+    signaturePage.drawText("Primary Owner Signature:", {
+      x: leftColX,
+      y: signaturePageY,
+      size: 9,
+      font: helveticaBold,
+      color: darkGray,
+    })
+
+    signaturePageY -= 35
+
+    signaturePage.drawLine({
+      start: { x: leftColX, y: signaturePageY },
+      end: { x: leftColX + 400, y: signaturePageY },
+      thickness: 0.75,
+      color: lineGray,
+    })
+    signaturePage.drawText("SIGNATURE", {
+      x: leftColX,
+      y: signaturePageY - 10,
+      size: 6,
+      font: helveticaFont,
+      color: lightGray,
+    })
+
+    signaturePage.drawText(new Date().toLocaleDateString(), {
+      x: leftColX + 250,
+      y: signaturePageY + 5,
+      size: 10,
+      font: helveticaFont,
+      color: black,
+    })
+    signaturePage.drawText("DATE", {
+      x: leftColX + 250,
+      y: signaturePageY - 10,
+      size: 6,
+      font: helveticaFont,
+      color: lightGray,
+    })
+
+    signaturePageY -= 50
+
+    // ========== SECOND OWNER SIGNATURE ==========
+    signaturePage.drawText("Second Owner Signature:", {
+      x: leftColX,
+      y: signaturePageY,
+      size: 9,
+      font: helveticaBold,
+      color: darkGray,
+    })
+
+    signaturePageY -= 35
+
+    signaturePage.drawLine({
+      start: { x: leftColX, y: signaturePageY },
+      end: { x: leftColX + 400, y: signaturePageY },
+      thickness: 0.75,
+      color: lineGray,
+    })
+    signaturePage.drawText("SIGNATURE", {
+      x: leftColX,
+      y: signaturePageY - 10,
+      size: 6,
+      font: helveticaFont,
+      color: lightGray,
+    })
+
+    signaturePage.drawText(new Date().toLocaleDateString(), {
+      x: leftColX + 250,
+      y: signaturePageY + 5,
+      size: 10,
+      font: helveticaFont,
+      color: black,
+    })
+    signaturePage.drawText("DATE", {
+      x: leftColX + 250,
+      y: signaturePageY - 10,
+      size: 6,
+      font: helveticaFont,
+      color: lightGray,
+    })
+
+    signaturePageY -= 50
+
+    // ========== ELECTRONIC SIGNATURE CERTIFICATE ON PAGE 2 ==========
+    let certPageY = signaturePageY
+    const certHeight = 160
+    
+    // Certificate container - full width box
+    const certBoxX = margin
+    const certBoxWidth = pageWidth - margin * 2
+    const certBoxY = certPageY - certHeight
+    const certBoxHeight = certHeight
+
+    // Certificate background
+    signaturePage.drawRectangle({
+      x: certBoxX,
+      y: certBoxY,
+      width: certBoxWidth,
+      height: certBoxHeight,
+      color: rgb(248 / 255, 250 / 255, 252 / 255),
+      borderColor: rgb(203 / 255, 213 / 255, 225 / 255),
+      borderWidth: 0.75,
+    })
+
+    // Certificate header bar
+    signaturePage.drawRectangle({
+      x: certBoxX,
+      y: certBoxY + certBoxHeight - 22,
+      width: certBoxWidth,
+      height: 22,
+      color: brandBlue,
+    })
+
+    // Certificate title
+    signaturePage.drawText("ELECTRONIC SIGNATURE CERTIFICATE", {
+      x: certBoxX + 12,
+      y: certBoxY + certBoxHeight - 16,
+      size: 8,
+      font: helveticaBold,
+      color: rgb(1, 1, 1),
+    })
+
+    // Certificate ID placeholder
+    const certIdText = "ID: [SAMPLE]"
+    const certIdWidth = helveticaFont.widthOfTextAtSize(certIdText, 7)
+    signaturePage.drawText(certIdText, {
+      x: certBoxX + certBoxWidth - certIdWidth - 12,
+      y: certBoxY + certBoxHeight - 15,
+      size: 7,
+      font: helveticaFont,
+      color: rgb(200 / 255, 220 / 255, 255 / 255),
+    })
+
+    // Certificate content
+    const certContentX = certBoxX + 15
+    let certContentY = certBoxY + certBoxHeight - 40
+    const green = rgb(22 / 255, 163 / 255, 74 / 255)
+
+    // Row 1: Signer 1
+    signaturePage.drawText("Signer 1:", {
+      x: certContentX,
+      y: certContentY,
+      size: 7,
+      font: helveticaBold,
+      color: darkGray,
+    })
+    signaturePage.drawText("_______________________________", {
+      x: certContentX + 50,
+      y: certContentY,
+      size: 7,
+      font: helveticaFont,
+      color: black,
+    })
+
+    signaturePage.drawText("Status:", {
+      x: certContentX + 250,
+      y: certContentY,
+      size: 7,
+      font: helveticaBold,
+      color: darkGray,
+    })
+    signaturePage.drawText("SIGNED", {
+      x: certContentX + 290,
+      y: certContentY,
+      size: 7,
+      font: helveticaBold,
+      color: green,
+    })
+
+    certContentY -= 12
+
+    // Row 2: Signer 2
+    signaturePage.drawText("Signer 2:", {
+      x: certContentX,
+      y: certContentY,
+      size: 7,
+      font: helveticaBold,
+      color: darkGray,
+    })
+    signaturePage.drawText("_______________________________", {
+      x: certContentX + 50,
+      y: certContentY,
+      size: 7,
+      font: helveticaFont,
+      color: black,
+    })
+
+    signaturePage.drawText("Status:", {
+      x: certContentX + 250,
+      y: certContentY,
+      size: 7,
+      font: helveticaBold,
+      color: darkGray,
+    })
+    signaturePage.drawText("SIGNED", {
+      x: certContentX + 290,
+      y: certContentY,
+      size: 7,
+      font: helveticaBold,
+      color: green,
+    })
+
+    certContentY -= 14
+
+    // Row 3: Email
+    signaturePage.drawText("Email:", {
+      x: certContentX,
+      y: certContentY,
+      size: 7,
+      font: helveticaBold,
+      color: darkGray,
+    })
+    signaturePage.drawText("_____________________________", {
+      x: certContentX + 40,
+      y: certContentY,
+      size: 7,
+      font: helveticaFont,
+      color: black,
+    })
+
+    certContentY -= 14
+
+    // Row 4: IP Address
+    signaturePage.drawText("IP Address:", {
+      x: certContentX,
+      y: certContentY,
+      size: 7,
+      font: helveticaBold,
+      color: darkGray,
+    })
+    signaturePage.drawText("_____________________________", {
+      x: certContentX + 55,
+      y: certContentY,
+      size: 7,
+      font: helveticaFont,
+      color: black,
+    })
+
+    certContentY -= 14
+
+    // Row 5: Signed Date/Time
+    signaturePage.drawText("Signed:", {
+      x: certContentX,
+      y: certContentY,
+      size: 7,
+      font: helveticaBold,
+      color: darkGray,
+    })
+    signaturePage.drawText("_________________________________", {
+      x: certContentX + 40,
+      y: certContentY,
+      size: 7,
+      font: helveticaFont,
+      color: black,
+    })
+
+    certContentY -= 14
+
+    // Row 6: Browser
+    signaturePage.drawText("Browser:", {
+      x: certContentX,
+      y: certContentY,
+      size: 7,
+      font: helveticaBold,
+      color: darkGray,
+    })
+    signaturePage.drawText("_________________________________", {
+      x: certContentX + 45,
+      y: certContentY,
+      size: 6,
+      font: helveticaFont,
+      color: lightGray,
+    })
+
+    certContentY -= 16
+
+    // Disclaimer
+    const disclaimerText = "This electronic signature is legally binding under the ESIGN Act (15 U.S.C. Section 7001) and UETA. This certificate verifies the identity and intent of the signer."
+    const maxWidth = certBoxWidth - 30
+    const lineHeight = 8
+    
+    let words = disclaimerText.split(" ")
+    let currentLine = ""
+    let lines: string[] = []
+    
+    for (let word of words) {
+      const testLine = currentLine + (currentLine ? " " : "") + word
+      const testWidth = helveticaFont.widthOfTextAtSize(testLine, 6)
+      
+      if (testWidth > maxWidth && currentLine) {
+        lines.push(currentLine)
+        currentLine = word
+      } else {
+        currentLine = testLine
+      }
+    }
+    if (currentLine) {
+      lines.push(currentLine)
+    }
+    
+    let disclaimerY = certContentY
+    for (let line of lines) {
+      signaturePage.drawText(line, {
+        x: certContentX,
+        y: disclaimerY,
+        size: 6,
+        font: helveticaFont,
+        color: lightGray,
+      })
+      disclaimerY -= lineHeight
+    }
+
+    // ========== FOOTER ACCENT BAR ==========
+    signaturePage.drawRectangle({
+      x: 0,
+      y: 0,
+      width: pageWidth,
+      height: 4,
+      color: brandBlue,
+    })
+
+    page.drawRectangle({
+      x: 0,
+      y: 0,
+      width: pageWidth,
+      height: 4,
+      color: brandBlue,
+    })
+
+    console.log("[PDF] Serializing PDF document...")
+    const pdfBytes = await pdfDoc.save()
+    console.log("[PDF] PDF serialized successfully, size:", pdfBytes.length, "bytes")
+
+    return pdfBytes
+  } catch (error) {
+    const errorMsg = error instanceof Error ? error.message : String(error)
+    console.error("[PDF] Blank PDF generation error:", errorMsg)
+    throw error
+  }
+}
+
 // Helper function to sanitize text by removing unicode characters that can't be encoded in WinAnsi
 function sanitizeText(text: string): string {
   if (!text) return text
