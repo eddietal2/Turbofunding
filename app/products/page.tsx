@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import ProductsClient from "./products-client"
 import { Suspense } from "react"
+import ProductsLoading from "./loading"
 
 export const metadata: Metadata = {
   title: "Business Funding Products - Working Capital, SBA Loans, Equipment Financing",
@@ -134,7 +135,7 @@ export default function ProductsPage() {
           }),
         }}
       />
-      <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading products...</div>}>
+      <Suspense fallback={<ProductsLoading />}>
         <ProductsClient />
       </Suspense>
     </>
