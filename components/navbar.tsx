@@ -79,7 +79,7 @@ export function Navbar() {
           aria-label="TurboFunding.com Home"
         >
           <Image
-            src="/images/TF-text-logo.png"
+            src="/images/TF-logo-text.png"
             alt="TurboFunding Logo"
             width={48}
             height={48}
