@@ -1,6 +1,9 @@
+"use client"
+
 import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
+import { useEffect, useRef, useState } from "react"
 import {
   ShoppingBagIcon,
   TruckIcon,
@@ -123,6 +126,36 @@ const colorMap: Record<string, { iconBg: string; iconText: string; badge: string
   orange:  { iconBg: "bg-orange-100",  iconText: "text-orange-600",  badge: "bg-orange-50 text-orange-700 border-orange-100", checkBg: "bg-orange-50",  checkText: "text-orange-600",  placeholderBg: "bg-orange-50",  placeholderIcon: "text-orange-300" },
 }
 
+// Custom hook for scroll fade-in animation
+function useScrollFadeIn() {
+  const ref = useRef<HTMLDivElement>(null)
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+          observer.unobserve(entry.target)
+        }
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -50px 0px" }
+    )
+
+    if (ref.current) {
+      observer.observe(ref.current)
+    }
+
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current)
+      }
+    }
+  }, [])
+
+  return { ref, isVisible }
+}
+
 export default function IndustriesPage() {
   return (
     <div className="flex min-h-screen flex-col" style={{ color: "#0D1B2A" }}>
@@ -159,11 +192,15 @@ export default function IndustriesPage() {
                 const Icon = industry.icon
                 const colors = colorMap[industry.color]
                 const isReversed = index % 2 !== 0
+                const { ref, isVisible } = useScrollFadeIn()
 
                 return (
                   <div
+                    ref={ref}
                     key={industry.id}
-                    className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-shadow"
+                    className={`bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden hover:shadow-md transition-all duration-700 ease-out ${
+                      isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+                    }`}
                   >
                     <div className={`grid md:grid-cols-2 ${isReversed ? "md:[direction:rtl]" : ""}`}>
 
