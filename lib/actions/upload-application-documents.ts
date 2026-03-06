@@ -152,7 +152,7 @@ User can continue from Step 2 using the app folder system.
     
     return {
       success: true,
-      filePath: filePath + ".txt",
+      filePath: blob.url,
     }
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : "Unknown error"
@@ -177,7 +177,9 @@ export async function deleteIncompleteApplication(filePath: string): Promise<{ s
     console.log("[IncompleteApp] Deleting incomplete application file:", filePath)
     
     // Use Vercel Blob's del function to delete the file
-    const response = await del(filePath)
+    const response = await del(filePath, {
+      token: VERCEL_BLOB_TOKEN,
+    })
     
     console.log("[IncompleteApp] ✅ Successfully deleted incomplete application:", filePath)
     console.log("[IncompleteApp] Delete response:", response)
