@@ -44,18 +44,6 @@ Server runs on `http://localhost:3000`
 - **Email:** Configured via environment variables
 - **Package Manager:** pnpm
 
-## Environment Variables
-
-Required in `.env.local`:
-```
-BLOB_READ_WRITE_TOKEN
-ENCRYPTION_KEY
-SENDER_EMAIL
-ADMIN_EMAIL
-```
-
-See `.env.example` for complete list. Contact the development team for production credentials.
-
 ## Scripts
 
 ```bash
