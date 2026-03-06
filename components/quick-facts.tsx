@@ -20,7 +20,7 @@ export default function QuickFacts() {
               </div>
             </div>
 
-            {/* Stat 2: Same-Day Approvals */}
+            {/* Stat 2: Same-Day Funding Available */}
             <div className="flex items-start justify-center py-6 md:py-8 px-4 md:px-6 flex-1 text-center">
               <div className="flex flex-col items-center gap-3">
                 <div className="w-12 h-12 rounded-2xl bg-blue-100 flex items-center justify-center flex-shrink-0">
@@ -30,7 +30,7 @@ export default function QuickFacts() {
                 </div>
                 <p className="text-sm md:text-base font-bold text-gray-900 font-space-grotesk leading-tight">
                   Same-Day<br />
-                  <span className="text-blue-600">Approvals</span><br />
+                  <span className="text-blue-600">Funding</span><br />
                   <span className="bg-gradient-to-r from-orange-500 to-amber-500 bg-clip-text text-transparent">Available</span>
                 </p>
               </div>
