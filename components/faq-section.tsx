@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import { ChevronDownIcon } from "lucide-react"
+import { ImportantDisclosure } from "./important-disclosure"
 
 const faqCategories = [
   {
@@ -207,6 +208,7 @@ export function FaqSection() {
             </div>
           ))}
         </div>
+        <ImportantDisclosure />
       </div>
     </div>
   )
