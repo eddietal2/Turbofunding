@@ -131,40 +131,17 @@ See [Environment Variables](#environment-variables) section below.
 
 ## Environment Variables
 
-Create a `.env.local` file in the project root:
+Create a `.env.local` file in the project root with the following variables:
 
 ```bash
-# Vercel Blob Storage
-BLOB_READ_WRITE_TOKEN=your_vercel_blob_token
-
-# Encryption Key (AES-256 = 32 bytes = 64 hex characters)
-ENCRYPTION_KEY=your_64_character_hex_key_here
-
-# Email Service Configuration
-SMTP_HOST=your.email.service.com
-SMTP_PORT=587
-SMTP_USER=your_email@example.com
-SMTP_PASSWORD=your_app_password
-SENDER_EMAIL=noreply@turbofunding.com
-
-# Admin Notification Email
-ADMIN_EMAIL=admin@turbofunding.com
-
-# Optional: Analytics/Tracking
-NEXT_PUBLIC_GTAG=your_google_analytics_id
+BLOB_READ_WRITE_TOKEN=...
+ENCRYPTION_KEY=...
+SENDER_EMAIL=...
+ADMIN_EMAIL=...
+NEXT_PUBLIC_GTAG=...
 ```
 
-### Generating ENCRYPTION_KEY
-
-The encryption key must be 64 hexadecimal characters (256-bit):
-
-```bash
-# On macOS/Linux
-openssl rand -hex 32
-
-# On Windows PowerShell
-[System.Convert]::ToHexString((1..32 | ForEach-Object { Get-Random -Max 256 }))
-```
+See `.env.example` for the complete list of required variables. Contact the development team for production credentials.
 
 ## Development
 
@@ -309,28 +286,15 @@ applications/{businessName}/{YYYY-MM-DD_HH-MM-AM|PM}/
 
 ## Encryption & Security
 
-### AES-256-GCM Encryption
+All documents are encrypted before upload to storage and require authentication keys to decrypt. Encryption is handled automatically by the application during submission.
 
-All documents are encrypted before upload:
+**Security Practices:**
+- Sensitive keys stored in environment variables (never committed to version control)
+- File validation and size limits enforced
+- HTTPS required for all data transmission
+- Access tokens must be kept confidential
 
-```typescript
-// Structure: IV (16 bytes) + Ciphertext + AuthTag (16 bytes)
-const encryptedData = Buffer.concat([iv, ciphertext, authTag])
-```
-
-### Key Security
-
-- Encryption key stored in `.env` (never committed)
-- Validate key format: 64 hex characters (256-bit)
-- Warning logged if key missing/invalid
-- Files stored with public access but encrypted content
-
-### Data Validation
-
-- Real-time form validation
-- Server-side validation on submission
-- File type checking (whitelisted extensions)
-- File size limits (15MB per file, 45MB total)
+⚠️ **Important:** Do not commit `.env` files or share encryption keys. Rotate credentials if exposed.
 
 ## Decoder Utility
 
