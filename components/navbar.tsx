@@ -375,7 +375,7 @@ export function Navbar() {
                     aria-label="Toggle products submenu"
                   >
                     <ChevronDownIcon 
-                      className={`h-5 w-5 transition-transform duration-200 flex-shrink-0 ${
+                      className={`h-5 w-5 text-white transition-transform duration-200 flex-shrink-0 ${
                         isMobileProductsOpen ? "rotate-180" : ""
                       }`}
                     />
@@ -421,7 +421,7 @@ export function Navbar() {
                     aria-label="Toggle industries submenu"
                   >
                     <ChevronDownIcon 
-                      className={`h-5 w-5 transition-transform duration-200 flex-shrink-0 ${
+                      className={`h-5 w-5 text-white transition-transform duration-200 flex-shrink-0 ${
                         isMobileIndustriesOpen ? "rotate-180" : ""
                       }`}
                     />
@@ -466,7 +466,7 @@ export function Navbar() {
                     aria-label="Toggle resources submenu"
                   >
                     <ChevronDownIcon 
-                      className={`h-5 w-5 transition-transform duration-200 flex-shrink-0 ${
+                      className={`h-5 w-5 text-white transition-transform duration-200 flex-shrink-0 ${
                         isMobileResourcesOpen ? "rotate-180" : ""
                       }`}
                     />
@@ -503,6 +503,21 @@ export function Navbar() {
                   }`}
                 >
                   Contact
+                </Link>
+              </li>
+
+              {/* Mobile About Us Link */}
+              <li>
+                <Link
+                  href="/team"
+                  onClick={closeMenu}
+                  className={`block py-3 px-4 rounded-lg text-lg tracking-wide transition-colors ${
+                    isActive("/team")
+                      ? "bg-blue-600 text-white font-bold"
+                      : "text-gray-300 font-normal hover:text-white hover:bg-gray-800"
+                  }`}
+                >
+                  About Us
                 </Link>
               </li>
             </ul>
