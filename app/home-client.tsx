@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Accordion, AccordionItem, AccordionTrigger, AccordionContent } from "@/components/ui/accordion"
 import { RotatingText } from "@/components/rotating-text"
 import { LoanCalculator } from "@/components/loan-calculator"
+import QuickFacts from "@/components/quick-facts"
 import { AwardIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 
@@ -515,22 +516,8 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ===== 27 YEARS STATS SECTION ===== */}
-      <section className="w-full bg-white border-b border-gray-100">
-        <div className="container px-4 md:px-6 max-w-5xl mx-auto">
-          <div className="flex items-center justify-center py-7 gap-4">
-            <div className="w-12 h-12 rounded-2xl bg-orange-100 flex items-center justify-center flex-shrink-0">
-              <AwardIcon className="h-6 w-6 text-orange-500" />
-            </div>
-            <p className="text-xl md:text-2xl font-bold text-gray-900 font-space-grotesk">
-              27 Years of Combined{" "}
-              <span className="bg-gradient-to-r from-orange-500 to-amber-500 bg-clip-text text-transparent">
-                Financial Service Experience
-              </span>
-            </p>
-          </div>
-        </div>
-      </section>
+      {/* ===== QUICK FACTS SECTION ===== */}
+      <QuickFacts />
 
         {/* How To Qualify Section */}
         {/* Changed section background from gray-800 to bg-[#F5F7FA] with updated text colors */}
