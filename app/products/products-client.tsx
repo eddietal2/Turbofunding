@@ -404,13 +404,13 @@ export default function ProductsClient() {
                 {/* Best For Card */}
                 <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 md:p-8">
                   <div className="flex items-center gap-2 mb-4">
-                    <ShieldCheckIcon className="h-5 w-5 text-orange-500" />
+                    <ShieldCheckIcon className="h-5 w-5 text-blue-600" />
                     <h3 className="text-lg font-bold text-gray-900 font-space-grotesk">Best For</h3>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {product.bestFor.map((item, i) => (
-                      <div key={i} className="flex items-center gap-2.5 bg-orange-50/60 border border-orange-100 rounded-xl px-4 py-3">
-                        <div className="w-1.5 h-1.5 rounded-full bg-orange-500 flex-shrink-0" />
+                      <div key={i} className="flex items-center gap-2.5 bg-blue-50/60 border border-blue-100 rounded-xl px-4 py-3">
+                        <div className="w-1.5 h-1.5 rounded-full bg-blue-600 flex-shrink-0" />
                         <span className="text-sm text-gray-700 font-medium">{item}</span>
                       </div>
                     ))}
