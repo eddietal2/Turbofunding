@@ -8,12 +8,13 @@ const LOGO_URL = "https://yeixnyce3to9ontr.public.blob.vercel-storage.com/logos/
 const WEBSITE_URL = "https://turbofunding.com"
 
 const transporter = nodemailer.createTransport({
-  host: "mail.spacemail.com",
-  port: 465,
-  secure: true, // SSL
+  service: 'gmail',
   auth: {
-    user: process.env.NODEMAILER_EMAIL,
-    pass: process.env.NODEMAILER_PASSWORD,
+    type: 'OAuth2',
+    user: process.env.APP_EMAIL,
+    clientId: process.env.GMAIL_CLIENT_ID,
+    clientSecret: process.env.GMAIL_CLIENT_SECRET,
+    refreshToken: process.env.GMAIL_REFRESH_TOKEN,
   },
 })
 
@@ -310,7 +311,7 @@ Funding Solutions for Growing Businesses
     }
 
     const mailOptions: any = {
-      from: `"TurboFunding.com" <${process.env.NODEMAILER_EMAIL}>`,
+      from: `"TurboFunding.com" <${process.env.APP_EMAIL}>`,
       to: recipientEmail,
       subject: `✓ Application Received - ${businessName} | TurboFunding.com`,
       text: textContent,
@@ -393,7 +394,7 @@ export async function sendAdminNotificationEmail(formData: Record<string, unknow
     <p style="color: #64748b; font-size: 12px; text-align: center;">Submitted on ${new Date().toLocaleString()}</p>
   `
 
-  const htmlContent = getEmailTemplate(content, process.env.NODEMAILER_EMAIL || "admin")
+  const htmlContent = getEmailTemplate(content, process.env.APP_EMAIL || "admin")
 
   try {
     // Build attachments array
@@ -414,10 +415,10 @@ export async function sendAdminNotificationEmail(formData: Record<string, unknow
     }
 
     const mailOptions: any = {
-      from: `"TurboFunding.com" <${process.env.NODEMAILER_EMAIL}>`,
+      from: `"TurboFunding.com" <${process.env.APP_EMAIL}>`,
       to: process.env.NODE_ENV === "production"
         ? "Matt@turbofunding.com,Vivek@turbofunding.com,eddie@finalbossxr.com"
-        : process.env.NODEMAILER_EMAIL,
+        : process.env.APP_EMAIL,
       subject: `🆕 New Application: ${formData.businessName || formData.legalBusinessName} - $${Number(formData.amountRequested || 0).toLocaleString()}`,
       html: htmlContent,
     }
@@ -557,7 +558,7 @@ Funding Solutions for Growing Businesses
 
   try {
     const info = await transporter.sendMail({
-      from: `"TurboFunding.com" <${process.env.NODEMAILER_EMAIL}>`,
+      from: `"TurboFunding.com" <${process.env.APP_EMAIL}>`,
       to: recipientEmail,
       subject: `🎉 Welcome to TurboFunding.com, ${recipientName}!`,
       text: textContent,

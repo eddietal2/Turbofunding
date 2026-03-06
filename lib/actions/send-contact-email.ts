@@ -1,6 +1,6 @@
 "use server"
 
-import nodemailer from "nodemailer"
+import { google } from "googleapis"
 
 interface ContactFormData {
   name: string
@@ -16,26 +16,57 @@ interface SendContactEmailResult {
   messageId?: string
 }
 
-const transporter = nodemailer.createTransport({
-  host: "mail.spacemail.com",
-  port: 465,
-  secure: true, // SSL
-  auth: {
-    user: process.env.NODEMAILER_EMAIL,
-    pass: process.env.NODEMAILER_PASSWORD,
-  },
-  logger: true,
-  debug: true,
-})
+function getGmailClient() {
+  const oauth2Client = new google.auth.OAuth2(
+    process.env.GMAIL_CLIENT_ID,
+    process.env.GMAIL_CLIENT_SECRET,
+  )
+  oauth2Client.setCredentials({
+    refresh_token: process.env.GMAIL_REFRESH_TOKEN,
+  })
+  return google.gmail({ version: "v1", auth: oauth2Client })
+}
 
-// Verify transporter connection on startup
-transporter.verify((error, success) => {
-  if (error) {
-    console.error("[ContactEmail] SMTP Connection Error:", error)
-  } else {
-    console.log("[ContactEmail] SMTP Server ready:", success)
-  }
-})
+function buildRawEmail({
+  from,
+  to,
+  replyTo,
+  subject,
+  textContent,
+  htmlContent,
+}: {
+  from: string
+  to: string
+  replyTo?: string
+  subject: string
+  textContent: string
+  htmlContent: string
+}): string {
+  const boundary = "boundary_" + Date.now().toString(36)
+  const headers = [
+    `From: ${from}`,
+    `To: ${to}`,
+    ...(replyTo ? [`Reply-To: ${replyTo}`] : []),
+    `Subject: ${subject}`,
+    `MIME-Version: 1.0`,
+    `Content-Type: multipart/alternative; boundary="${boundary}"`,
+  ].join("\r\n")
+
+  const body = [
+    `--${boundary}`,
+    `Content-Type: text/plain; charset="UTF-8"`,
+    ``,
+    textContent,
+    `--${boundary}`,
+    `Content-Type: text/html; charset="UTF-8"`,
+    ``,
+    htmlContent,
+    `--${boundary}--`,
+  ].join("\r\n")
+
+  const email = `${headers}\r\n\r\n${body}`
+  return Buffer.from(email).toString("base64url")
+}
 
 /**
  * Send contact form submission to admin email
@@ -43,8 +74,8 @@ transporter.verify((error, success) => {
 export async function sendContactEmail(formData: ContactFormData): Promise<SendContactEmailResult> {
   try {
     console.log("[ContactEmail] ===== Starting Email Send =====")
-    console.log("[ContactEmail] Env check - NODEMAILER_EMAIL:", process.env.NODEMAILER_EMAIL)
-    console.log("[ContactEmail] Env check - NODEMAILER_PASSWORD:", process.env.NODEMAILER_PASSWORD ? "***SET***" : "NOT SET")
+    console.log("[ContactEmail] Env check - CONTACT_EMAIL:", process.env.CONTACT_EMAIL)
+    console.log("[ContactEmail] Env check - GMAIL_REFRESH_TOKEN configured:", process.env.GMAIL_REFRESH_TOKEN ? "YES" : "NOT SET")
     
     console.log("[ContactEmail] Form data:", {
       name: formData.name,
@@ -53,18 +84,18 @@ export async function sendContactEmail(formData: ContactFormData): Promise<SendC
       subject: formData.subject,
     })
 
-    const adminEmail = process.env.NODEMAILER_EMAIL
+    const adminEmail = process.env.CONTACT_EMAIL
 
     if (!adminEmail) {
-      console.error("[ContactEmail] NODEMAILER_EMAIL not configured")
+      console.error("[ContactEmail] CONTACT_EMAIL not configured")
       return {
         success: false,
         error: "Email service not configured",
       }
     }
 
-    if (!process.env.NODEMAILER_PASSWORD) {
-      console.error("[ContactEmail] NODEMAILER_PASSWORD not configured")
+    if (!process.env.GMAIL_REFRESH_TOKEN || !process.env.GMAIL_CLIENT_ID || !process.env.GMAIL_CLIENT_SECRET) {
+      console.error("[ContactEmail] OAuth2 credentials not configured")
       return {
         success: false,
         error: "Email service not properly configured",
@@ -155,20 +186,27 @@ Submitted at: ${new Date().toISOString()}
 </html>
 `
 
-    // Send email to admin
+    // Send email to admin via Gmail API
     console.log("[ContactEmail] Attempting to send admin email to:", adminEmail)
-    const info = await transporter.sendMail({
-      from: `"TurboFunding Contact Form" <${process.env.NODEMAILER_EMAIL}>`,
-      to: process.env.NODEMAILER_EMAIL,
+    const gmail = getGmailClient()
+
+    const adminRaw = buildRawEmail({
+      from: `"TurboFunding Contact Form" <${adminEmail}>`,
+      to: adminEmail,
       replyTo: formData.email,
       subject: `New Contact Form Submission: ${formData.subject}`,
-      text: textContent,
-      html: htmlContent,
+      textContent,
+      htmlContent,
     })
 
-    console.log("[ContactEmail] ✅ Admin email sent successfully!")
-    console.log("[ContactEmail] Message ID:", info.messageId)
-    console.log("[ContactEmail] Response:", info.response)
+    const adminResult = await gmail.users.messages.send({
+      userId: "me",
+      requestBody: { raw: adminRaw },
+    })
+
+    const messageId = adminResult.data.id || undefined
+    console.log("[ContactEmail] Admin email sent successfully!")
+    console.log("[ContactEmail] Message ID:", messageId)
 
     // Optionally send confirmation email to the user
     const confirmationHtml = `
@@ -218,24 +256,28 @@ Submitted at: ${new Date().toISOString()}
     // Send confirmation to user
     try {
       console.log("[ContactEmail] Attempting to send confirmation email to:", formData.email)
-      const confirmInfo = await transporter.sendMail({
-        from: `"TurboFunding.com" <${process.env.NODEMAILER_EMAIL}>`,
+      const confirmRaw = buildRawEmail({
+        from: `"TurboFunding.com" <${adminEmail}>`,
         to: formData.email,
         subject: "We received your message - TurboFunding.com",
-        html: confirmationHtml,
-        text: `Hi ${formData.name},\n\nThank you for reaching out to TurboFunding.com! We've received your message and our team will get back to you within 1 business day.\n\nBest regards,\nThe TurboFunding Team`,
+        htmlContent: confirmationHtml,
+        textContent: `Hi ${formData.name},\n\nThank you for reaching out to TurboFunding.com! We've received your message and our team will get back to you within 1 business day.\n\nBest regards,\nThe TurboFunding Team`,
       })
-      console.log("[ContactEmail] ✅ Confirmation email sent to user successfully!")
-      console.log("[ContactEmail] Confirmation Message ID:", confirmInfo.messageId)
+
+      const confirmResult = await gmail.users.messages.send({
+        userId: "me",
+        requestBody: { raw: confirmRaw },
+      })
+      console.log("[ContactEmail] Confirmation email sent to user successfully!")
+      console.log("[ContactEmail] Confirmation Message ID:", confirmResult.data.id)
     } catch (confirmationError) {
-      console.warn("[ContactEmail] ⚠️ Failed to send confirmation email to user:", confirmationError)
-      // Don't fail the request if confirmation email fails
+      console.warn("[ContactEmail] Failed to send confirmation email to user:", confirmationError)
     }
 
     console.log("[ContactEmail] ===== Email Send Complete =====")
     return {
       success: true,
-      messageId: info.messageId,
+      messageId,
     }
   } catch (error: unknown) {
     console.error("[ContactEmail] ===== ERROR ENCOUNTERED =====")

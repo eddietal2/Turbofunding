@@ -1,6 +1,6 @@
 "use client"
 // DEV MODE: Set to true to pre-fill all required fields for quick testing
-const DEV_MODE = false
+const DEV_MODE = true
 
 import { useState, useEffect, useCallback, useRef } from "react"
 import Link from "next/link"
