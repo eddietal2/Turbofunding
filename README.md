@@ -209,24 +209,11 @@ Completion recorded
 
 ### 3. Incomplete Applications
 
-Incomplete applications are saved to Vercel Blob with structure:
-```
-incomplete_applications/{sanitized_email}/application.txt
-```
-
-Each email can only have ONE incomplete application (new ones replace old ones).
-
-When a user submits a complete application, the incomplete record is automatically deleted.
+Incomplete applications are tracked to allow users to resume their submissions later. When users submit a complete application, their incomplete application record is automatically deleted from storage.
 
 ### 4. Document Organization
 
-Completed applications are organized by business name and timestamp:
-```
-applications/{businessName}/{YYYY-MM-DD_HH-MM-AM|PM}/
-├── application       (encrypted PDF)
-├── bank-statements   (encrypted, if provided)
-└── other-documents   (encrypted, if provided)
-```
+Completed applications and their supporting documents are organized and stored securely. All documents are encrypted before storage.
 
 ## Application Form Flow
 
@@ -298,31 +285,9 @@ All documents are encrypted before upload to storage and require authentication 
 
 ## Decoder Utility
 
-The `decoder/` folder contains a CLI tool to decrypt downloaded encrypted files:
+A decryption utility is available in the `decoder/` folder for authorized personnel only.
 
-### Usage
-
-```bash
-cd decoder
-
-# Decrypt a file
-node decrypt-application.js ./encrypted-file ./output.pdf
-
-# Or encrypt a file
-node decrypt-application.js ./input.pdf ./encrypted-output --encrypt
-```
-
-### Requirements
-
-- `ENCRYPTION_KEY` in `.env` (parent directory)
-- Must match the key used for encryption
-
-### What It's For
-
-- **Download:** Encrypted blobs are public URLs safe for email
-- **Decrypt:** Use this tool to recover the original PDF on client machine
-- **Encrypt:** Test encryption/decryption locally
-- **.gitignore:** `decoder/` is ignored to prevent key exposure
+**Warning:** This tool requires sensitive credentials. Keep it secure and do not commit to version control. The `decoder/` folder is included in `.gitignore`.
 
 ## Deployment
 
@@ -348,10 +313,9 @@ vercel
 
 ### Pre-Deployment Checklist
 
-- [ ] Encryption key generated & stored safely
-- [ ] Vercel Blob token configured
-- [ ] Email credentials tested
-- [ ] Admin email address set
+- [ ] All environment variables configured securely
+- [ ] Email credentials verified and tested
+- [ ] Admin email address configured
 - [ ] Domain configured if using custom domain
 - [ ] CORS headers configured if needed
 - [ ] File size limits appropriate for your use case
@@ -390,23 +354,22 @@ Creates `blank-application.pdf` used as form template.
 ### Form Not Saving?
 - Check browser console for errors
 - Verify localStorage is enabled
-- Check `.env` variables loaded
+- Contact development team if issues persist
 
 ### PDF Generation Failing?
-- Ensure pdf-lib is installed
-- Check file size < 15MB
-- Verify encryption key is valid
+- Check that file size is within limits
+- Verify all required fields are filled
+- Contact development team for assistance
 
 ### Emails Not Sending?
-- Check SMTP credentials
+- Check that email credentials are configured
 - Verify email addresses are correct
-- Review email service logs
-- Test with `pnpm test:email`
+- Contact development team
 
-### Decryption Failing?
-- Verify `ENCRYPTION_KEY` matches original key
-- Check file wasn't corrupted in transit
-- Ensure file is actually encrypted (not plain PDF)
+### Application Issues?
+- Review browser console for error messages
+- Check network tab for failed requests
+- Contact the development team with error details
 
 ---
 
