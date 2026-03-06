@@ -1,6 +1,7 @@
 ﻿import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
+import QuickFacts from "@/components/quick-facts"
 import {
   ShieldCheckIcon,
   ZapIcon,
@@ -76,22 +77,8 @@ export default function TeamPage() {
           </div>
         </section>
 
-        {/* ===== STATS BAR ===== */}
-        <section className="w-full bg-white border-b border-gray-100">
-          <div className="container px-4 md:px-6 max-w-5xl mx-auto">
-            <div className="flex items-center justify-center py-7 gap-4">
-              <div className="w-12 h-12 rounded-2xl bg-orange-100 flex items-center justify-center flex-shrink-0">
-                <AwardIcon className="h-6 w-6 text-orange-500" />
-              </div>
-              <p className="text-xl md:text-2xl font-bold text-gray-900 font-space-grotesk">
-                27 Years of Combined{" "}
-                <span className="bg-gradient-to-r from-orange-500 to-amber-500 bg-clip-text text-transparent">
-                  Financial Service Experience
-                </span>
-              </p>
-            </div>
-          </div>
-        </section>
+        {/* ===== QUICK FACTS ===== */}
+        <QuickFacts />
 
         {/* ===== OUR STORY ===== */}
         <section className="w-full py-14 md:py-20 bg-[#F5F7FA]">
