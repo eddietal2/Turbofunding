@@ -78,12 +78,21 @@ export function Navbar() {
           className="flex items-center gap-1 text-xl font-bold tracking-tighter"
           aria-label="TurboFunding.com Home"
         >
+          {/* Desktop Logo */}
           <Image
             src="/images/tf-logo-text.png"
             alt="TurboFunding Logo"
             width={48}
             height={48}
-            className="h-5 w-auto bg-transparent"
+            className="h-5 w-auto bg-transparent hidden lg:block"
+          />
+          {/* Mobile Logo */}
+          <Image
+            src="/images/tf-logo.png"
+            alt="TurboFunding Logo"
+            width={48}
+            height={48}
+            className="h-12 w-auto bg-transparent lg:hidden"
           />
         </Link>
 
@@ -265,7 +274,18 @@ export function Navbar() {
         )}
 
         {/* Mobile Menu Button */}
-        <div className="lg:hidden">
+        <div className="lg:hidden flex items-center gap-2">
+          <Button
+            asChild
+            variant="ghost"
+            className="text-blue-500 hover:bg-gray-800 h-10 px-3 flex items-center gap-1.5"
+            aria-label="Call us"
+          >
+            <a href="tel:+19377516937" className="flex items-center gap-1.5">
+              <PhoneCall className="h-5 w-5" />
+              <span className="text-sm font-semibold">(937)-751-6937</span>
+            </a>
+          </Button>
           <Button
             variant="ghost"
             size="icon"
