@@ -31,6 +31,11 @@ export function Footer() {
             </h3>
             <ul className="space-y-3 text-sm font-space-grotesk tracking-wide">
               <li>
+                <Link href="/" className="hover:text-orange-400 transition-colors">
+                  Home
+                </Link>
+              </li>
+              <li>
                 <Link href="/products" className="hover:text-orange-400 transition-colors">
                   Products
                 </Link>
@@ -38,6 +43,21 @@ export function Footer() {
               <li>
                 <Link href="/industries" className="hover:text-orange-400 transition-colors">
                   Industries
+                </Link>
+              </li>
+              <li>
+                <Link href="/resources#calculator" className="hover:text-orange-400 transition-colors">
+                  Loan Calculator
+                </Link>
+              </li>
+              <li>
+                <Link href="/faqs" className="hover:text-orange-400 transition-colors">
+                  FAQs
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="hover:text-orange-400 transition-colors">
+                  Contact
                 </Link>
               </li>
               <li>
