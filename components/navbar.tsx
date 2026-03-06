@@ -32,6 +32,7 @@ const products = [
 
 const resources = [
   { name: "Loan Calculator", href: "/resources#calculator" },
+  { name: "FAQs", href: "/resources#faqs" },
 ]
 
 export function Navbar() {
