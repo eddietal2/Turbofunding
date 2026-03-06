@@ -142,16 +142,6 @@ export default function TeamPage() {
                     className="object-cover"
                     priority
                   />
-                  {/* Overlay badge */}
-                  <div className="absolute bottom-4 left-4 bg-black/70 backdrop-blur-sm rounded-xl px-4 py-2.5 flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-full bg-orange-500/20 flex items-center justify-center">
-                      <ZapIcon className="h-4 w-4 text-orange-400" />
-                    </div>
-                    <div>
-                      <p className="text-white text-xs font-bold leading-none">Turbo Speed</p>
-                      <p className="text-gray-400 text-xs mt-0.5">Funding at race pace</p>
-                    </div>
-                  </div>
                 </div>
               </div>
 

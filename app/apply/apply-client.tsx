@@ -3613,7 +3613,7 @@ export default function ApplyPage() {
                           </svg>
                         </div>
                         <div>
-                          <h2 className="text-xl md:text-2xl font-bold mb-2 text-gray-900">Review Your Application</h2>
+                          <h2 className="text-xl md:text-2xl font-bold mb-2 text-gray-900">E-Sign and Submit Your Application</h2>
                           <p className="text-gray-600 text-sm md:text-base">Please verify all information is correct before submitting. You can go back to edit any section.</p>
                         </div>
                       </div>
@@ -4047,27 +4047,22 @@ export default function ApplyPage() {
                     )}
 
                     {/* GLBA Compliance Acknowledgment */}
-                    <div className="bg-amber-50 border border-amber-300 rounded-xl p-4 md:p-6 mb-6">
-                      <h3 className="font-semibold text-amber-900 mb-3 flex items-center gap-2">
+                    <div className="bg-blue-50 border border-blue-300 rounded-xl p-4 md:p-6 mb-6">
+                      <h3 className="font-semibold text-blue-900 mb-3 flex items-center gap-2">
                         <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                          <path fillRule="evenodd" d="M13.816 4.477a.5.5 0 00-.596.04L7.5 9.338V7a.5.5 0 00-1 0v5a.5.5 0 00.5.5h5a.5.5 0 000-1H8.338l4.821-5.72a.5.5 0 00-.343-.803z" clipRule="evenodd" />
+                          <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
                         </svg>
                         Legal Acknowledgment
                       </h3>
-                      <div className="text-sm text-amber-900 space-y-3">
-                        <p>
-                          By signing and submitting this application, you acknowledge and certify that:
-                        </p>
-                        <ul className="list-disc list-inside space-y-2 text-amber-800">
-                          <li>All information provided in this application is true, accurate, and complete to the best of your knowledge.</li>
-                          <li>You authorize TurboFunding to verify any information contained herein and retrieve your consumer credit report(s).</li>
-                          <li>You understand that your personal financial information is protected under the Gramm-Leach-Bliley Act (GLBA) and will be kept confidential.</li>
-                          <li>You have read our <Link href="/privacy" className="text-amber-700 hover:text-amber-800 underline font-medium">Privacy Policy</Link> and understand how your data is collected, used, and protected.</li>
-                          <li>You consent to the electronic storage and processing of your sensitive financial documents using industry-standard encryption.</li>
+                      <div className="text-sm text-blue-900 space-y-3">
+                        <ul className="list-disc list-inside space-y-2 text-blue-800">
+                          <li>All information provided is true, accurate, and complete.</li>
+                          <li>You authorize TurboFunding and/or any lender(s) in its network to obtain your consumer and/or business credit report(s), including a hard inquiry, from one or more consumer reporting agencies pursuant to the FCRA. You acknowledge this has been discussed prior to submission to formal lender underwriting and understand it may impact your credit score.</li>
+                          <li>You acknowledge TurboFunding acts solely as a loan broker, not a direct lender, and authorize it to share your personal, business, and financial information with its lending network for the purpose of evaluating your financing request. No approval or specific terms are guaranteed.</li>
+                          <li>You have had the opportunity to review TurboFunding's <Link href="/privacy" className="text-orange-600 hover:text-orange-700 underline font-bold">Privacy Policy</Link> and <Link href="/terms" className="text-orange-600 hover:text-orange-700 underline font-bold">Terms & Conditions</Link> and understand how your information is collected, used, shared, and protected. Your submission constitutes acceptance of both documents.</li>
+                          <li>You agree to receive recurring marketing communications from TurboFunding and its lending partners — including SMS, email, and phone calls — at the contact information provided. Consent is not required for approval. Reply STOP to opt out of SMS at any time.</li>
+                          <li>Your electronic submission constitutes your legal signature pursuant to the E-SIGN Act (15 U.S.C. § 7001)</li>
                         </ul>
-                        <p className="text-xs text-amber-700 mt-3">
-                          <strong>Important:</strong> Providing false information on a loan application is a federal crime punishable by fine and imprisonment.
-                        </p>
                       </div>
                     </div>
 
@@ -4101,7 +4096,7 @@ export default function ApplyPage() {
                             disabled={isSubmitting || !allSignaturesCollected}
                             className={`w-full sm:w-auto font-semibold px-8 py-3 shadow-lg disabled:opacity-50 disabled:cursor-not-allowed ${
                               allSignaturesCollected 
-                                ? 'bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white shadow-orange-500/25'
+                                ? 'btn-gold-elite text-white'
                                 : 'bg-gray-300 text-gray-500 cursor-not-allowed'
                             }`}
                           >
