@@ -5,11 +5,11 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
 const TIERS = [
-  { label: "Not Open Yet", multiplier: null, term: null },
-  { label: "3 – 8 Months", multiplier: 1.49, term: 12 },
-  { label: "9 – 24 Months", multiplier: 1.79, term: 18 },
+  { label: "Just Starting (Under 6 months)", multiplier: null, term: null },
+  { label: "6 – 12 Months", multiplier: 1.49, term: 12 },
+  { label: "1 – 2 Years", multiplier: 1.79, term: 18 },
   { label: "2 – 5 Years", multiplier: 1.99, term: 24 },
-  { label: "5 Years+", multiplier: 2.4, term: 36 },
+  { label: "5+ Years", multiplier: 2.4, term: 36 },
 ] as const
 
 const MIN_SALES = 200000
@@ -38,8 +38,8 @@ export function LoanCalculator() {
     ? round100((annualSales / 12) * tier.multiplier)
     : null
   
-  // Monthly Payment = (Funding ÷ Term) + (Funding × 6.5% ÷ 12)
-  const PRIME_RATE = 0.065
+  // Monthly Payment = (Funding ÷ Term) + (Funding × 6.75% ÷ 12)
+  const PRIME_RATE = 0.0675
   const monthlyPayment = qualified && fundingAmount
     ? round10((fundingAmount / tier.term) + (fundingAmount * PRIME_RATE / 12))
     : null
@@ -182,7 +182,7 @@ export function LoanCalculator() {
             {/* Display Screen */}
             <div className="p-4 sm:p-5 border-t border-gray-200 -mx-4 sm:-mx-6">
               <div className="mb-3">
-                <div className="text-[11px] font-semibold text-gray-500 mb-1">Funding Estimate</div>
+                <div className="text-[11px] font-semibold text-black mb-1">Funding Estimate</div>
                 <div className="text-3xl sm:text-4xl font-extrabold text-gray-900 tracking-tight">
                   {fundingAmount ? formatCurrency(fundingAmount) : "—"}
                 </div>
@@ -190,15 +190,9 @@ export function LoanCalculator() {
               <div className="h-px bg-gradient-to-r from-blue-600 to-transparent mb-3"></div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <div className="text-[10px] font-semibold text-gray-500 mb-0.5">Monthly Payment</div>
-                  <div className="text-lg sm:text-xl font-bold text-orange-600">
+                  <div className="text-[10px] font-semibold text-black mb-0.5">Monthly Payment</div>
+                  <div className="text-3xl sm:text-4xl font-extrabold text-blue-600 tracking-tight">
                     {monthlyPayment ? formatCurrency(monthlyPayment) : "—"}
-                  </div>
-                </div>
-                <div>
-                  <div className="text-[10px] font-semibold text-gray-500 mb-0.5">Annual Sales</div>
-                  <div className="text-lg sm:text-xl font-bold text-blue-600">
-                    {formatCurrency(annualSales)}
                   </div>
                 </div>
               </div>
@@ -206,18 +200,28 @@ export function LoanCalculator() {
 
 
             {/* Not qualified message */}
-            {selectedTier === "Not Open Yet" && (
-              <div
-                className="rounded-lg p-4 text-sm font-semibold"
-                style={{ color: "#991b1b", background: "#fee2e2", border: "1px solid #fecaca" }}
-              >
-                Sorry, you currently do not qualify for a loan at this time. The minimum time in business is 6+ months.
+            {selectedTier === "Just Starting (Under 6 months)" && (
+              <div className="space-y-3">
+                <div
+                  className="rounded-lg p-4 text-sm font-semibold"
+                  style={{ color: "#991b1b", background: "#fee2e2", border: "1px solid #fecaca" }}
+                >
+                  Sorry, you currently do not qualify for a loan yet. The minimum time in business is 6+ months. Please use the button below or call 937-751-6937 to schedule a follow when the time is right.
+                </div>
+                <Button
+                  asChild
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-lg py-3 px-6 shadow-lg transition-all"
+                >
+                  <a href="https://calendly.com/turbofunding" target="_blank" rel="noopener noreferrer">
+                    Schedule a Call
+                  </a>
+                </Button>
               </div>
             )}
 
             {/* Disclaimer */}
             <p className="text-[10px] text-gray-600 leading-tight m-0">
-              * Results shown are estimates based on user-provided information and do not constitute a loan offer. Final loan amount and monthly payment are contingent upon credit approval and verification of financial documentation.
+              *Results shown are estimates based on user-provided information and do not constitute a loan offer or commitment to lend. Final loan amount, term, and monthly payment are subject to credit approval, underwriting review, and verification of financial documentation. Actual rates and terms may vary. Monthly payment estimates include a variable interest component based on the current Wall Street Journal Prime Rate (6.75% as of March 2026), which represents a best-case rate for highly qualified applicants and is subject to change. Applicants who do not meet top-tier credit and financial criteria may be subject to higher rates. A change in the Prime Rate will result in a corresponding change to your estimated monthly payment.
             </p>
 
             {/* CTA Button */}
