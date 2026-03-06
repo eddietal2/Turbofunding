@@ -1,22 +1,141 @@
 "use server"
 
-import nodemailer from "nodemailer"
+import { google } from "googleapis"
 import { ApplicationFolder } from "./actions/upload-application-documents"
 
 // Logo hosted on Vercel Blob CDN
 const LOGO_URL = "https://yeixnyce3to9ontr.public.blob.vercel-storage.com/logos/turbofunding-logo.png"
 const WEBSITE_URL = "https://turbofunding.com"
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    type: 'OAuth2',
-    user: process.env.APP_EMAIL,
-    clientId: process.env.GMAIL_CLIENT_ID,
-    clientSecret: process.env.GMAIL_CLIENT_SECRET,
-    refreshToken: process.env.GMAIL_REFRESH_TOKEN,
-  },
-})
+function getGmailClient(account: "app" | "contact" = "app") {
+  const config = account === "app" 
+    ? {
+        clientId: process.env.GMAIL_APP_CLIENT_ID,
+        clientSecret: process.env.GMAIL_APP_CLIENT_SECRET,
+        refreshToken: process.env.GMAIL_APP_REFRESH_TOKEN,
+      }
+    : {
+        clientId: process.env.GMAIL_CONTACT_CLIENT_ID,
+        clientSecret: process.env.GMAIL_CONTACT_CLIENT_SECRET,
+        refreshToken: process.env.GMAIL_CONTACT_REFRESH_TOKEN,
+      }
+
+  if (!config.refreshToken || !config.clientId || !config.clientSecret) {
+    throw new Error(`Missing credentials for ${account} account`)
+  }
+
+  const oauth2Client = new google.auth.OAuth2(
+    config.clientId,
+    config.clientSecret,
+  )
+  oauth2Client.setCredentials({
+    refresh_token: config.refreshToken,
+  })
+  return google.gmail({ version: "v1", auth: oauth2Client })
+}
+
+async function fetchAttachmentAsBase64(url: string): Promise<string | null> {
+  try {
+    const res = await fetch(url)
+    if (!res.ok) return null
+    const buffer = Buffer.from(await res.arrayBuffer())
+    return buffer.toString("base64")
+  } catch {
+    return null
+  }
+}
+
+function encodeSubject(subject: string): string {
+  // RFC 2047: encode non-ASCII characters
+  // Check if subject contains non-ASCII characters
+  if (/[^\x00-\x7F]/.test(subject)) {
+    return `=?UTF-8?B?${Buffer.from(subject).toString("base64")}?=`
+  }
+  return subject
+}
+
+function buildRawEmail({
+  from,
+  to,
+  replyTo,
+  subject,
+  textContent,
+  htmlContent,
+  attachments,
+}: {
+  from: string
+  to: string
+  replyTo?: string
+  subject: string
+  textContent: string
+  htmlContent: string
+  attachments?: Array<{ filename: string; base64: string; mimeType: string }>
+}): string {
+  const boundary = "boundary_" + Date.now().toString(36)
+  const mixedBoundary = "mixed_" + Date.now().toString(36)
+  const hasAttachments = attachments && attachments.length > 0
+
+  const encodedSubject = encodeSubject(subject)
+
+  const headers = [
+    `From: ${from}`,
+    `To: ${to}`,
+    ...(replyTo ? [`Reply-To: ${replyTo}`] : []),
+    `Subject: ${encodedSubject}`,
+    `MIME-Version: 1.0`,
+    `Message-ID: <${Date.now()}.${Math.random().toString(36).substring(2)}@turbofunding.com>`,
+    `Date: ${new Date().toUTCString()}`,
+    `X-Mailer: TurboFunding.com`,
+    hasAttachments
+      ? `Content-Type: multipart/mixed; boundary="${mixedBoundary}"`
+      : `Content-Type: multipart/alternative; boundary="${boundary}"`,
+  ].join("\r\n")
+
+  let body: string
+
+  if (hasAttachments) {
+    const altPart = [
+      `--${mixedBoundary}`,
+      `Content-Type: multipart/alternative; boundary="${boundary}"`,
+      ``,
+      `--${boundary}`,
+      `Content-Type: text/plain; charset="UTF-8"`,
+      ``,
+      textContent,
+      `--${boundary}`,
+      `Content-Type: text/html; charset="UTF-8"`,
+      ``,
+      htmlContent,
+      `--${boundary}--`,
+    ].join("\r\n")
+
+    const attachmentParts = attachments!.map((att) => [
+      `--${mixedBoundary}`,
+      `Content-Type: ${att.mimeType}; name="${att.filename}"`,
+      `Content-Disposition: attachment; filename="${att.filename}"`,
+      `Content-Transfer-Encoding: base64`,
+      ``,
+      att.base64,
+    ].join("\r\n")).join("\r\n")
+
+    body = `${altPart}\r\n${attachmentParts}\r\n--${mixedBoundary}--`
+  } else {
+    body = [
+      `--${boundary}`,
+      `Content-Type: text/plain; charset="UTF-8"`,
+      ``,
+      textContent,
+      `--${boundary}`,
+      `Content-Type: text/html; charset="UTF-8"`,
+      ``,
+      htmlContent,
+      `--${boundary}--`,
+    ].join("\r\n")
+  }
+
+  const email = `${headers}\r\n\r\n${body}`
+  return Buffer.from(email).toString("base64url")
+}
 
 // Shared email template wrapper - logo served from Vercel Blob CDN
 function getEmailTemplate(content: string, recipientEmail: string) {
@@ -294,38 +413,47 @@ Funding Solutions for Growing Businesses
 
   try {
     // Build attachments array
-    const attachments: Array<{ filename: string; path: string }> = []
+    const attachments: Array<{ filename: string; base64: string; mimeType: string }> = []
     
     if (pdfUrl) {
-      attachments.push({
-        filename: `TurboFunding-Application-${new Date().toISOString().split('T')[0]}.pdf`,
-        path: pdfUrl,
-      })
+      const base64 = await fetchAttachmentAsBase64(pdfUrl)
+      if (base64) {
+        attachments.push({
+          filename: `TurboFunding-Application-${new Date().toISOString().split('T')[0]}.pdf`,
+          base64,
+          mimeType: "application/pdf",
+        })
+      }
     }
 
     if (bankStatementsUrl) {
-      attachments.push({
-        filename: `TurboFunding-BankStatements-${new Date().toISOString().split('T')[0]}.pdf`,
-        path: bankStatementsUrl,
-      })
+      const base64 = await fetchAttachmentAsBase64(bankStatementsUrl)
+      if (base64) {
+        attachments.push({
+          filename: `TurboFunding-BankStatements-${new Date().toISOString().split('T')[0]}.pdf`,
+          base64,
+          mimeType: "application/pdf",
+        })
+      }
     }
 
-    const mailOptions: any = {
-      from: `"TurboFunding.com" <${process.env.APP_EMAIL}>`,
+    const gmail = getGmailClient("app")
+    const raw = buildRawEmail({
+      from: `"TurboFunding.com" <${process.env.GMAIL_APP_EMAIL}>`,
       to: recipientEmail,
       subject: `✓ Application Received - ${businessName} | TurboFunding.com`,
-      text: textContent,
-      html: htmlContent,
-    }
+      textContent,
+      htmlContent,
+      attachments: attachments.length > 0 ? attachments : undefined,
+    })
 
-    if (attachments.length > 0) {
-      mailOptions.attachments = attachments
-    }
+    const result = await gmail.users.messages.send({
+      userId: "me",
+      requestBody: { raw },
+    })
 
-    const info = await transporter.sendMail(mailOptions)
-
-    console.log("[Email] Confirmation email sent:", info.messageId)
-    return { success: true, messageId: info.messageId }
+    console.log("[Email] Confirmation email sent:", result.data.id)
+    return { success: true, messageId: result.data.id || undefined }
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : "Unknown error"
     console.error("[Email] Error sending confirmation email:", error)
@@ -394,43 +522,55 @@ export async function sendAdminNotificationEmail(formData: Record<string, unknow
     <p style="color: #64748b; font-size: 12px; text-align: center;">Submitted on ${new Date().toLocaleString()}</p>
   `
 
-  const htmlContent = getEmailTemplate(content, process.env.APP_EMAIL || "admin")
+  const htmlContent = getEmailTemplate(content, process.env.GMAIL_APP_EMAIL || "admin")
 
   try {
     // Build attachments array
-    const attachments: Array<{ filename: string; path: string }> = []
+    const attachments: Array<{ filename: string; base64: string; mimeType: string }> = []
     
     if (pdfUrl) {
-      attachments.push({
-        filename: `TurboFunding-Application-${new Date().toISOString().split('T')[0]}.pdf`,
-        path: pdfUrl,
-      })
+      const base64 = await fetchAttachmentAsBase64(pdfUrl)
+      if (base64) {
+        attachments.push({
+          filename: `TurboFunding-Application-${new Date().toISOString().split('T')[0]}.pdf`,
+          base64,
+          mimeType: "application/pdf",
+        })
+      }
     }
 
     if (bankStatementsUrl) {
-      attachments.push({
-        filename: `TurboFunding-BankStatements-${new Date().toISOString().split('T')[0]}.pdf`,
-        path: bankStatementsUrl,
-      })
+      const base64 = await fetchAttachmentAsBase64(bankStatementsUrl)
+      if (base64) {
+        attachments.push({
+          filename: `TurboFunding-BankStatements-${new Date().toISOString().split('T')[0]}.pdf`,
+          base64,
+          mimeType: "application/pdf",
+        })
+      }
     }
 
-    const mailOptions: any = {
-      from: `"TurboFunding.com" <${process.env.APP_EMAIL}>`,
-      to: process.env.NODE_ENV === "production"
-        ? "Matt@turbofunding.com,Vivek@turbofunding.com,eddie@finalbossxr.com"
-        : process.env.APP_EMAIL,
+    const toAddress = process.env.NODE_ENV === "production"
+      ? "Matt@turbofunding.com,Vivek@turbofunding.com,eddie@finalbossxr.com"
+      : process.env.GMAIL_APP_EMAIL || ""
+
+    const gmail = getGmailClient("app")
+    const raw = buildRawEmail({
+      from: `"TurboFunding.com" <${process.env.GMAIL_APP_EMAIL}>`,
+      to: toAddress,
       subject: `🆕 New Application: ${formData.businessName || formData.legalBusinessName} - $${Number(formData.amountRequested || 0).toLocaleString()}`,
-      html: htmlContent,
-    }
+      textContent: "",
+      htmlContent,
+      attachments: attachments.length > 0 ? attachments : undefined,
+    })
 
-    if (attachments.length > 0) {
-      mailOptions.attachments = attachments
-    }
+    const result = await gmail.users.messages.send({
+      userId: "me",
+      requestBody: { raw },
+    })
 
-    const info = await transporter.sendMail(mailOptions)
-
-    console.log("[Email] Admin notification sent:", info.messageId)
-    return { success: true, messageId: info.messageId }
+    console.log("[Email] Admin notification sent:", result.data.id)
+    return { success: true, messageId: result.data.id || undefined }
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : "Unknown error"
     console.error("[Email] Error sending admin notification:", error)
@@ -557,16 +697,22 @@ Funding Solutions for Growing Businesses
   `
 
   try {
-    const info = await transporter.sendMail({
-      from: `"TurboFunding.com" <${process.env.APP_EMAIL}>`,
+    const gmail = getGmailClient("contact")
+    const raw = buildRawEmail({
+      from: `"TurboFunding.com" <${process.env.GMAIL_CONTACT_EMAIL}>`,
       to: recipientEmail,
       subject: `🎉 Welcome to TurboFunding.com, ${recipientName}!`,
-      text: textContent,
-      html: htmlContent,
+      textContent,
+      htmlContent,
     })
 
-    console.log("[Email] Sign up email sent:", info.messageId)
-    return { success: true, messageId: info.messageId }
+    const result = await gmail.users.messages.send({
+      userId: "me",
+      requestBody: { raw },
+    })
+
+    console.log("[Email] Sign up email sent:", result.data.id)
+    return { success: true, messageId: result.data.id || undefined }
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : "Unknown error"
     console.error("[Email] Error sending sign up email:", error)
@@ -735,16 +881,22 @@ TurboFunding.com
   `
 
   try {
-    const info = await transporter.sendMail({
-      from: `"TurboFunding.com" <${process.env.NODEMAILER_EMAIL}>`,
+    const gmail = getGmailClient("contact")
+    const raw = buildRawEmail({
+      from: `"TurboFunding.com" <${process.env.GMAIL_CONTACT_EMAIL}>`,
       to: recipientEmail,
       subject,
-      text: textContent,
-      html: htmlContent,
+      textContent,
+      htmlContent,
     })
 
-    console.log("[Email] Login email sent:", info.messageId)
-    return { success: true, messageId: info.messageId }
+    const result = await gmail.users.messages.send({
+      userId: "me",
+      requestBody: { raw },
+    })
+
+    console.log("[Email] Login email sent:", result.data.id)
+    return { success: true, messageId: result.data.id || undefined }
   } catch (error: unknown) {
     const errorMessage = error instanceof Error ? error.message : "Unknown error"
     console.error("[Email] Error sending login email:", error)
@@ -760,10 +912,10 @@ TurboFunding.com
 // ============================================
 
 export async function sendTestEmail(toEmail?: string) {
-  const testEmail = toEmail || process.env.NODEMAILER_EMAIL
+  const testEmail = toEmail || process.env.GMAIL_APP_EMAIL
 
   if (!testEmail) {
-    console.error("❌ No email address provided. Set NODEMAILER_EMAIL in .env or pass an email.")
+    console.error("❌ No email address provided. Set GMAIL_APP_EMAIL in .env or pass an email.")
     return { success: false, error: "No email address" }
   }
 
