@@ -7,7 +7,7 @@ import Link from "next/link"
 const TIERS = [
   { label: "Just Starting (Under 6 months)", multiplier: null, term: null },
   { label: "6 – 12 Months", multiplier: 1.49, term: 12 },
-  { label: "1 – 2 Years", multiplier: 1.79, term: 18 },
+  { label: "12 – 24 Months", multiplier: 1.79, term: 18 },
   { label: "2 – 5 Years", multiplier: 1.99, term: 24 },
   { label: "5+ Years", multiplier: 2.4, term: 36 },
 ] as const
