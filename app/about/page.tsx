@@ -1,4 +1,4 @@
-﻿import Link from "next/link"
+import Link from "next/link"
 import Image from "next/image"
 import { Button } from "@/components/ui/button"
 import QuickFacts from "@/components/quick-facts"
@@ -19,7 +19,7 @@ const values = [
     title: "Trust & Transparency",
     subtitle: "Your success is our priority",
     description:
-      "We believe in complete transparency in our funding process. No hidden fees, no surprise termsâ€”just straightforward solutions that you can trust.",
+      "We believe in complete transparency in our funding process. No hidden fees, no surprise terms—just straightforward solutions that you can trust.",
   },
   {
     icon: ZapIcon,
@@ -45,7 +45,7 @@ const colorMap: Record<string, { iconBg: string; iconText: string; accent: strin
   emerald: { iconBg: "bg-emerald-100", iconText: "text-emerald-600", accent: "text-emerald-600", border: "border-emerald-100" },
 }
 
-export default function TeamPage() {
+export default function AboutPage() {
   return (
     <div className="flex min-h-screen flex-col" style={{ color: "#0D1B2A" }}>
       <main className="flex-1">
@@ -70,7 +70,7 @@ export default function TeamPage() {
                 </span>
               </h1>
               <p className="text-lg md:text-xl text-gray-400 max-w-xl mx-auto">
-                We believe small businesses deserve fast, reliable access to capital. Meet the team that&apos;s leveling the
+                We believe small businesses deserve fast, reliable access to capital. Meet the team that's leveling the
                 playing field.
               </p>
             </div>
@@ -105,14 +105,14 @@ export default function TeamPage() {
                   </p>
                   <p>
                     As a direct lender with deep industry experience across business lending, private capital, and SBA
-                    partnerships, we&apos;ve built strong relationships with a wide network of funding sources. Our main
-                    goal is to deliver cheaper financing at turbo speeds â€” helping you save capital while accessing the
-                    capital you need. We match each client with the right funding solution â€” from merchant cash advances
-                    and business lines of credit to SBA loans â€” and educate you throughout the process to help
+                    partnerships, we've built strong relationships with a wide network of funding sources. Our main
+                    goal is to deliver cheaper financing at turbo speeds — helping you save capital while accessing the
+                    capital you need. We match each client with the right funding solution — from merchant cash advances
+                    and business lines of credit to SBA loans — and educate you throughout the process to help
                     consolidate and optimize your financing strategy.
                   </p>
                   <p>
-                    TurboFunding is more than just financing. We&apos;re partners in growth. Whether you&apos;re starting a new
+                    TurboFunding is more than just financing. We're partners in growth. Whether you're starting a new
                     venture, expanding to new locations, or weathering unexpected challenges, our team is here to guide
                     you every step of the way.
                   </p>

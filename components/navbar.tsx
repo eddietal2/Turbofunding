@@ -234,13 +234,13 @@ export function Navbar() {
 
           {/* About Us Link */}
           <Link
-            href="/team"
+            href="/about"
             className={`text-sm tracking-wide transition-colors whitespace-nowrap leading-tight font-semibold ${
-              isActive("/team")
+              isActive("/about")
                 ? "text-orange-500"
                 : "text-white hover:text-orange-500"
             }`}
-            aria-current={isActive("/team") ? "page" : undefined}
+            aria-current={isActive("/about") ? "page" : undefined}
           >
             About Us
           </Link>
@@ -509,10 +509,10 @@ export function Navbar() {
               {/* Mobile About Us Link */}
               <li>
                 <Link
-                  href="/team"
+                  href="/about"
                   onClick={closeMenu}
                   className={`block py-3 px-4 rounded-lg text-lg tracking-wide transition-colors ${
-                    isActive("/team")
+                    isActive("/about")
                       ? "bg-blue-600 text-white font-bold"
                       : "text-gray-300 font-normal hover:text-white hover:bg-gray-800"
                   }`}
