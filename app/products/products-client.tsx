@@ -299,7 +299,7 @@ export default function ProductsClient() {
           <div className="relative container px-4 md:px-6 py-12 md:py-20">
             <div className="max-w-3xl mx-auto text-center">
               <div className="inline-flex items-center gap-2 bg-white/5 border border-white/10 rounded-full px-4 py-1.5 mb-5">
-                <SparklesIcon className="h-4 w-4 text-orange-400" />
+                <SparklesIcon className="h-4 w-4 text-blue-400" />
                 <span className="text-sm text-gray-300 font-medium">7 Funding Solutions for Every Business</span>
               </div>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-4 font-space-grotesk">
