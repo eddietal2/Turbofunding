@@ -87,8 +87,8 @@ export default function TeamPage() {
 
               {/* Text */}
               <div className="space-y-5">
-                <div className="inline-flex items-center gap-2 bg-orange-50 border border-orange-100 rounded-full px-3 py-1">
-                  <span className="text-xs font-semibold text-orange-600 uppercase tracking-wide">Our Story</span>
+                <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 rounded-full px-3 py-1">
+                  <span className="text-xs font-semibold text-blue-600 uppercase tracking-wide">Our Story</span>
                 </div>
                 <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900 font-space-grotesk">
                   Financing at the{" "}
