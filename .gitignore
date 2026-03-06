@@ -19,6 +19,9 @@ yarn-error.log*
 # env files
 .env*
 
+# Google OAuth credential files (NEVER commit these!)
+client_secret_*.json
+
 # Decryption utility and output files (keep keys secure!)
 decoder/
 
