@@ -136,7 +136,7 @@ export default function TeamPage() {
               <div className="relative rounded-2xl overflow-hidden shadow-xl">
                 <div className="relative h-[360px] md:h-[440px] w-full">
                   <Image
-                    src="/images/race-car-hero.jpg"
+                    src="/images/about-us-image.png"
                     alt="TurboFunding - Speed and precision in business funding"
                     fill
                     className="object-cover"
