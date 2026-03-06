@@ -168,8 +168,8 @@ export function LoanCalculator() {
                           : "text-gray-700 hover:text-gray-900"
                       }`}
                       style={{
-                        background: active ? "#D97706" : "rgba(36, 96, 227, 0.08)",
-                        border: active ? "2px solid #F59E0B" : "2px solid rgba(36, 96, 227, 0.2)",
+                        background: active ? "#2460e3" : "rgba(36, 96, 227, 0.08)",
+                        border: active ? "2px solid #1d4ed8" : "2px solid rgba(36, 96, 227, 0.2)",
                       }}
                     >
                       {t.label}
