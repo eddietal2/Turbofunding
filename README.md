@@ -63,7 +63,6 @@ lib/actions/       # Server-side actions (submission, uploads, emails)
 components/        # Reusable React components
 public/            # Static assets
 styles/            # Global CSS
-decoder/           # Decryption utility (git-ignored)
 ```
 
 ## Application Flow
