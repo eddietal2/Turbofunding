@@ -10,8 +10,6 @@ import {
   AwardIcon,
 } from "lucide-react"
 
-
-
 const values = [
   {
     icon: ShieldCheckIcon,
@@ -76,9 +74,46 @@ export default function AboutPage() {
             </div>
           </div>
         </section>
+        {/* ===== COMPANY VALUES ===== */}
+        <section className="w-full py-14 md:py-20 bg-white">
+          <div className="container px-4 md:px-6 max-w-6xl mx-auto">
 
-        {/* ===== QUICK FACTS ===== */}
-        <QuickFacts />
+            <div className="text-center mb-10">
+              <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 rounded-full px-3 py-1 mb-4">
+                <span className="text-xs font-semibold text-blue-600 uppercase tracking-wide">Our Values</span>
+              </div>
+              <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900 font-space-grotesk mb-3">
+                What{" "}
+                <span className="bg-gradient-to-r from-orange-500 to-amber-500 bg-clip-text text-transparent">
+                  Drives Us
+                </span>
+              </h2>
+              <p className="text-gray-500 max-w-xl mx-auto">
+                Our core values shape everything we do at TurboFunding.com
+              </p>
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-3">
+              {values.map((value) => {
+                const Icon = value.icon
+                const colors = colorMap[value.color]
+                return (
+                  <div
+                    key={value.title}
+                    className={`bg-white rounded-2xl border ${colors.border} shadow-sm p-7 flex flex-col items-center text-center hover:shadow-md transition-shadow`}
+                  >
+                    <div className={`w-14 h-14 rounded-2xl ${colors.iconBg} flex items-center justify-center mb-4`}>
+                      <Icon className={`h-7 w-7 ${colors.iconText}`} />
+                    </div>
+                    <h3 className="text-lg font-bold text-gray-900 mb-1 font-space-grotesk">{value.title}</h3>
+                    <p className={`text-xs font-semibold uppercase tracking-wide mb-3 ${colors.accent}`}>{value.subtitle}</p>
+                    <p className="text-gray-600 text-sm leading-relaxed">{value.description}</p>
+                  </div>
+                )
+              })}
+            </div>
+          </div>
+        </section>
 
         {/* ===== OUR STORY ===== */}
         <section className="w-full py-14 md:py-20 bg-[#F5F7FA]">
@@ -136,46 +171,8 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* ===== COMPANY VALUES ===== */}
-        <section className="w-full py-14 md:py-20 bg-white">
-          <div className="container px-4 md:px-6 max-w-6xl mx-auto">
-
-            <div className="text-center mb-10">
-              <div className="inline-flex items-center gap-2 bg-blue-50 border border-blue-100 rounded-full px-3 py-1 mb-4">
-                <span className="text-xs font-semibold text-blue-600 uppercase tracking-wide">Our Values</span>
-              </div>
-              <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-gray-900 font-space-grotesk mb-3">
-                What{" "}
-                <span className="bg-gradient-to-r from-orange-500 to-amber-500 bg-clip-text text-transparent">
-                  Drives Us
-                </span>
-              </h2>
-              <p className="text-gray-500 max-w-xl mx-auto">
-                Our core values shape everything we do at TurboFunding.com
-              </p>
-            </div>
-
-            <div className="grid gap-6 md:grid-cols-3">
-              {values.map((value) => {
-                const Icon = value.icon
-                const colors = colorMap[value.color]
-                return (
-                  <div
-                    key={value.title}
-                    className={`bg-white rounded-2xl border ${colors.border} shadow-sm p-7 flex flex-col items-center text-center hover:shadow-md transition-shadow`}
-                  >
-                    <div className={`w-14 h-14 rounded-2xl ${colors.iconBg} flex items-center justify-center mb-4`}>
-                      <Icon className={`h-7 w-7 ${colors.iconText}`} />
-                    </div>
-                    <h3 className="text-lg font-bold text-gray-900 mb-1 font-space-grotesk">{value.title}</h3>
-                    <p className={`text-xs font-semibold uppercase tracking-wide mb-3 ${colors.accent}`}>{value.subtitle}</p>
-                    <p className="text-gray-600 text-sm leading-relaxed">{value.description}</p>
-                  </div>
-                )
-              })}
-            </div>
-          </div>
-        </section>
+        {/* ===== QUICK FACTS ===== */}
+        <QuickFacts />
 
         {/* ===== CTA ===== */}
         <section className="relative w-full overflow-hidden bg-gradient-to-br from-[#0F172A] via-[#1E293B] to-[#0F172A]">
